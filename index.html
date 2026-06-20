@@ -120,12 +120,12 @@
         const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
         
         const COLOR_PALETTES = [
-            { bg: "bg-emerald-500", border: "border-emerald-500", text: "text-emerald-600", lightBg: "bg-emerald-50", opacityBg: "bg-emerald-500/15 text-emerald-700", labelSuccess: "bg-emerald-100 text-emerald-800", labelFail: "bg-slate-100 text-slate-400" },
-            { bg: "bg-sky-500", border: "border-sky-500", text: "text-sky-600", lightBg: "bg-sky-50", opacityBg: "bg-sky-500/15 text-sky-700", labelSuccess: "bg-sky-100 text-sky-800", labelFail: "bg-slate-100 text-slate-400" },
-            { bg: "bg-indigo-500", border: "border-indigo-500", text: "text-indigo-600", lightBg: "bg-indigo-50", opacityBg: "bg-indigo-500/15 text-indigo-700", labelSuccess: "bg-indigo-100 text-indigo-800", labelFail: "bg-slate-100 text-slate-400" },
-            { bg: "bg-purple-500", border: "border-purple-500", text: "text-purple-600", lightBg: "bg-purple-50", opacityBg: "bg-purple-500/15 text-purple-700", labelSuccess: "bg-purple-100 text-purple-800", labelFail: "bg-slate-100 text-slate-400" },
-            { bg: "bg-rose-500", border: "border-rose-500", text: "text-rose-600", lightBg: "bg-rose-50", opacityBg: "bg-rose-500/15 text-rose-700", labelSuccess: "bg-rose-100 text-rose-800", labelFail: "bg-slate-100 text-slate-400" },
-            { bg: "bg-amber-500", border: "border-amber-500", text: "text-amber-600", lightBg: "bg-amber-50", opacityBg: "bg-amber-500/15 text-amber-700", labelSuccess: "bg-amber-100 text-amber-800", labelFail: "bg-slate-100 text-slate-400" }
+            { bg: "bg-emerald-500", border: "border-emerald-500", text: "text-emerald-600", lightBg: "bg-emerald-50", opacityBg: "bg-emerald-500/15 text-emerald-700", weekCapsule: "bg-emerald-500/10" },
+            { bg: "bg-sky-500", border: "border-sky-500", text: "text-sky-600", lightBg: "bg-sky-50", opacityBg: "bg-sky-500/15 text-sky-700", weekCapsule: "bg-sky-500/10" },
+            { bg: "bg-indigo-500", border: "border-indigo-500", text: "text-indigo-600", lightBg: "bg-indigo-50", opacityBg: "bg-indigo-500/15 text-indigo-700", weekCapsule: "bg-indigo-500/10" },
+            { bg: "bg-purple-500", border: "border-purple-500", text: "text-purple-600", lightBg: "bg-purple-50", opacityBg: "bg-purple-500/15 text-purple-700", weekCapsule: "bg-purple-500/10" },
+            { bg: "bg-rose-500", border: "border-rose-500", text: "text-rose-600", lightBg: "bg-rose-50", opacityBg: "bg-rose-500/15 text-rose-700", weekCapsule: "bg-rose-500/10" },
+            { bg: "bg-amber-500", border: "border-amber-500", text: "text-amber-600", lightBg: "bg-amber-50", opacityBg: "bg-amber-500/15 text-amber-700", weekCapsule: "bg-amber-500/10" }
         ];
 
         let habits = [];
@@ -257,7 +257,7 @@
             const chartsContainer = document.getElementById('monthly-charts-container');
             
             const stats = getJalaliStats(weekOffset);
-            document.getElementById('current-week-display').innerText = toPersianDigits(stats.weekRangeStr);
+            document.getElementById('current-week-display').innerText = `هفتهٔ ${toPersianDigits(stats.weekRangeStr)}`;
             tbody.innerHTML = ''; chartsContainer.innerHTML = '';
             badgeCount.innerText = `${toPersianDigits(habits.length)} عادت`;
 
@@ -343,7 +343,7 @@
                     </td>`;
                 tbody.appendChild(tr);
 
-                // ۲۸ روز اخیر رندر با کپسول‌های موفقیت هفته
+                // ۲۸ روز اخیر رندر با باکس کپسولی دور روزهای هفته‌های موفق
                 const matrixCard = document.createElement('div'); matrixCard.className = "bg-slate-50/50 border border-slate-200/60 rounded-xl p-4 flex flex-col justify-between";
                 let weeksRowsHtml = ''; const baseSat = new Date(); const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay() + 1);
                 baseSat.setDate(baseSat.getDate() + dToSat - 21); 
@@ -358,21 +358,22 @@
                         if (isDone) completionsInThisWeek++;
 
                         const jCellDate = jalaali.toJalaali(dayCellDate.getFullYear(), dayCellDate.getMonth() + 1, dayCellDate.getDate());
-                        const dotClass = isDone ? `w-3 h-3 ${palette.bg} rounded-md` : `w-3 h-3 bg-slate-200/80 rounded-md`;
+                        const dotClass = isDone ? `w-2.5 h-2.5 ${palette.bg} rounded-md` : `w-2.5 h-2.5 bg-slate-200 rounded-md`;
                         singleWeekDots += `<div class="${dotClass}" title="روز ${toPersianDigits(jCellDate.jd)} ${JALAALI_MONTHS[jCellDate.jm - 1]}"></div>`;
                     }
 
                     const isGoalAchieved = completionsInThisWeek >= habit.weeklyGoal;
-                    const labelClass = isGoalAchieved ? palette.labelSuccess : (palette.labelFail || "bg-slate-100 text-slate-400");
-                    const labelText = isGoalAchieved ? "موفق" : "ناموفق";
+                    // اگر به هدف رسیده باشد، یک کپسول کمرنگ دور کل ۷ نقطه ایجاد می‌شود
+                    const rowContainerClass = isGoalAchieved 
+                        ? `${palette.weekCapsule} rounded-full px-3 py-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]` 
+                        : "px-3 py-1.5 bg-transparent";
 
                     weeksRowsHtml += `
-                        <div class="flex items-center justify-between gap-4 py-1 border-b border-slate-100/50 last:border-0">
+                        <div class="flex items-center justify-center transition-all ${rowContainerClass}">
                             <div class="flex items-center gap-1.5">${singleWeekDots}</div>
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide transition-all ${labelClass}">${labelText}</span>
                         </div>`;
                 }
-                matrixCard.innerHTML = `<div class="flex justify-between items-center mb-3"><span class="font-bold text-slate-800 text-sm">${habit.title}</span><span class="text-xs font-medium px-2 py-0.5 rounded-md ${palette.lightBg} ${palette.text}">۲۸ روز اخیر</span></div><div class="space-y-1 bg-white border border-slate-100 rounded-lg p-3 shadow-3xs">${weeksRowsHtml}</div>`;
+                matrixCard.innerHTML = `<div class="flex justify-between items-center mb-3"><span class="font-bold text-slate-800 text-sm">${habit.title}</span><span class="text-xs font-medium px-2 py-0.5 rounded-md ${palette.lightBg} ${palette.text}">۲۸ روز اخیر</span></div><div class="space-y-1.5 bg-white border border-slate-100 rounded-lg p-3 shadow-3xs flex flex-col justify-center min-h-[130px]">${weeksRowsHtml}</div>`;
                 chartsContainer.appendChild(matrixCard);
             });
         }
