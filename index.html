@@ -20,7 +20,11 @@
         <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 mb-8 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_-5px_rgba(0,0,0,0.3)] flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
             <div>
                 <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
-                <p id="current-date-display" class="text-sm text-slate-400 dark:text-slate-500 font-medium mt-1.5">امروز: ...</p>
+                <div class="flex items-center gap-2 mt-1.5">
+                    <p id="current-date-display" class="text-sm text-slate-400 dark:text-slate-500 font-medium">امروز: ...</p>
+                    <span class="inline-block w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+                    <span id="app-version-display" class="text-xs text-slate-300 dark:text-slate-600 font-mono">v1.0</span>
+                </div>
             </div>
             
             <!-- WEEK NAVIGATION CONTROLLER -->
@@ -121,10 +125,12 @@
     </div>
 
     <script>
+        // ثابت نسخه فعلی برنامه (هر بار که تغییر دادی، این عدد را اینجا بالا ببر، مثلاً 1.1)
+        const CURRENT_VERSION = "1.0"; 
+
         const JALAALI_MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
         const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
         
-        // پالت رنگی بهینه‌شده برای هر دو حالت روشن و تاریک
         const COLOR_PALETTES = [
             { bg: "bg-emerald-500", border: "border-emerald-500 dark:border-emerald-500/80", text: "text-emerald-600 dark:text-emerald-400", lightBg: "bg-emerald-50 dark:bg-emerald-950/40", opacityBg: "bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400", weekCapsule: "bg-emerald-500/10 dark:bg-emerald-500/15" },
             { bg: "bg-sky-500", border: "border-sky-500 dark:border-sky-500/80", text: "text-sky-600 dark:text-sky-400", lightBg: "bg-sky-50 dark:bg-sky-950/40", opacityBg: "bg-sky-500/15 dark:bg-sky-500/20 text-sky-700 dark:text-sky-400", weekCapsule: "bg-sky-500/10 dark:bg-sky-500/15" },
@@ -349,7 +355,6 @@
                     </td>`;
                 tbody.appendChild(tr);
 
-                // ۲۸ روز اخیر رندر با باکس کپسولی دور روزهای هفته‌های موفق
                 const matrixCard = document.createElement('div'); matrixCard.className = "bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl p-4 flex flex-col justify-between";
                 let weeksRowsHtml = ''; const baseSat = new Date(); const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay() + 1);
                 baseSat.setDate(baseSat.getDate() + dToSat - 21); 
@@ -417,18 +422,27 @@
         function loadDataFromDisk() {
             const savedHabits = localStorage.getItem('habits_data');
             if (savedHabits) {
-                try {
-                    habits = JSON.parse(savedHabits);
-                } catch(e) {
-                    habits = [];
-                }
-            } else {
-                habits = [];
-            }
+                try { habits = JSON.parse(savedHabits); } catch(e) { habits = []; }
+            } else { habits = []; }
             habits.forEach(h => h.currentStreak = calculateJalaliStreak(h));
         }
 
+        // سیستم هوشمند آپدیت خودکار برنامه (کَش‌شکن بدون از دست رفتن دیتای لوکال)
+        function checkAppVersionUpdate() {
+            const lastSavedVersion = localStorage.getItem('app_version_key');
+            document.getElementById('app-version-display').innerText = `v${CURRENT_VERSION}`;
+            
+            if (lastSavedVersion !== CURRENT_VERSION) {
+                localStorage.setItem('app_version_key', CURRENT_VERSION);
+                // اگر نسخه تغییر کرده باشد، یک ریست سبک انجام می‌شود تا فایل‌های جدید از گیت‌هاب لود شوند
+                if (lastSavedVersion !== null) {
+                    window.location.reload(true);
+                }
+            }
+        }
+
         window.onload = function() {
+            checkAppVersionUpdate();
             const stats = getJalaliStats(0);
             const prDate = `${WEEKDAYS_FA[new Date().getDay()]}، ${stats.realJToday.jd} ${JALAALI_MONTHS[stats.realJToday.jm - 1]} ${stats.realJToday.jy}`;
             document.getElementById('current-date-display').innerText = `امروز: ${toPersianDigits(prDate)}`;
