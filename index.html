@@ -16,7 +16,6 @@
 <body class="text-slate-800 dark:text-slate-200 min-h-full pb-12 antialiased bg-slate-50 dark:bg-slate-950 selection:bg-slate-200 dark:selection:bg-slate-800 transition-colors duration-300">
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <!-- TOP DASHBOARD HEADER -->
         <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 mb-8 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_-5px_rgba(0,0,0,0.3)] flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
             <div>
                 <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
@@ -27,7 +26,6 @@
                 </div>
             </div>
             
-            <!-- WEEK NAVIGATION CONTROLLER -->
             <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 p-1 rounded-xl">
                 <button onclick="navigateWeek(1)" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته بعدی">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -45,7 +43,6 @@
             </div>
         </header>
 
-        <!-- MAIN HABITS TABLE -->
         <main class="mb-8">
             <div class="flex justify-between items-center mb-4 px-1">
                 <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
@@ -66,13 +63,13 @@
                         <thead>
                             <tr class="bg-slate-50/70 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-400 dark:text-slate-500 tracking-wider">
                                 <th class="p-4 w-1/4">عنوان عادت و مداومت</th>
-                                <th class="p-4 text-center px-1">شنبه</th>
-                                <th class="p-4 text-center px-1">۱شنبه</th>
-                                <th class="p-4 text-center px-1">۲شنبه</th>
-                                <th class="p-4 text-center px-1">۳شنبه</th>
-                                <th class="p-4 text-center px-1">۴شنبه</th>
-                                <th class="p-4 text-center px-1">۵شنبه</th>
-                                <th class="p-4 text-center px-1">جمعه</th>
+                                <th id="th-day-0" class="p-4 text-center px-1 transition-all">شنبه</th>
+                                <th id="th-day-1" class="p-4 text-center px-1 transition-all">۱شنبه</th>
+                                <th id="th-day-2" class="p-4 text-center px-1 transition-all">۲شنبه</th>
+                                <th id="th-day-3" class="p-4 text-center px-1 transition-all">۳شنبه</th>
+                                <th id="th-day-4" class="p-4 text-center px-1 transition-all">۴شنبه</th>
+                                <th id="th-day-5" class="p-4 text-center px-1 transition-all">۵شنبه</th>
+                                <th id="th-day-6" class="p-4 text-center px-1 transition-all">جمعه</th>
                                 <th class="p-4 text-center w-1/6">پیشرفت هفته</th>
                                 <th class="p-4 text-center w-12">عملیات</th>
                             </tr>
@@ -86,7 +83,6 @@
             </div>
         </main>
 
-        <!-- 28-DAY TRENDS MATRIX -->
         <section id="monthly-trends-section" class="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs hidden transition-all">
             <h2 id="monthly-trends-title" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-5 flex items-center gap-1.5">
                 <span class="w-1 h-3.5 bg-indigo-500 rounded-full inline-block"></span>
@@ -95,7 +91,6 @@
             <div id="monthly-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
         </section>
 
-        <!-- ADD HABIT FORM -->
         <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all">
             <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-1.5">
                 <span class="w-1 h-3.5 bg-slate-400 dark:bg-slate-600 rounded-full inline-block"></span>
@@ -125,8 +120,8 @@
     </div>
 
     <script>
-        // ثابت نسخه فعلی برنامه (هر بار که تغییر دادی، این عدد را اینجا بالا ببر، مثلاً 1.1)
-        const CURRENT_VERSION = "1.0"; 
+        // ارتقا به نسخه ۱.۱ برای اعمال خودکار تغییرات روی آیفون شما
+        const CURRENT_VERSION = "1.1"; 
 
         const JALAALI_MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
         const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
@@ -166,7 +161,10 @@
             const weekKey = `W-${targetSat.getFullYear()}-${String(targetSat.getMonth()+1).padStart(2,'0')}-${String(targetSat.getDate()).padStart(2,'0')}`;
             const jToday = jalaali.toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
 
-            return { weekKey, weekRangeStr: `${jSat.jd} ${JALAALI_MONTHS[jSat.jm - 1]} تا ${jFri.jd} ${JALAALI_MONTHS[jFri.jm - 1]} ${jFri.jy}`, realJToday: jToday };
+            // ایندکس روز جاری در جدول (شنبه=0، یکشنبه=1، ...، جمعه=6)
+            const currentTableDayIndex = today.getDay() === 6 ? 0 : today.getDay() + 1;
+
+            return { weekKey, weekRangeStr: `${jSat.jd} ${JALAALI_MONTHS[jSat.jm - 1]} تا ${jFri.jd} ${JALAALI_MONTHS[jFri.jm - 1]} ${jFri.jy}`, realJToday: jToday, currentTableDayIndex };
         }
 
         function getStatusByDate(habit, dateObj) {
@@ -250,11 +248,12 @@
         window.toggleDayNode = function(habitId, weekKey, dayIndex) {
             if (isEditMode) return;
 
-            const habit = habits.find(h => h.id === habitId);
-            if (!habit) return;
-            if (!habit.history[weekKey]) habit.history[weekKey] = [false, false, false, false, false, false, false];
+            const habit = habits.find(h => h.id === id);
+            const habitObj = habits.find(h => h.id === habitId);
+            if (!habitObj) return;
+            if (!habitObj.history[weekKey]) habitObj.history[weekKey] = [false, false, false, false, false, false, false];
 
-            habit.history[weekKey][dayIndex] = !habit.history[weekKey][dayIndex];
+            habitObj.history[weekKey][dayIndex] = !habitObj.history[weekKey][dayIndex];
             habits.forEach(h => h.currentStreak = calculateJalaliStreak(h));
             
             saveDataToDisk();
@@ -272,6 +271,18 @@
             document.getElementById('current-week-display').innerText = `هفتهٔ ${toPersianDigits(stats.weekRangeStr)}`;
             tbody.innerHTML = ''; chartsContainer.innerHTML = '';
             badgeCount.innerText = `${toPersianDigits(habits.length)} عادت`;
+
+            // هایلایت کردن هدر روز جاری در جدول اصلی (تنها در صورتی که در هفته جاری باشیم)
+            for (let i = 0; i < 7; i++) {
+                const th = document.getElementById(`th-day-${i}`);
+                if (th) {
+                    if (weekOffset === 0 && i === stats.currentTableDayIndex) {
+                        th.className = "p-4 text-center px-1 text-slate-900 dark:text-white bg-slate-500/5 dark:bg-white/5 rounded-t-xl font-black";
+                    } else {
+                        th.className = "p-4 text-center px-1 text-slate-400 dark:text-slate-500 font-bold";
+                    }
+                }
+            }
 
             if (habits.length === 0) {
                 emptyState.classList.remove('hidden'); trendsSection.classList.add('hidden'); return;
@@ -310,7 +321,11 @@
                     else if (isGrace) { btnClasses += `${palette.opacityBg} border-transparent`; content = "✓"; }
                     else { btnClasses += `bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-transparent`; content = " "; }
 
-                    daysHtml += `<td class="p-1.5 text-center"><button ${isEditMode ? 'disabled' : ''} onclick="toggleDayNode('${habit.id}', '${stats.weekKey}', ${i})" class="${btnClasses} ${isEditMode ? 'opacity-30 cursor-not-allowed hover:scale-100 active:scale-100' : ''}">${content}</button></td>`;
+                    // بررسی مچ بودن با ستون روز جاری برای کشیدن مستطیل لطیف ستونی
+                    const isTodayColumn = (weekOffset === 0 && i === stats.currentTableDayIndex);
+                    const tdBgClass = isTodayColumn ? "bg-slate-500/5 dark:bg-white/5 rounded-xl" : "";
+
+                    daysHtml += `<td class="p-1.5 text-center ${tdBgClass}"><button ${isEditMode ? 'disabled' : ''} onclick="toggleDayNode('${habit.id}', '${stats.weekKey}', ${i})" class="${btnClasses} ${isEditMode ? 'opacity-30 cursor-not-allowed hover:scale-100 active:scale-100' : ''}">${content}</button></td>`;
                 }
 
                 const editControlsHtml = isEditMode ? `
@@ -427,14 +442,12 @@
             habits.forEach(h => h.currentStreak = calculateJalaliStreak(h));
         }
 
-        // سیستم هوشمند آپدیت خودکار برنامه (کَش‌شکن بدون از دست رفتن دیتای لوکال)
         function checkAppVersionUpdate() {
             const lastSavedVersion = localStorage.getItem('app_version_key');
             document.getElementById('app-version-display').innerText = `v${CURRENT_VERSION}`;
             
             if (lastSavedVersion !== CURRENT_VERSION) {
                 localStorage.setItem('app_version_key', CURRENT_VERSION);
-                // اگر نسخه تغییر کرده باشد، یک ریست سبک انجام می‌شود تا فایل‌های جدید از گیت‌هاب لود شوند
                 if (lastSavedVersion !== null) {
                     window.location.reload(true);
                 }
