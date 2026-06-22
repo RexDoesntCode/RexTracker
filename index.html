@@ -22,7 +22,7 @@
                 <div class="flex items-center gap-2 mt-1.5">
                     <p id="current-date-display" class="text-sm text-slate-400 dark:text-slate-500 font-medium">امروز: ...</p>
                     <span class="inline-block w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-                    <span id="app-version-display" class="text-xs text-slate-300 dark:text-slate-600 font-mono">v1.0</span>
+                    <span id="app-version-display" class="text-xs text-slate-300 dark:text-slate-600 font-mono">v1.2</span>
                 </div>
             </div>
             
@@ -120,8 +120,8 @@
     </div>
 
     <script>
-        // ارتقا به نسخه ۱.۱ برای اعمال خودکار تغییرات روی آیفون شما
-        const CURRENT_VERSION = "1.1"; 
+        // نسخه ۱.۲ برای اعمال خودکار تغییرات اصلاحی
+        const CURRENT_VERSION = "1.2"; 
 
         const JALAALI_MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
         const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
@@ -161,7 +161,6 @@
             const weekKey = `W-${targetSat.getFullYear()}-${String(targetSat.getMonth()+1).padStart(2,'0')}-${String(targetSat.getDate()).padStart(2,'0')}`;
             const jToday = jalaali.toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
 
-            // ایندکس روز جاری در جدول (شنبه=0، یکشنبه=1، ...، جمعه=6)
             const currentTableDayIndex = today.getDay() === 6 ? 0 : today.getDay() + 1;
 
             return { weekKey, weekRangeStr: `${jSat.jd} ${JALAALI_MONTHS[jSat.jm - 1]} تا ${jFri.jd} ${JALAALI_MONTHS[jFri.jm - 1]} ${jFri.jy}`, realJToday: jToday, currentTableDayIndex };
@@ -248,7 +247,6 @@
         window.toggleDayNode = function(habitId, weekKey, dayIndex) {
             if (isEditMode) return;
 
-            const habit = habits.find(h => h.id === id);
             const habitObj = habits.find(h => h.id === habitId);
             if (!habitObj) return;
             if (!habitObj.history[weekKey]) habitObj.history[weekKey] = [false, false, false, false, false, false, false];
@@ -272,7 +270,6 @@
             tbody.innerHTML = ''; chartsContainer.innerHTML = '';
             badgeCount.innerText = `${toPersianDigits(habits.length)} عادت`;
 
-            // هایلایت کردن هدر روز جاری در جدول اصلی (تنها در صورتی که در هفته جاری باشیم)
             for (let i = 0; i < 7; i++) {
                 const th = document.getElementById(`th-day-${i}`);
                 if (th) {
@@ -321,7 +318,6 @@
                     else if (isGrace) { btnClasses += `${palette.opacityBg} border-transparent`; content = "✓"; }
                     else { btnClasses += `bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-transparent`; content = " "; }
 
-                    // بررسی مچ بودن با ستون روز جاری برای کشیدن مستطیل لطیف ستونی
                     const isTodayColumn = (weekOffset === 0 && i === stats.currentTableDayIndex);
                     const tdBgClass = isTodayColumn ? "bg-slate-500/5 dark:bg-white/5 rounded-xl" : "";
 
