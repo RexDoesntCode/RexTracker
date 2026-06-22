@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" class="h-full bg-slate-50">
+<html lang="fa" dir="rtl" class="h-full bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,25 +13,27 @@
         body { font-family: 'Vazirmatn', sans-serif; }
     </style>
 </head>
-<body class="text-slate-800 min-h-full pb-12 antialiased bg-slate-50 selection:bg-slate-200">
+<body class="text-slate-800 dark:text-slate-200 min-h-full pb-12 antialiased bg-slate-50 dark:bg-slate-950 selection:bg-slate-200 dark:selection:bg-slate-800 transition-colors duration-300">
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <header class="bg-white border border-slate-200/80 rounded-2xl p-6 mb-8 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- TOP DASHBOARD HEADER -->
+        <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 mb-8 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_-5px_rgba(0,0,0,0.3)] flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
             <div>
-                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
-                <p id="current-date-display" class="text-sm text-slate-400 font-medium mt-1.5">امروز: ...</p>
+                <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
+                <p id="current-date-display" class="text-sm text-slate-400 dark:text-slate-500 font-medium mt-1.5">امروز: ...</p>
             </div>
             
-            <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200/60 p-1 rounded-xl">
-                <button onclick="navigateWeek(1)" class="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-slate-900 shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته بعدی">
+            <!-- WEEK NAVIGATION CONTROLLER -->
+            <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 p-1 rounded-xl">
+                <button onclick="navigateWeek(1)" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته بعدی">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
                 <div class="px-4 text-center min-w-[180px]">
-                    <span id="current-week-display" class="text-sm font-bold text-slate-700 tracking-wide block">...</span>
+                    <span id="current-week-display" class="text-sm font-bold text-slate-700 dark:text-slate-300 tracking-wide block">...</span>
                 </div>
-                <button onclick="navigateWeek(-1)" class="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-slate-900 shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته قبلی">
+                <button onclick="navigateWeek(-1)" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته قبلی">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
                     </svg>
@@ -39,25 +41,26 @@
             </div>
         </header>
 
+        <!-- MAIN HABITS TABLE -->
         <main class="mb-8">
             <div class="flex justify-between items-center mb-4 px-1">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-1.5">
-                    <span class="w-1 h-3.5 bg-slate-800 rounded-full inline-block"></span>
+                <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                    <span class="w-1 h-3.5 bg-slate-800 dark:bg-slate-200 rounded-full inline-block"></span>
                     جدول هفتگی ارزیابی عادات
                 </h2>
                 <div class="flex items-center gap-2.5">
-                    <button id="edit-mode-btn" onclick="toggleEditMode()" class="text-sm font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95">
+                    <button id="edit-mode-btn" onclick="toggleEditMode()" class="text-sm font-medium bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95">
                         ⚙️ ویرایش
                     </button>
-                    <span id="habits-count-badge" class="bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg font-bold">۰ عادت</span>
+                    <span id="habits-count-badge" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs px-3 py-1.5 rounded-lg font-bold">۰ عادت</span>
                 </div>
             </div>
             
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all">
                 <div class="overflow-x-auto">
                     <table class="w-full text-right border-collapse min-w-[700px]">
                         <thead>
-                            <tr class="bg-slate-50/70 border-b border-slate-200 text-sm font-bold text-slate-400 tracking-wider">
+                            <tr class="bg-slate-50/70 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-400 dark:text-slate-500 tracking-wider">
                                 <th class="p-4 w-1/4">عنوان عادت و مداومت</th>
                                 <th class="p-4 text-center px-1">شنبه</th>
                                 <th class="p-4 text-center px-1">۱شنبه</th>
@@ -70,35 +73,37 @@
                                 <th class="p-4 text-center w-12">عملیات</th>
                             </tr>
                         </thead>
-                        <tbody id="habits-table-body" class="divide-y divide-slate-100 text-base font-medium"></tbody>
+                        <tbody id="habits-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-base font-medium"></tbody>
                     </table>
                 </div>
-                <div id="empty-state" class="hidden text-center py-16 bg-white">
-                    <p class="text-slate-400 text-base font-normal">هیچ عادتی ثبت نشده است.</p>
+                <div id="empty-state" class="hidden text-center py-16 bg-white dark:bg-slate-900">
+                    <p class="text-slate-400 dark:text-slate-500 text-base font-normal">هیچ عادتی ثبت نشده است.</p>
                 </div>
             </div>
         </main>
 
-        <section id="monthly-trends-section" class="mb-8 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs hidden">
-            <h2 id="monthly-trends-title" class="text-sm font-bold text-slate-500 mb-5 flex items-center gap-1.5">
+        <!-- 28-DAY TRENDS MATRIX -->
+        <section id="monthly-trends-section" class="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs hidden transition-all">
+            <h2 id="monthly-trends-title" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-5 flex items-center gap-1.5">
                 <span class="w-1 h-3.5 bg-indigo-500 rounded-full inline-block"></span>
                 ماتریس ارزیابی ۲۸ روز اخیر
             </h2>
             <div id="monthly-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
         </section>
 
-        <section class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
-            <h2 class="text-sm font-bold text-slate-500 mb-4 flex items-center gap-1.5">
-                <span class="w-1 h-3.5 bg-slate-400 rounded-full inline-block"></span>
+        <!-- ADD HABIT FORM -->
+        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all">
+            <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-1.5">
+                <span class="w-1 h-3.5 bg-slate-400 dark:bg-slate-600 rounded-full inline-block"></span>
                 تعریف عادت جدید
             </h2>
             <form id="add-habit-form" class="flex flex-col md:flex-row gap-4 items-end">
                 <div class="flex-1 w-full">
                     <input type="text" id="habit-title" required placeholder="مثلاً: ورزش، مطالعه، سحرخیزی..." 
-                        class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-base text-slate-900 focus:outline-none focus:border-slate-400 focus:bg-white transition-all placeholder:text-slate-400">
+                        class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2 text-base text-slate-900 dark:text-white focus:outline-none focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-900 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600">
                 </div>
                 <div class="w-full md:w-48">
-                    <select id="habit-goal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-base text-slate-700 focus:outline-none focus:border-slate-400 focus:bg-white transition-all">
+                    <select id="habit-goal" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-base text-slate-700 dark:text-slate-300 focus:outline-none focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-900 transition-all">
                         <option value="7">۷ روز (هر روز)</option>
                         <option value="6">۶ روز در هفته</option>
                         <option value="5">۵ روز در هفته</option>
@@ -108,7 +113,7 @@
                         <option value="1">۱ روز در هفته</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white font-medium px-5 py-2 rounded-xl transition-all duration-200 active:scale-[0.98] whitespace-nowrap text-base">
+                <button type="submit" class="w-full md:w-auto bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold px-5 py-2 rounded-xl transition-all duration-200 active:scale-[0.98] whitespace-nowrap text-base">
                     + افزودن به جدول
                 </button>
             </form>
@@ -119,13 +124,14 @@
         const JALAALI_MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
         const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
         
+        // پالت رنگی بهینه‌شده برای هر دو حالت روشن و تاریک
         const COLOR_PALETTES = [
-            { bg: "bg-emerald-500", border: "border-emerald-500", text: "text-emerald-600", lightBg: "bg-emerald-50", opacityBg: "bg-emerald-500/15 text-emerald-700", weekCapsule: "bg-emerald-500/10" },
-            { bg: "bg-sky-500", border: "border-sky-500", text: "text-sky-600", lightBg: "bg-sky-50", opacityBg: "bg-sky-500/15 text-sky-700", weekCapsule: "bg-sky-500/10" },
-            { bg: "bg-indigo-500", border: "border-indigo-500", text: "text-indigo-600", lightBg: "bg-indigo-50", opacityBg: "bg-indigo-500/15 text-indigo-700", weekCapsule: "bg-indigo-500/10" },
-            { bg: "bg-purple-500", border: "border-purple-500", text: "text-purple-600", lightBg: "bg-purple-50", opacityBg: "bg-purple-500/15 text-purple-700", weekCapsule: "bg-purple-500/10" },
-            { bg: "bg-rose-500", border: "border-rose-500", text: "text-rose-600", lightBg: "bg-rose-50", opacityBg: "bg-rose-500/15 text-rose-700", weekCapsule: "bg-rose-500/10" },
-            { bg: "bg-amber-500", border: "border-amber-500", text: "text-amber-600", lightBg: "bg-amber-50", opacityBg: "bg-amber-500/15 text-amber-700", weekCapsule: "bg-amber-500/10" }
+            { bg: "bg-emerald-500", border: "border-emerald-500 dark:border-emerald-500/80", text: "text-emerald-600 dark:text-emerald-400", lightBg: "bg-emerald-50 dark:bg-emerald-950/40", opacityBg: "bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400", weekCapsule: "bg-emerald-500/10 dark:bg-emerald-500/15" },
+            { bg: "bg-sky-500", border: "border-sky-500 dark:border-sky-500/80", text: "text-sky-600 dark:text-sky-400", lightBg: "bg-sky-50 dark:bg-sky-950/40", opacityBg: "bg-sky-500/15 dark:bg-sky-500/20 text-sky-700 dark:text-sky-400", weekCapsule: "bg-sky-500/10 dark:bg-sky-500/15" },
+            { bg: "bg-indigo-500", border: "border-indigo-500 dark:border-indigo-500/80", text: "text-indigo-600 dark:text-indigo-400", lightBg: "bg-indigo-50 dark:bg-indigo-950/40", opacityBg: "bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400", weekCapsule: "bg-indigo-500/10 dark:bg-indigo-500/15" },
+            { bg: "bg-purple-500", border: "border-purple-500 dark:border-purple-500/80", text: "text-purple-600 dark:text-purple-400", lightBg: "bg-purple-50 dark:bg-purple-950/40", opacityBg: "bg-purple-500/15 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400", weekCapsule: "bg-purple-500/10 dark:bg-purple-500/15" },
+            { bg: "bg-rose-500", border: "border-rose-500 dark:border-rose-500/80", text: "text-rose-600 dark:text-rose-400", lightBg: "bg-rose-50 dark:bg-rose-950/40", opacityBg: "bg-rose-500/15 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400", weekCapsule: "bg-rose-500/10 dark:bg-rose-500/15" },
+            { bg: "bg-amber-500", border: "border-amber-500 dark:border-amber-500/80", text: "text-amber-600 dark:text-amber-400", lightBg: "bg-amber-50 dark:bg-amber-950/40", opacityBg: "bg-amber-500/15 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400", weekCapsule: "bg-amber-500/10 dark:bg-amber-500/15" }
         ];
 
         let habits = [];
@@ -202,10 +208,10 @@
             const btn = document.getElementById('edit-mode-btn');
             if (isEditMode) {
                 btn.innerText = "✓ خروج";
-                btn.className = "text-sm font-bold bg-slate-900 hover:bg-slate-800 text-white px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95";
+                btn.className = "text-sm font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95";
             } else {
                 btn.innerText = "⚙️ ویرایش";
-                btn.className = "text-sm font-medium bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95";
+                btn.className = "text-sm font-medium bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95";
             }
             renderApp();
         };
@@ -282,7 +288,7 @@
                 const percentage = Math.min(Math.round((effectiveCompletions / habit.weeklyGoal) * 100), 100);
                 const palette = habit.colorPalette;
 
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50/50 transition-colors";
+                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors";
                 let daysHtml = '';
                 for (let i = 0; i < 7; i++) {
                     const isChecked = weekData[i];
@@ -296,19 +302,19 @@
                     let content = "";
                     if (isChecked) { btnClasses += `${palette.bg} ${palette.border} text-white shadow-2xs`; content = "✓"; }
                     else if (isGrace) { btnClasses += `${palette.opacityBg} border-transparent`; content = "✓"; }
-                    else { btnClasses += `bg-white border-slate-200 hover:border-slate-300 text-transparent`; content = " "; }
+                    else { btnClasses += `bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-transparent`; content = " "; }
 
                     daysHtml += `<td class="p-1.5 text-center"><button ${isEditMode ? 'disabled' : ''} onclick="toggleDayNode('${habit.id}', '${stats.weekKey}', ${i})" class="${btnClasses} ${isEditMode ? 'opacity-30 cursor-not-allowed hover:scale-100 active:scale-100' : ''}">${content}</button></td>`;
                 }
 
                 const editControlsHtml = isEditMode ? `
-                    <div class="flex items-center gap-1 ml-1 bg-slate-50 p-1 rounded-md border border-slate-200 shadow-2xs">
-                        <button onclick="editHabitTitle('${habit.id}')" class="text-slate-500 hover:text-slate-800 transition-colors p-0.5" title="ویرایش نام">✏️</button>
+                    <div class="flex items-center gap-1 ml-1 bg-slate-50 dark:bg-slate-950 p-1 rounded-md border border-slate-200 dark:border-slate-800 shadow-2xs">
+                        <button onclick="editHabitTitle('${habit.id}')" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors p-0.5" title="ویرایش نام">✏️</button>
                         <div class="flex flex-col gap-0.5">
-                            <button onclick="moveHabit('${habit.id}', -1)" class="text-slate-400 hover:text-slate-700 transition-colors" title="بالا بردن">
+                            <button onclick="moveHabit('${habit.id}', -1)" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" title="بالا بردن">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7" /></svg>
                             </button>
-                            <button onclick="moveHabit('${habit.id}', 1)" class="text-slate-400 hover:text-slate-700 transition-colors" title="پایین آوردن">
+                            <button onclick="moveHabit('${habit.id}', 1)" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" title="پایین آوردن">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
                             </button>
                         </div>
@@ -320,10 +326,10 @@
                         <div class="flex items-center gap-1.5">
                             ${editControlsHtml}
                             <div>
-                                <div class="font-bold text-slate-900 text-base">${habit.title}</div>
+                                <div class="font-bold text-slate-900 dark:text-white text-base">${habit.title}</div>
                                 <div class="flex items-center gap-1.5 mt-1">
-                                    <span class="text-xs text-slate-400">هدف: ${toPersianDigits(habit.weeklyGoal)} روز</span>
-                                    <span class="inline-block w-1 h-1 bg-slate-200 rounded-full"></span>
+                                    <span class="text-xs text-slate-400 dark:text-slate-500">هدف: ${toPersianDigits(habit.weeklyGoal)} روز</span>
+                                    <span class="inline-block w-1 h-1 bg-slate-200 dark:bg-slate-800 rounded-full"></span>
                                     <span class="text-xs font-bold ${palette.text}">🔥 ${toPersianDigits(habit.currentStreak)}</span>
                                 </div>
                             </div>
@@ -332,19 +338,19 @@
                     ${daysHtml}
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <div class="w-full bg-slate-100 rounded-full h-2 max-w-[65px] overflow-hidden hidden sm:block"><div class="${palette.bg} h-full rounded-full" style="width: ${percentage}%"></div></div>
-                            <span class="text-sm font-bold text-slate-500">${toPersianDigits(percentage)}٪</span>
+                            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 max-w-[65px] overflow-hidden hidden sm:block"><div class="${palette.bg} h-full rounded-full" style="width: ${percentage}%"></div></div>
+                            <span class="text-sm font-bold text-slate-500 dark:text-slate-400">${toPersianDigits(percentage)}٪</span>
                         </div>
                     </td>
                     <td class="p-4 text-center">
-                        <button onclick="deleteHabitNode('${habit.id}')" class="text-slate-300 hover:text-rose-600 transition-colors p-1">
+                        <button onclick="deleteHabitNode('${habit.id}')" class="text-slate-300 dark:text-slate-700 hover:text-rose-600 dark:hover:text-rose-400 transition-colors p-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </button>
                     </td>`;
                 tbody.appendChild(tr);
 
                 // ۲۸ روز اخیر رندر با باکس کپسولی دور روزهای هفته‌های موفق
-                const matrixCard = document.createElement('div'); matrixCard.className = "bg-slate-50/50 border border-slate-200/60 rounded-xl p-4 flex flex-col justify-between";
+                const matrixCard = document.createElement('div'); matrixCard.className = "bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl p-4 flex flex-col justify-between";
                 let weeksRowsHtml = ''; const baseSat = new Date(); const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay() + 1);
                 baseSat.setDate(baseSat.getDate() + dToSat - 21); 
 
@@ -358,12 +364,11 @@
                         if (isDone) completionsInThisWeek++;
 
                         const jCellDate = jalaali.toJalaali(dayCellDate.getFullYear(), dayCellDate.getMonth() + 1, dayCellDate.getDate());
-                        const dotClass = isDone ? `w-2.5 h-2.5 ${palette.bg} rounded-md` : `w-2.5 h-2.5 bg-slate-200 rounded-md`;
+                        const dotClass = isDone ? `w-2.5 h-2.5 ${palette.bg} rounded-md` : `w-2.5 h-2.5 bg-slate-200 dark:bg-slate-800 rounded-md`;
                         singleWeekDots += `<div class="${dotClass}" title="روز ${toPersianDigits(jCellDate.jd)} ${JALAALI_MONTHS[jCellDate.jm - 1]}"></div>`;
                     }
 
                     const isGoalAchieved = completionsInThisWeek >= habit.weeklyGoal;
-                    // اگر به هدف رسیده باشد، یک کپسول کمرنگ دور کل ۷ نقطه ایجاد می‌شود
                     const rowContainerClass = isGoalAchieved 
                         ? `${palette.weekCapsule} rounded-full px-3 py-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]` 
                         : "px-3 py-1.5 bg-transparent";
@@ -373,7 +378,7 @@
                             <div class="flex items-center gap-1.5">${singleWeekDots}</div>
                         </div>`;
                 }
-                matrixCard.innerHTML = `<div class="flex justify-between items-center mb-3"><span class="font-bold text-slate-800 text-sm">${habit.title}</span><span class="text-xs font-medium px-2 py-0.5 rounded-md ${palette.lightBg} ${palette.text}">۲۸ روز اخیر</span></div><div class="space-y-1.5 bg-white border border-slate-100 rounded-lg p-3 shadow-3xs flex flex-col justify-center min-h-[130px]">${weeksRowsHtml}</div>`;
+                matrixCard.innerHTML = `<div class="flex justify-between items-center mb-3"><span class="font-bold text-slate-800 dark:text-slate-200 text-sm">${habit.title}</span><span class="text-xs font-medium px-2 py-0.5 rounded-md ${palette.lightBg} ${palette.text}">۲۸ روز اخیر</span></div><div class="space-y-1.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/60 rounded-lg p-3 shadow-3xs flex flex-col justify-center min-h-[130px]">${weeksRowsHtml}</div>`;
                 chartsContainer.appendChild(matrixCard);
             });
         }
