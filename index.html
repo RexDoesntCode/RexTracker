@@ -22,7 +22,7 @@
                 <div class="flex items-center gap-2 mt-1.5">
                     <p id="current-date-display" class="text-sm text-slate-400 dark:text-slate-500 font-medium">امروز: ...</p>
                     <span class="inline-block w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-                    <span id="app-version-display" class="text-xs text-slate-300 dark:text-slate-600 font-mono">v1.2</span>
+                    <span id="app-version-display" class="text-xs text-slate-300 dark:text-slate-600 font-mono">v1.3</span>
                 </div>
             </div>
             
@@ -120,8 +120,8 @@
     </div>
 
     <script>
-        // نسخه ۱.۲ برای اعمال خودکار تغییرات اصلاحی
-        const CURRENT_VERSION = "1.2"; 
+        // ارتقا به نسخه ۱.۳ برای رفع مشکل افکت یکپارچه کپسولی ستون امروز
+        const CURRENT_VERSION = "1.3"; 
 
         const JALAALI_MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
         const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
@@ -270,13 +270,15 @@
             tbody.innerHTML = ''; chartsContainer.innerHTML = '';
             badgeCount.innerText = `${toPersianDigits(habits.length)} عادت`;
 
+            // ۱. تنظیم هدر ستون‌ها به صورت یکپارچه با سلول‌های جدول
             for (let i = 0; i < 7; i++) {
                 const th = document.getElementById(`th-day-${i}`);
                 if (th) {
                     if (weekOffset === 0 && i === stats.currentTableDayIndex) {
-                        th.className = "p-4 text-center px-1 text-slate-900 dark:text-white bg-slate-500/5 dark:bg-white/5 rounded-t-xl font-black";
+                        // فقط گوشه‌های بالای هدر گرد باشد (شروع کپسول)
+                        th.className = "p-4 text-center px-1 text-slate-900 dark:text-white bg-slate-500/5 dark:bg-white/5 rounded-t-2xl font-black";
                     } else {
-                        th.className = "p-4 text-center px-1 text-slate-400 dark:text-slate-500 font-bold";
+                        th.className = "p-4 text-center px-1 text-slate-400 dark:text-slate-500 font-bold rounded-none";
                     }
                 }
             }
@@ -287,7 +289,8 @@
                 emptyState.classList.add('hidden'); trendsSection.classList.remove('hidden');
             }
 
-            habits.forEach(habit => {
+            // ۲. تنظیم ردیف‌های جدول عادات
+            habits.forEach((habit, habitIndex) => {
                 if (!habit.history[stats.weekKey]) habit.history[stats.weekKey] = [false, false, false, false, false, false, false];
                 const weekData = habit.history[stats.weekKey];
                 
@@ -318,8 +321,15 @@
                     else if (isGrace) { btnClasses += `${palette.opacityBg} border-transparent`; content = "✓"; }
                     else { btnClasses += `bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-transparent`; content = " "; }
 
+                    // منطق هوشمند گرد کردن کپسولی ستون جاری
                     const isTodayColumn = (weekOffset === 0 && i === stats.currentTableDayIndex);
-                    const tdBgClass = isTodayColumn ? "bg-slate-500/5 dark:bg-white/5 rounded-xl" : "";
+                    let borderRoundClass = "rounded-none"; // پیش‌فرض میانی تیز
+                    
+                    if (isTodayColumn && habitIndex === habits.length - 1) {
+                        borderRoundClass = "rounded-b-2xl"; // فقط ردیف آخر کپسول گرد پایین بگیرد
+                    }
+                    
+                    const tdBgClass = isTodayColumn ? `bg-slate-500/5 dark:bg-white/5 ${borderRoundClass}` : "";
 
                     daysHtml += `<td class="p-1.5 text-center ${tdBgClass}"><button ${isEditMode ? 'disabled' : ''} onclick="toggleDayNode('${habit.id}', '${stats.weekKey}', ${i})" class="${btnClasses} ${isEditMode ? 'opacity-30 cursor-not-allowed hover:scale-100 active:scale-100' : ''}">${content}</button></td>`;
                 }
