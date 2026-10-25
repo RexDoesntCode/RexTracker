@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f8fafc">
   <meta name="description" content="Rex Tracker | رهگیری عادات؛ رهگیری عادت‌ها با تقویم شمسی و همگام‌سازی بین دستگاه‌ها">
+  <meta name="application-name" content="Rex Tracker">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Rex Tracker">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/png" sizes="48x48" href="./favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.webmanifest">
   <title>Rex Tracker | رهگیری عادات</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
@@ -57,32 +65,47 @@
 </head>
 <body class="min-h-full pb-12 bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 dark:bg-slate-950 dark:text-slate-200 dark:selection:bg-indigo-950 transition-colors duration-200">
   <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8">
-    <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-6 mb-4 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-      <div class="min-w-0">
-        <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Rex Tracker | رهگیری عادات</h1>
-        <div class="flex flex-wrap items-center gap-2 mt-2">
-          <p id="current-date-display" class="text-sm text-slate-500 dark:text-slate-400">امروز: ...</p>
-          <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-          <span id="app-version-display" class="text-xs text-slate-400 font-mono">v2.2</span>
-          <span id="save-status" class="text-xs text-slate-400" role="status" aria-live="polite">ذخیره روی این دستگاه</span>
+    <header class="mb-5 overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex flex-col gap-5 p-4 sm:p-5 xl:flex-row xl:items-center xl:justify-between xl:gap-6">
+        <div class="flex min-w-0 items-center gap-3 sm:gap-4">
+          <img src="./app-icon-192.png" alt="" width="56" height="56" fetchpriority="high" class="h-12 w-12 shrink-0 rounded-2xl bg-white object-cover shadow-sm ring-1 ring-slate-200/80 sm:h-14 sm:w-14" />
+          <div class="min-w-0">
+            <div class="mb-1 flex flex-wrap items-center gap-2">
+              <h1 class="text-lg font-black tracking-tight text-slate-950 dark:text-white sm:text-2xl" dir="ltr">Rex Tracker</h1>
+              <span id="app-version-display" class="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400">v2.3</span>
+            </div>
+            <p class="text-sm font-semibold text-slate-600 dark:text-slate-300 sm:text-base">رهگیری عادات</p>
+            <p class="mt-0.5 text-xs text-slate-400 dark:text-slate-500">ثبت روزانه، پیگیری مداومت و مشاهدهٔ پیشرفت</p>
+          </div>
+        </div>
+
+        <div class="flex w-full flex-wrap items-center gap-2 xl:w-auto xl:justify-end">
+          <button id="theme-toggle" type="button" class="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800" aria-label="تغییر تم">🌙 تم</button>
+          <button id="auth-open-btn" type="button" class="inline-flex min-h-10 items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white transition hover:bg-slate-700 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200">ورود / ثبت‌نام</button>
+          <div id="account-signed-in" class="hidden min-w-0 flex-wrap items-center gap-2">
+            <span id="account-email" class="max-w-[9rem] truncate text-xs font-semibold text-slate-700 dark:text-slate-200 sm:max-w-[12rem] sm:text-sm" title="حساب کاربری"></span>
+            <button id="sync-now-btn" type="button" class="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-bold text-indigo-800 transition hover:bg-indigo-100 disabled:cursor-wait disabled:opacity-50 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200 dark:hover:bg-indigo-950/70" title="همگام‌سازی اجباری اطلاعات با حساب ابری"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 7v5h-5M4 17v-5h5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.6 9A7 7 0 0 1 18 6l2 1M4 17l2 1a7 7 0 0 0 12.4-3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>همگام‌سازی</span></button>
+            <button id="sign-out-btn" type="button" class="inline-flex min-h-10 items-center justify-center rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">خروج</button>
+          </div>
         </div>
       </div>
-      <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-        <button id="theme-toggle" type="button" class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="تغییر تم">🌙 تم</button>
-        <button id="auth-open-btn" type="button" class="px-3 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-sm font-bold hover:opacity-90">ورود | ثبت نام</button>
-        <div id="account-signed-in" class="hidden items-center gap-2 flex-wrap">
-          <span id="account-email" class="max-w-[12rem] text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 break-all" title="حساب کاربری"></span>
-          <button id="sync-now-btn" type="button" class="px-3 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200 text-sm font-bold hover:bg-indigo-50 dark:hover:bg-indigo-950/40 disabled:opacity-50" title="همگام‌سازی فوری اطلاعات با حساب ابری">↻ Sync اجباری</button>
-          <button id="sign-out-btn" type="button" class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">خروج</button>
-        </div>
-        <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 p-1 rounded-xl mr-auto lg:mr-0">
-          <button type="button" data-action="navigate-week" data-direction="1" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition active:scale-95" title="هفته بعدی" aria-label="هفته بعدی">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-          </button>
-          <div class="px-2 sm:px-4 text-center min-w-[145px] sm:min-w-[180px]"><span id="current-week-display" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 block">...</span></div>
-          <button type="button" data-action="navigate-week" data-direction="-1" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition active:scale-95" title="هفته قبلی" aria-label="هفته قبلی">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-          </button>
+
+      <div class="border-t border-slate-100 bg-slate-50/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-950/40 sm:px-5">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
+            <p id="current-date-display" class="text-sm font-medium text-slate-600 dark:text-slate-300">امروز: ...</p>
+            <span class="hidden h-4 w-px bg-slate-200 dark:bg-slate-700 sm:inline-block"></span>
+            <span id="save-status" class="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-500 ring-1 ring-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:ring-slate-800" role="status" aria-live="polite">ذخیره روی این دستگاه</span>
+          </div>
+          <div class="flex items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:justify-start">
+            <button type="button" data-action="navigate-week" data-direction="1" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 active:scale-95 dark:text-slate-300 dark:hover:bg-slate-800" title="هفته بعدی" aria-label="هفته بعدی">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <div class="min-w-0 flex-1 px-2 text-center sm:min-w-[180px]"><span id="current-week-display" class="block whitespace-nowrap text-xs font-bold text-slate-700 dark:text-slate-200 sm:text-sm">...</span></div>
+            <button type="button" data-action="navigate-week" data-direction="-1" class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 active:scale-95 dark:text-slate-300 dark:hover:bg-slate-800" title="هفته قبلی" aria-label="هفته قبلی">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -193,7 +216,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '2.2';
+const CURRENT_VERSION = '2.3';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
 const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
@@ -232,10 +255,10 @@ function showToast(message, type='info') {
   $('toast-container').appendChild(box);
   window.setTimeout(() => box.remove(), 4200);
 }
-function setSaveStatus(message, color='text-slate-400') {
+function setSaveStatus(message, color='text-slate-400 dark:text-slate-400') {
   const el = $('save-status');
   el.textContent = message;
-  el.className = `text-xs ${color}`;
+  el.className = `inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 ${color}`;
 }
 function makeId() {
   try { if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID(); } catch (_) {}
