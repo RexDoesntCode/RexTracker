@@ -74,8 +74,14 @@
   .welcome-description { max-width:550px; margin-top:11px; font-size:13px; line-height:2; color:#73869c; }
   html.dark .welcome-description { color:#9bb0c5; }
   .date-status-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:24px; }
-  #current-date-display { font-size:12px; font-weight:750; color:#4c6178; }
+  .date-display-group { display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0; }
+  #current-date-display { font-size:12px; font-weight:750; color:#4c6178; margin:0; }
+  .calendar-mode-toggle { min-height:28px; padding:3px 9px; border:1px solid #b9e8f2; border-radius:9px; background:rgba(235,250,255,.88); color:#167b9c; font-size:10px; font-weight:850; line-height:1.4; box-shadow:0 1px 4px rgba(20,120,160,.05); white-space:nowrap; }
+  .calendar-mode-toggle:hover { background:#dff7fd; border-color:#7bd6e8; transform:translateY(-1px); }
+  html.dark .calendar-mode-toggle { background:rgba(20,113,142,.17); border-color:rgba(71,190,221,.28); color:#92e4f5; }
+  html.dark .calendar-mode-toggle:hover { background:rgba(20,135,164,.26); border-color:rgba(71,190,221,.5); }
   html.dark #current-date-display { color:#c6d7e6; }
+  @media (prefers-reduced-motion: reduce) { .calendar-mode-toggle { transition:none !important; } }
   #save-status { display:inline-flex; align-items:center; gap:6px; width:max-content; max-width:100%; padding:7px 10px; border-radius:99px; border:1px solid #dcece7; background:rgba(238,250,246,.9); font-size:10px; font-weight:750; line-height:1.6; box-shadow:none; }
   #save-status::before { content:""; width:6px; height:6px; border-radius:50%; flex-shrink:0; background:currentColor; }
   html.dark #save-status { background:rgba(24,117,94,.15); border-color:rgba(71,194,157,.18); }
@@ -442,7 +448,10 @@
         <h2 id="welcome-heading" class="welcome-title">پیشرفت، از کارهای کوچک ساخته می‌شود.</h2>
         <p class="welcome-description">روی کامل بودن تمرکز نکن؛ روی تکرار کردن تمرکز کن. ثبت‌های روزانه‌ات را ببین، مسیرت را دنبال کن و آهسته اما پیوسته جلو برو.</p>
         <div class="date-status-row">
-          <p id="current-date-display">امروز: ...</p>
+          <div class="date-display-group">
+            <p id="current-date-display">امروز: ...</p>
+            <button id="calendar-mode-toggle" class="calendar-mode-toggle" type="button" title="تقویم فعلی شمسی است؛ برای تغییر به میلادی بزن" aria-label="تقویم فعلی شمسی؛ تغییر به میلادی" aria-pressed="false">شمسی</button>
+          </div>
           <span id="save-status" role="status" aria-live="polite">ذخیره روی این دستگاه</span>
         </div>
       </div>
@@ -604,8 +613,10 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.1';
+const CURRENT_VERSION = '3.2';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
+const WEEKDAYS_SAT_FIRST = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
 const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
 const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
 const COLOR_PALETTES = [
@@ -618,6 +629,7 @@ const COLOR_PALETTES = [
 ];
 
 let habits = [];
+let calendarMode = (() => { try { return localStorage.getItem('rex_calendar_mode') === 'gregorian' ? 'gregorian' : 'jalali'; } catch (_) { return 'jalali'; } })();
 let weekOffset = 0;
 let isEditMode = false;
 let supabaseClient = null;
@@ -636,6 +648,58 @@ const $ = (id) => document.getElementById(id);
 function toPersianDigits(value) {
   if (value === undefined || value === null) return '';
   return String(value).replace(/[0-9]/g, d => ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'][Number(d)]);
+}
+
+function getCalendarDayNumber(date) {
+  if (calendarMode === 'gregorian') return date.getDate();
+  const j = jalaali.toJalaali(date.getFullYear(), date.getMonth() + 1, date.getDate());
+  return j.jd;
+}
+function formatCalendarDate(date, options = {}) {
+  const weekday = options.weekday !== false;
+  const includeYear = options.includeYear !== false;
+  let day, month, year;
+  if (calendarMode === 'gregorian') {
+    day = date.getDate();
+    month = GREGORIAN_MONTHS_FA[date.getMonth()];
+    year = date.getFullYear();
+  } else {
+    const j = jalaali.toJalaali(date.getFullYear(), date.getMonth() + 1, date.getDate());
+    day = j.jd;
+    month = JALAALI_MONTHS[j.jm - 1];
+    year = j.jy;
+  }
+  const dateText = `${toPersianDigits(day)} ${month}${includeYear ? ` ${toPersianDigits(year)}` : ''}`;
+  return weekday ? `${WEEKDAYS_FA[date.getDay()]}، ${dateText}` : dateText;
+}
+function formatCalendarWeekRange(startDate) {
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 6);
+  if (calendarMode === 'gregorian') {
+    const startNeedsYear = startDate.getFullYear() !== endDate.getFullYear();
+    return `${formatCalendarDate(startDate, { weekday:false, includeYear:startNeedsYear })} تا ${formatCalendarDate(endDate, { weekday:false, includeYear:true })}`;
+  }
+  const startJ = jalaali.toJalaali(startDate.getFullYear(), startDate.getMonth() + 1, startDate.getDate());
+  const endJ = jalaali.toJalaali(endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate());
+  const startText = `${toPersianDigits(startJ.jd)} ${JALAALI_MONTHS[startJ.jm - 1]}${startJ.jy !== endJ.jy ? ` ${toPersianDigits(startJ.jy)}` : ''}`;
+  const endText = `${toPersianDigits(endJ.jd)} ${JALAALI_MONTHS[endJ.jm - 1]} ${toPersianDigits(endJ.jy)}`;
+  return `${startText} تا ${endText}`;
+}
+function updateCalendarModeButton() {
+  const button = $('calendar-mode-toggle');
+  if (!button) return;
+  const activeLabel = calendarMode === 'jalali' ? 'شمسی' : 'میلادی';
+  const targetLabel = calendarMode === 'jalali' ? 'میلادی' : 'شمسی';
+  button.textContent = activeLabel;
+  button.title = `تقویم فعلی ${activeLabel} است؛ برای تغییر به ${targetLabel} بزن`;
+  button.setAttribute('aria-label', `تقویم فعلی ${activeLabel}؛ تغییر به ${targetLabel}`);
+  button.setAttribute('aria-pressed', calendarMode === 'gregorian' ? 'true' : 'false');
+}
+function toggleCalendarMode() {
+  calendarMode = calendarMode === 'jalali' ? 'gregorian' : 'jalali';
+  try { localStorage.setItem('rex_calendar_mode', calendarMode); } catch (_) {}
+  renderApp();
+  showToast(`تقویم به ${calendarMode === 'jalali' ? 'شمسی' : 'میلادی'} تغییر کرد.`, 'success');
 }
 function showToast(message, type='info') {
   const box = document.createElement('div');
@@ -1195,7 +1259,7 @@ function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette, compact=fal
   else classes += 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-transparent hover:border-slate-400 dark:hover:border-slate-500';
   if (disabled) classes += ' opacity-40 cursor-not-allowed hover:border-slate-200 dark:hover:border-slate-700';
   const content = checked || grace ? '✓' : '·';
-  const title = future ? 'ثبت روز آینده غیرفعال است' : (isEditMode ? 'برای ثبت وضعیت از حالت ویرایش خارج شو' : `ثبت وضعیت روز ${toPersianDigits(date.getDate())}`);
+  const title = future ? 'ثبت روز آینده غیرفعال است' : (isEditMode ? 'برای ثبت وضعیت از حالت ویرایش خارج شو' : `ثبت وضعیت روز ${formatCalendarDate(date, { weekday:false })}`);
   return `<button type="button" data-action="toggle-day" data-day-index="${dayIndex}" data-week-key="${weekKey}" class="${classes}" title="${title}" aria-label="${title}" aria-pressed="${checked ? 'true' : 'false'}" ${disabled ? 'disabled aria-disabled="true"' : ''}>${content}</button>`;
 }
 
@@ -1231,7 +1295,9 @@ function renderApp() {
   const trends = $('monthly-trends-section');
   const matrix = $('monthly-charts-container');
   const stats = getJalaliStats(weekOffset);
-  $('current-week-display').textContent = `هفتهٔ ${toPersianDigits(stats.weekRangeStr)}`;
+  $('current-date-display').textContent = `امروز: ${formatCalendarDate(new Date())}`;
+  updateCalendarModeButton();
+  $('current-week-display').textContent = `هفتهٔ ${formatCalendarWeekRange(stats.targetSat)}`;
   $('habits-count-badge').textContent = `${toPersianDigits(habits.length)} عادت`;
   updateSummaryStats(stats);
   $('edit-mode-btn').textContent = isEditMode ? 'پایان ویرایش' : 'ویرایش';
@@ -1242,7 +1308,9 @@ function renderApp() {
   for (let i=0; i<7; i++) {
     const th = $(`th-day-${i}`);
     const todayColumn = weekOffset === 0 && i === stats.currentTableDayIndex;
+    const dayDate = new Date(stats.targetSat); dayDate.setDate(stats.targetSat.getDate() + i);
     th.className = `p-3 text-center min-w-[50px] ${todayColumn ? 'text-slate-900 dark:text-white bg-indigo-50 dark:bg-indigo-950/40 font-extrabold' : 'text-slate-500 dark:text-slate-400'}`;
+    th.innerHTML = `<span class="block text-[11px] leading-5">${WEEKDAYS_SAT_FIRST[i]}</span><span class="block mt-0.5 text-[10px] font-extrabold opacity-80">${toPersianDigits(getCalendarDayNumber(dayDate))}</span>`;
   }
   emptyState.classList.toggle('hidden', habits.length > 0);
   const desktopWrap = $('desktop-habits-wrap');
@@ -1294,7 +1362,7 @@ function renderApp() {
     for (let i=0; i<7; i++) {
       const date = new Date(tableSaturday); date.setDate(tableSaturday.getDate()+i);
       const todayColumn = weekOffset === 0 && i === stats.currentTableDayIndex;
-      mobileDays += `<div class="flex flex-col items-center gap-1.5 rounded-lg py-1 ${todayColumn ? 'bg-indigo-50 dark:bg-indigo-950/40' : ''}"><span class="text-[10px] font-bold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-400'}">${WEEKDAYS_SHORT[i]}</span>${getDayButtonMarkup(habit,i,weekDataKey,date,palette,true)}</div>`;
+      mobileDays += `<div class="flex flex-col items-center gap-1.5 rounded-lg py-1 ${todayColumn ? 'bg-indigo-50 dark:bg-indigo-950/40' : ''}"><span class="text-[10px] font-bold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-400'}">${WEEKDAYS_SHORT[i]}</span><span class="text-[10px] font-extrabold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}">${toPersianDigits(getCalendarDayNumber(date))}</span>${getDayButtonMarkup(habit,i,weekDataKey,date,palette,true)}</div>`;
     }
     card.innerHTML = `
       <div class="flex items-start gap-2.5"><span class="mt-1.5 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><h3 class="habit-title-mobile font-extrabold text-sm text-slate-900 dark:text-white break-words"></h3><div class="flex flex-wrap items-center gap-2 mt-1"><span class="goal-label-mobile text-xs text-slate-500 dark:text-slate-400"></span><span class="text-xs font-bold ${palette.text}">🔥 ${toPersianDigits(habit.currentStreak)}</span><span class="text-xs text-slate-500 mr-auto">${toPersianDigits(percentage)}٪ این هفته</span></div></div></div>
@@ -1323,9 +1391,8 @@ function renderApp() {
         const info = getStatusByDate(habit, dayCellDate);
         const done = info.isChecked || isGraceDayForDate(habit, dayCellDate);
         if (done) completions++;
-        const jDate = jalaali.toJalaali(dayCellDate.getFullYear(),dayCellDate.getMonth()+1,dayCellDate.getDate());
         const dotClass = done ? `w-2 h-2 ${palette.bg} rounded-sm` : 'w-2 h-2 bg-slate-200 dark:bg-slate-800 rounded-sm';
-        dots += `<span class="${dotClass}" title="${toPersianDigits(jDate.jd)} ${JALAALI_MONTHS[jDate.jm-1]}"></span>`;
+        dots += `<span class="${dotClass}" title="${formatCalendarDate(dayCellDate, { weekday:false })}"></span>`;
       }
       const metGoal = completions >= habit.weeklyGoal;
       const rowClass = metGoal ? `${palette.weekCapsule} rounded-full` : 'rounded-full';
@@ -1429,6 +1496,7 @@ document.addEventListener('change', (event) => {
   habit.weeklyGoal = goal; recalculateStreaks(); saveDataToDisk(); renderApp(); showToast('هدف هفتگی ذخیره شد.', 'success');
 });
 $('edit-mode-btn').addEventListener('click', () => { isEditMode = !isEditMode; renderApp(); });
+$('calendar-mode-toggle').addEventListener('click', toggleCalendarMode);
 $('add-habit-open-btn').addEventListener('click', () => openModal('add-habit-modal'));
 $('auth-open-btn').addEventListener('click', () => openModal('auth-modal'));
 $('sync-now-btn').addEventListener('click', forceCloudSync);
@@ -1466,10 +1534,7 @@ document.addEventListener('keydown', (event) => {
 
 function initializeApp() {
   $('app-version-display').textContent = `v${CURRENT_VERSION}`;
-  const stats = getJalaliStats(0);
-  const today = new Date();
-  const weekday = WEEKDAYS_FA[today.getDay()];
-  $('current-date-display').textContent = `امروز: ${toPersianDigits(`${weekday}، ${stats.realJToday.jd} ${JALAALI_MONTHS[stats.realJToday.jm-1]} ${stats.realJToday.jy}`)}`;
+  updateCalendarModeButton();
   initTheme();
   loadDataFromDisk();
   renderApp();
