@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f8fafc">
   <meta name="description" content="پیشخوان شخصی رهگیری عادات با تقویم شمسی و همگام‌سازی بین دستگاه‌ها">
-  <title>پیشخوان هوشمند رهگیری عادات|Rex Tracker</title>
-  <script>tailwind = { config: { darkMode: 'class' } };</script>
+  <title>پیشخوان هوشمند رهگیری عادات</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,7 +25,29 @@
     .habit-table tbody tr:hover td:first-child { background: #f8fafc; }
     .dark .habit-table tbody tr:hover td:first-child { background: #111c30; }
     .day-button { min-width: 2rem; min-height: 2rem; }
-    .toast { animation: toast-in .18s ease-out; }
+    #toast-container.toast-container {
+      position: fixed;
+      left: 50%;
+      bottom: max(1.25rem, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: min(30rem, calc(100vw - 2rem));
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      pointer-events: none;
+    }
+    .toast { animation: toast-in .18s ease-out; box-sizing: border-box; max-width: 100%; overflow-wrap: anywhere; text-align: center; }
+    /* A few explicit dark-mode fallbacks for browser-generated table content. */
+    html.dark, html.dark body { color-scheme: dark; }
+    html.dark .habit-table thead tr,
+    html.dark .habit-table thead th { background-color: #0f172a; color: #cbd5e1; border-color: #334155; }
+    html.dark .habit-table tbody tr { border-color: #1e293b; }
+    html.dark .habit-table tbody td { border-color: #1e293b; }
+    html.dark .habit-table td:first-child { background-color: #0f172a; }
+    html.dark .habit-table tbody tr:hover td:first-child { background-color: #111c30; }
+    html.dark .habit-table tbody tr:hover td { background-color: rgba(30, 41, 59, .35); }
     @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
   </style>
@@ -143,7 +165,7 @@
       </div>
     </div>
   </div>
-  <div id="toast-container" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-auto sm:translate-x-1/2 sm:w-auto z-[60] flex flex-col items-center gap-2 pointer-events-none" role="status" aria-live="polite"></div>
+  <div id="toast-container" class="toast-container" role="status" aria-live="polite"></div>
 
 <script>
 'use strict';
@@ -152,7 +174,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '2.0';
+const CURRENT_VERSION = '2.1';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
 const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
@@ -551,7 +573,8 @@ async function signUp() {
   if (!email || password.length < 8) { showToast('ایمیل معتبر و رمز عبور حداقل ۸ نویسه‌ای وارد کن.', 'error'); return; }
   authBusy = true; $('sign-in-btn').disabled = true; $('sign-up-btn').disabled = true;
   try {
-    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+    const emailRedirectTo = new URL('./', window.location.href).href;
+    const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { emailRedirectTo } });
     if (error) throw error;
     $('auth-password').value = '';
     if (data.session) showToast('حساب ساخته شد و وارد شدی.', 'success');
@@ -610,7 +633,7 @@ function createEditPanel(habit, index, compact=false) {
       <div><span class="block text-[11px] font-bold text-slate-500 mb-1.5">رنگ عادت</span><div class="flex items-center gap-2 flex-wrap">${COLOR_PALETTES.map((p,i)=>`<button type="button" data-action="set-color" data-palette-index="${i}" class="palette-choice w-7 h-7 rounded-full ${p.dot} border-2 border-transparent" title="${p.name}" aria-label="رنگ ${p.name}"></button>`).join('')}</div></div>
     </div>
     <div class="flex items-center justify-between gap-2 border-t border-slate-200 dark:border-slate-800 pt-3">
-      <div class="flex items-center gap-1.5"><button type="button" data-action="move-up" class="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs hover:bg-white dark:hover:bg-slate-800">↑ جابه‌جایی به بالا</button><button type="button" data-action="move-down" class="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs hover:bg-white dark:hover:bg-slate-800">↓ پایین</button></div>
+      <div class="flex items-center gap-1.5"><button type="button" data-action="move-up" aria-label="انتقال به بالا" title="انتقال به بالا" class="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 text-base leading-none hover:bg-white dark:hover:bg-slate-800">↑</button><button type="button" data-action="move-down" aria-label="انتقال به پایین" title="انتقال به پایین" class="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 text-base leading-none hover:bg-white dark:hover:bg-slate-800">↓</button></div>
       <button type="button" data-action="delete-habit" class="rounded-lg border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 px-3 py-2 text-xs font-bold hover:bg-rose-50 dark:hover:bg-rose-950/40">حذف عادت</button>
     </div>`;
   const input = panel.querySelector('[data-role="edit-title"]'); input.value = habit.title;
@@ -646,7 +669,7 @@ function renderApp() {
   const stats = getJalaliStats(weekOffset);
   $('current-week-display').textContent = `هفتهٔ ${toPersianDigits(stats.weekRangeStr)}`;
   $('habits-count-badge').textContent = `${toPersianDigits(habits.length)} عادت`;
-  $('edit-mode-btn').textContent = isEditMode ? '✓ خروج از ویرایش' : '⚙️ حالت ویرایش';
+  $('edit-mode-btn').textContent = isEditMode ? 'پایان ویرایش' : 'ویرایش';
   $('edit-mode-btn').className = isEditMode ? 'text-sm font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-950 border border-slate-900 dark:border-white px-3.5 py-2 rounded-xl transition shadow-sm' : 'text-sm font-bold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-3.5 py-2 rounded-xl transition shadow-sm';
   $('edit-mode-note').classList.toggle('hidden', !isEditMode);
   $('th-operation').classList.toggle('hidden', !isEditMode);
@@ -657,8 +680,10 @@ function renderApp() {
     th.className = `p-3 text-center min-w-[50px] ${todayColumn ? 'text-slate-900 dark:text-white bg-indigo-50 dark:bg-indigo-950/40 font-extrabold' : 'text-slate-500 dark:text-slate-400'}`;
   }
   emptyState.classList.toggle('hidden', habits.length > 0);
-  $('desktop-habits-wrap').classList.toggle('hidden', habits.length === 0);
-  $('desktop-habits-wrap').classList.toggle('md:block', habits.length > 0);
+  const desktopWrap = $('desktop-habits-wrap');
+  desktopWrap.classList.add('hidden');
+  desktopWrap.classList.toggle('md:block', habits.length > 0);
+  desktopWrap.classList.toggle('md:hidden', habits.length === 0);
   mobile.classList.toggle('hidden', habits.length === 0);
   trends.classList.toggle('hidden', habits.length === 0);
   if (!habits.length) return;
