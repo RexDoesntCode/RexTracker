@@ -1,489 +1,842 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl" class="h-full bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+<html lang="fa" dir="rtl" class="h-full bg-slate-50">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پیشخوان هوشمند عادات دسکتاپ</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
-    <style>
-        body { font-family: 'Vazirmatn', sans-serif; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f8fafc">
+  <meta name="description" content="پیشخوان شخصی رهگیری عادات با تقویم شمسی و همگام‌سازی بین دستگاه‌ها">
+  <title>پیشخوان هوشمند رهگیری عادات|Rex Tracker</title>
+  <script>tailwind = { config: { darkMode: 'class' } };</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: 'Vazirmatn', sans-serif; }
+    * { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 2px solid #6366f1; outline-offset: 3px; }
+    .habit-table th:first-child, .habit-table td:first-child { position: sticky; right: 0; }
+    .habit-table th:first-child { z-index: 30; }
+    .habit-table td:first-child { z-index: 10; }
+    .habit-table td:first-child { background: #fff; }
+    .dark .habit-table td:first-child { background: #0f172a; }
+    .habit-table tbody tr:hover td:first-child { background: #f8fafc; }
+    .dark .habit-table tbody tr:hover td:first-child { background: #111c30; }
+    .day-button { min-width: 2rem; min-height: 2rem; }
+    .toast { animation: toast-in .18s ease-out; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+  </style>
 </head>
-<body class="text-slate-800 dark:text-slate-200 min-h-full pb-12 antialiased bg-slate-50 dark:bg-slate-950 selection:bg-slate-200 dark:selection:bg-slate-800 transition-colors duration-300">
+<body class="min-h-full pb-12 bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 dark:bg-slate-950 dark:text-slate-200 dark:selection:bg-indigo-950 transition-colors duration-200">
+  <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8">
+    <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-6 mb-4 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+      <div class="min-w-0">
+        <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
+        <div class="flex flex-wrap items-center gap-2 mt-2">
+          <p id="current-date-display" class="text-sm text-slate-500 dark:text-slate-400">امروز: ...</p>
+          <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
+          <span id="app-version-display" class="text-xs text-slate-400 font-mono">v2.0</span>
+          <span id="save-status" class="text-xs text-slate-400" role="status" aria-live="polite">ذخیره روی این دستگاه</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+        <button id="theme-toggle" type="button" class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="تغییر تم">🌙 تم</button>
+        <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 p-1 rounded-xl mr-auto lg:mr-0">
+          <button type="button" data-action="navigate-week" data-direction="1" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition active:scale-95" title="هفته بعدی" aria-label="هفته بعدی">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <div class="px-2 sm:px-4 text-center min-w-[145px] sm:min-w-[180px]"><span id="current-week-display" class="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 block">...</span></div>
+          <button type="button" data-action="navigate-week" data-direction="-1" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition active:scale-95" title="هفته قبلی" aria-label="هفته قبلی">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <!-- TOP DASHBOARD HEADER -->
-        <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 mb-8 shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_-5px_rgba(0,0,0,0.3)] flex flex-col md:flex-row items-center justify-between gap-4 transition-all">
-            <div>
-                <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
-                <div class="flex items-center gap-2 mt-1.5">
-                    <p id="current-date-display" class="text-sm text-slate-400 dark:text-slate-500 font-medium">امروز: ...</p>
-                    <span class="inline-block w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-                    <span id="app-version-display" class="text-xs text-slate-300 dark:text-slate-600 font-mono">v1.4</span>
-                </div>
-            </div>
-            
-            <!-- WEEK NAVIGATION CONTROLLER -->
-            <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/60 p-1 rounded-xl">
-                <button onclick="navigateWeek(1)" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته بعدی">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-                <div class="px-4 text-center min-w-[180px]">
-                    <span id="current-week-display" class="text-sm font-bold text-slate-700 dark:text-slate-300 tracking-wide block">...</span>
-                </div>
-                <button onclick="navigateWeek(-1)" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white shadow-xs hover:shadow-sm transition-all duration-200 active:scale-95" title="هفته قبلی">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-            </div>
-        </header>
+    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mb-7 shadow-sm" aria-labelledby="account-heading">
+      <div class="flex items-start sm:items-center gap-3 justify-between flex-col sm:flex-row">
+        <div class="min-w-0">
+          <h2 id="account-heading" class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><span class="inline-flex w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 items-center justify-center">☁️</span> حساب کاربری و همگام‌سازی</h2>
+          <p id="account-status" class="text-sm text-slate-500 dark:text-slate-400 mt-2" role="status" aria-live="polite">اطلاعات روی این دستگاه ذخیره می‌شود.</p>
+        </div>
+        <div id="account-signed-in" class="hidden w-full sm:w-auto flex-col sm:flex-row sm:items-center gap-2">
+          <span id="account-email" class="text-sm font-semibold text-slate-700 dark:text-slate-200 break-all"></span>
+          <button id="sign-out-btn" type="button" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">خروج از حساب</button>
+        </div>
+      </div>
+      <div id="account-config-warning" class="mt-4 rounded-xl border border-amber-200 dark:border-amber-900/70 bg-amber-50/70 dark:bg-amber-950/20 p-3 text-sm text-amber-900 dark:text-amber-200">
+        ورود و همگام‌سازی ابری هنوز پیکربندی نشده است. اپلیکیشن در حالت محلی کار می‌کند. برای فعال کردن حساب، مراحل فایل <span class="font-bold">README-setup-fa.md</span> را انجام بده و کلیدهای پروژهٔ Supabase را در تنظیمات ابتدای اسکریپت قرار بده.
+      </div>
+      <form id="auth-form" class="hidden mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto_auto] gap-3 items-end">
+        <div><label for="auth-email" class="block text-xs font-semibold text-slate-500 mb-1.5">ایمیل</label><input id="auth-email" type="email" autocomplete="email" required maxlength="254" placeholder="name@example.com" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"></div>
+        <div><label for="auth-password" class="block text-xs font-semibold text-slate-500 mb-1.5">رمز عبور</label><input id="auth-password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" placeholder="حداقل ۸ نویسه" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"></div>
+        <button type="submit" id="sign-in-btn" class="rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-4 py-2.5 text-sm font-bold hover:opacity-90">ورود</button>
+        <button type="button" id="sign-up-btn" class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800">ساخت حساب</button>
+      </form>
+      <p id="account-help" class="hidden mt-3 text-xs text-slate-500 dark:text-slate-400">ورود روی این مرورگر ماندگار می‌ماند. برای دیدن اطلاعات روی دستگاه دیگر، با همان حساب وارد شو.</p>
+    </section>
 
-        <!-- MAIN HABITS TABLE -->
-        <main class="mb-8">
-            <div class="flex justify-between items-center mb-4 px-1">
-                <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <span class="w-1 h-3.5 bg-slate-800 dark:bg-slate-200 rounded-full inline-block"></span>
-                    جدول هفتگی ارزیابی عادات
-                </h2>
-                <div class="flex items-center gap-2.5">
-                    <button id="edit-mode-btn" onclick="toggleEditMode()" class="text-sm font-medium bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95">
-                        ⚙️ ویرایش
-                    </button>
-                    <span id="habits-count-badge" class="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs px-3 py-1.5 rounded-lg font-bold">۰ عادت</span>
-                </div>
-            </div>
-            
-            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden transition-all">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right border-collapse min-w-[700px]">
-                        <thead>
-                            <tr class="bg-slate-50/70 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-800 text-sm font-bold text-slate-400 dark:text-slate-500 tracking-wider">
-                                <th class="p-4 w-1/4">عنوان عادت و مداومت</th>
-                                <th id="th-day-0" class="p-4 text-center px-1 transition-all">شنبه</th>
-                                <th id="th-day-1" class="p-4 text-center px-1 transition-all">۱شنبه</th>
-                                <th id="th-day-2" class="p-4 text-center px-1 transition-all">۲شنبه</th>
-                                <th id="th-day-3" class="p-4 text-center px-1 transition-all">۳شنبه</th>
-                                <th id="th-day-4" class="p-4 text-center px-1 transition-all">۴شنبه</th>
-                                <th id="th-day-5" class="p-4 text-center px-1 transition-all">۵شنبه</th>
-                                <th id="th-day-6" class="p-4 text-center px-1 transition-all">جمعه</th>
-                                <th class="p-4 text-center w-1/6">پیشرفت هفته</th>
-                                <th class="p-4 text-center w-12">عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="habits-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/60 text-base font-medium"></tbody>
-                    </table>
-                </div>
-                <div id="empty-state" class="hidden text-center py-16 bg-white dark:bg-slate-900">
-                    <p class="text-slate-400 dark:text-slate-500 text-base font-normal">هیچ عادتی ثبت نشده است.</p>
-                </div>
-            </div>
-        </main>
+    <main class="mb-8">
+      <div class="flex flex-wrap justify-between items-center gap-3 mb-4 px-1">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2"><span class="w-1 h-4 bg-slate-800 dark:bg-slate-200 rounded-full inline-block"></span> جدول هفتگی ارزیابی عادات</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">روزهای گذشته قابل ویرایش‌اند؛ ثبت روزهای آینده غیرفعال است.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="habits-count-badge" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs px-3 py-2 rounded-lg font-bold">۰ عادت</span>
+          <button id="edit-mode-btn" type="button" class="text-sm font-bold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-3.5 py-2 rounded-xl transition shadow-sm">⚙️ حالت ویرایش</button>
+        </div>
+      </div>
+      <div id="edit-mode-note" class="hidden mb-3 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 text-sm text-indigo-800 dark:text-indigo-200">حالت ویرایش فعال است. نام، هدف هفتگی، رنگ، ترتیب و حذف هر عادت از همین بخش قابل مدیریت است.</div>
 
-        <!-- 28-DAY TRENDS MATRIX (فشرده و بهینه‌شده برای ۲ ستون در موبایل و ۴ ستون در دسکتاپ) -->
-        <section id="monthly-trends-section" class="mb-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xs hidden transition-all">
-            <h2 id="monthly-trends-title" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-3.5 flex items-center gap-1.5">
-                <span class="w-1 h-3.5 bg-indigo-500 rounded-full inline-block"></span>
-                ماتریس ارزیابی ۲۸ روز اخیر
-            </h2>
-            <!-- گرید هوشمند: grid-cols-2 در موبایل و lg:grid-cols-4 در دسکتاپ -->
-            <div id="monthly-charts-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3"></div>
-        </section>
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+        <div id="desktop-habits-wrap" class="hidden md:block overflow-x-auto">
+          <table class="habit-table w-full text-right border-collapse min-w-[880px]">
+            <thead><tr class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400">
+              <th class="p-4 min-w-[245px] w-[28%] bg-slate-50 dark:bg-slate-900">عنوان عادت و مداومت</th>
+              <th id="th-day-0" class="p-3 text-center min-w-[50px]">شنبه</th><th id="th-day-1" class="p-3 text-center min-w-[50px]">یکشنبه</th><th id="th-day-2" class="p-3 text-center min-w-[50px]">دوشنبه</th><th id="th-day-3" class="p-3 text-center min-w-[50px]">سه‌شنبه</th><th id="th-day-4" class="p-3 text-center min-w-[50px]">چهارشنبه</th><th id="th-day-5" class="p-3 text-center min-w-[50px]">پنجشنبه</th><th id="th-day-6" class="p-3 text-center min-w-[50px]">جمعه</th>
+              <th class="p-3 text-center min-w-[105px]">پیشرفت هفته</th><th id="th-operation" class="p-3 text-center w-14 hidden">عملیات</th>
+            </tr></thead>
+            <tbody id="habits-table-body" class="divide-y divide-slate-100 dark:divide-slate-800/70 text-sm"></tbody>
+          </table>
+        </div>
+        <div id="mobile-habits-list" class="md:hidden p-3 space-y-3"></div>
+        <div id="empty-state" class="hidden text-center py-14 px-5">
+          <div class="text-3xl mb-3">🌱</div><p class="font-bold text-slate-700 dark:text-slate-200">هنوز عادتی ثبت نشده است.</p><p class="text-sm text-slate-500 mt-1">از فرم پایین صفحه اولین عادتت را اضافه کن.</p>
+        </div>
+      </div>
+    </main>
 
-        <!-- ADD HABIT FORM -->
-        <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs transition-all">
-            <h2 class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-1.5">
-                <span class="w-1 h-3.5 bg-slate-400 dark:bg-slate-600 rounded-full inline-block"></span>
-                تعریف عادت جدید
-            </h2>
-            <form id="add-habit-form" class="flex flex-col md:flex-row gap-4 items-end">
-                <div class="flex-1 w-full">
-                    <input type="text" id="habit-title" required placeholder="مثلاً: ورزش، مطالعه، سحرخیزی..." 
-                        class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2 text-base text-slate-900 dark:text-white focus:outline-none focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-900 transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600">
-                </div>
-                <div class="w-full md:w-48">
-                    <select id="habit-goal" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-base text-slate-700 dark:text-slate-300 focus:outline-none focus:border-slate-400 dark:focus:border-slate-600 focus:bg-white dark:focus:bg-slate-900 transition-all">
-                        <option value="7">۷ روز (هر روز)</option>
-                        <option value="6">۶ روز در هفته</option>
-                        <option value="5">۵ روز در هفته</option>
-                        <option value="4">۴ روز در هفته</option>
-                        <option value="3">۳ روز در هفته</option>
-                        <option value="2">۲ روز در هفته</option>
-                        <option value="1">۱ روز در هفته</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full md:w-auto bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold px-5 py-2 rounded-xl transition-all duration-200 active:scale-[0.98] whitespace-nowrap text-base">
-                    + افزودن به جدول
-                </button>
-            </form>
-        </section>
+    <!-- ماتریس به عمد چهار ردیفِ هفتهٔ واقعیِ شنبه تا جمعه را نگه می‌دارد. -->
+    <section id="monthly-trends-section" class="mb-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm hidden">
+      <div class="flex items-start sm:items-center justify-between gap-2 mb-4">
+        <div><h2 id="monthly-trends-title" class="text-sm font-extrabold text-slate-700 dark:text-slate-200 flex items-center gap-2"><span class="w-1 h-4 bg-indigo-500 rounded-full inline-block"></span> ماتریس ارزیابی ۲۸ روز اخیر</h2><p class="text-xs text-slate-500 mt-1">هر ردیف یک هفتهٔ کامل از شنبه تا جمعه است.</p></div>
+        <span class="text-xs text-slate-400 shrink-0">۴ هفته</span>
+      </div>
+      <div id="monthly-charts-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3"></div>
+    </section>
+
+    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
+      <h2 class="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2"><span class="w-1 h-4 bg-slate-400 rounded-full inline-block"></span> تعریف عادت جدید</h2>
+      <form id="add-habit-form" class="grid grid-cols-1 md:grid-cols-[1fr_200px_auto] gap-3 items-end">
+        <div><label for="habit-title" class="block text-xs font-semibold text-slate-500 mb-1.5">نام عادت</label><input type="text" id="habit-title" required maxlength="80" placeholder="مثلاً: ورزش، مطالعه، تمرین پیانو..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 placeholder:text-slate-400"></div>
+        <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
+        <button type="submit" class="w-full md:w-auto bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">+ افزودن عادت</button>
+      </form>
+    </section>
+
+    <footer class="text-center text-xs text-slate-400 dark:text-slate-600 mt-7">داده‌ها ابتدا روی دستگاه ذخیره می‌شوند؛ با فعال‌سازی حساب، نسخهٔ ابری نیز همگام خواهد شد.</footer>
+  </div>
+
+  <div id="sync-conflict-modal" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm p-4 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="sync-conflict-title">
+    <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-5 sm:p-6">
+      <h2 id="sync-conflict-title" class="text-lg font-extrabold text-slate-900 dark:text-white">دو نسخه از اطلاعات پیدا شد</h2>
+      <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-7">هم در این مرورگر و هم در حساب ابری عادت‌هایی وجود دارد. برای جلوگیری از حذف ناخواستهٔ اطلاعات، روش ادامه را انتخاب کن.</p>
+      <div id="sync-conflict-counts" class="text-xs text-slate-500 dark:text-slate-400 mt-2"></div>
+      <div class="grid grid-cols-1 gap-2 mt-5">
+        <button type="button" data-sync-choice="cloud" class="rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-4 py-3 text-sm font-bold">استفاده از اطلاعات حساب ابری</button>
+        <button type="button" data-sync-choice="merge" class="rounded-xl border border-indigo-300 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200 px-4 py-3 text-sm font-bold hover:bg-indigo-50 dark:hover:bg-indigo-950/40">ادغام دو نسخه (پیشنهادی برای حفظ اطلاعات)</button>
+        <button type="button" data-sync-choice="local" class="rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 py-3 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800">جایگزینی نسخهٔ ابری با این مرورگر</button>
+      </div>
     </div>
+  </div>
+  <div id="toast-container" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-auto sm:translate-x-1/2 sm:w-auto z-[60] flex flex-col items-center gap-2 pointer-events-none" role="status" aria-live="polite"></div>
 
-    <script>
-        // ارتقا به نسخه ۱.۴ برای فشرده‌سازی و ۲ ستونه کردن ماتریس ۲۸ روزه در موبایل
-        const CURRENT_VERSION = "1.4"; 
+<script>
+'use strict';
 
-        const JALAALI_MONTHS = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
-        const WEEKDAYS_FA = ["یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه", "شنبه"];
-        
-        const COLOR_PALETTES = [
-            { bg: "bg-emerald-500", border: "border-emerald-500 dark:border-emerald-500/80", text: "text-emerald-600 dark:text-emerald-400", lightBg: "bg-emerald-50 dark:bg-emerald-950/40", opacityBg: "bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400", weekCapsule: "bg-emerald-500/10 dark:bg-emerald-500/15" },
-            { bg: "bg-sky-500", border: "border-sky-500 dark:border-sky-500/80", text: "text-sky-600 dark:text-sky-400", lightBg: "bg-sky-50 dark:bg-sky-950/40", opacityBg: "bg-sky-500/15 dark:bg-sky-500/20 text-sky-700 dark:text-sky-400", weekCapsule: "bg-sky-500/10 dark:bg-sky-500/15" },
-            { bg: "bg-indigo-500", border: "border-indigo-500 dark:border-indigo-500/80", text: "text-indigo-600 dark:text-indigo-400", lightBg: "bg-indigo-50 dark:bg-indigo-950/40", opacityBg: "bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400", weekCapsule: "bg-indigo-500/10 dark:bg-indigo-500/15" },
-            { bg: "bg-purple-500", border: "border-purple-500 dark:border-purple-500/80", text: "text-purple-600 dark:text-purple-400", lightBg: "bg-purple-50 dark:bg-purple-950/40", opacityBg: "bg-purple-500/15 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400", weekCapsule: "bg-purple-500/10 dark:bg-purple-500/15" },
-            { bg: "bg-rose-500", border: "border-rose-500 dark:border-rose-500/80", text: "text-rose-600 dark:text-rose-400", lightBg: "bg-rose-50 dark:bg-rose-950/40", opacityBg: "bg-rose-500/15 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400", weekCapsule: "bg-rose-500/10 dark:bg-rose-500/15" },
-            { bg: "bg-amber-500", border: "border-amber-500 dark:border-amber-500/80", text: "text-amber-600 dark:text-amber-400", lightBg: "bg-amber-50 dark:bg-amber-950/40", opacityBg: "bg-amber-500/15 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400", weekCapsule: "bg-amber-500/10 dark:bg-amber-500/15" }
-        ];
+// برای فعال‌سازی حساب ابری، این دو مقدار را از Project Settings / API در Supabase بردار.
+// فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_PUBLIC_KEY = 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY';
+const CURRENT_VERSION = '2.0';
+const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
+const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
+const COLOR_PALETTES = [
+  { name:'سبز', dot:'bg-emerald-500', bg:'bg-emerald-500', border:'border-emerald-500 dark:border-emerald-500/80', text:'text-emerald-600 dark:text-emerald-400', lightBg:'bg-emerald-50 dark:bg-emerald-950/40', opacityBg:'bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400', weekCapsule:'bg-emerald-500/10 dark:bg-emerald-500/15' },
+  { name:'آبی', dot:'bg-sky-500', bg:'bg-sky-500', border:'border-sky-500 dark:border-sky-500/80', text:'text-sky-600 dark:text-sky-400', lightBg:'bg-sky-50 dark:bg-sky-950/40', opacityBg:'bg-sky-500/15 dark:bg-sky-500/20 text-sky-700 dark:text-sky-400', weekCapsule:'bg-sky-500/10 dark:bg-sky-500/15' },
+  { name:'نیلی', dot:'bg-indigo-500', bg:'bg-indigo-500', border:'border-indigo-500 dark:border-indigo-500/80', text:'text-indigo-600 dark:text-indigo-400', lightBg:'bg-indigo-50 dark:bg-indigo-950/40', opacityBg:'bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-400', weekCapsule:'bg-indigo-500/10 dark:bg-indigo-500/15' },
+  { name:'بنفش', dot:'bg-purple-500', bg:'bg-purple-500', border:'border-purple-500 dark:border-purple-500/80', text:'text-purple-600 dark:text-purple-400', lightBg:'bg-purple-50 dark:bg-purple-950/40', opacityBg:'bg-purple-500/15 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400', weekCapsule:'bg-purple-500/10 dark:bg-purple-500/15' },
+  { name:'صورتی', dot:'bg-rose-500', bg:'bg-rose-500', border:'border-rose-500 dark:border-rose-500/80', text:'text-rose-600 dark:text-rose-400', lightBg:'bg-rose-50 dark:bg-rose-950/40', opacityBg:'bg-rose-500/15 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400', weekCapsule:'bg-rose-500/10 dark:bg-rose-500/15' },
+  { name:'کهربایی', dot:'bg-amber-500', bg:'bg-amber-500', border:'border-amber-500 dark:border-amber-500/80', text:'text-amber-600 dark:text-amber-400', lightBg:'bg-amber-50 dark:bg-amber-950/40', opacityBg:'bg-amber-500/15 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400', weekCapsule:'bg-amber-500/10 dark:bg-amber-500/15' }
+];
 
-        let habits = [];
-        let weekOffset = 0; 
-        let isEditMode = false; 
+let habits = [];
+let weekOffset = 0;
+let isEditMode = false;
+let supabaseClient = null;
+let cloudUser = null;
+let activeCloudUserId = null;
+let pendingConflict = null;
+let cloudSyncTimer = null;
+let cloudSyncInFlight = false;
+let cloudSyncRequested = false;
+let authBusy = false;
+let lastToastTimer = null;
+const $ = (id) => document.getElementById(id);
 
-        function toPersianDigits(num) {
-            if (num === undefined || num === null) return '';
-            return num.toString().replace(/[0-9]/g, w => ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'][+w]);
-        }
+function toPersianDigits(value) {
+  if (value === undefined || value === null) return '';
+  return String(value).replace(/[0-9]/g, d => ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'][Number(d)]);
+}
+function showToast(message, type='info') {
+  const box = document.createElement('div');
+  const style = type === 'error' ? 'bg-rose-700' : type === 'success' ? 'bg-emerald-700' : 'bg-slate-900 dark:bg-slate-700';
+  box.className = `toast pointer-events-auto max-w-lg rounded-xl ${style} px-4 py-3 text-sm font-medium text-white shadow-lg`;
+  box.textContent = message;
+  $('toast-container').appendChild(box);
+  window.setTimeout(() => box.remove(), 4200);
+}
+function setSaveStatus(message, color='text-slate-400') {
+  const el = $('save-status');
+  el.textContent = message;
+  el.className = `text-xs ${color}`;
+}
+function makeId() {
+  try { if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID(); } catch (_) {}
+  return 'habit_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+}
+function paletteFor(value, fallbackIndex=0) {
+  if (value && typeof value === 'object') {
+    const matched = COLOR_PALETTES.find(p => p.bg === value.bg || p.name === value.name);
+    if (matched) return matched;
+  }
+  if (typeof value === 'string') {
+    const matched = COLOR_PALETTES.find(p => p.bg === value || p.name === value);
+    if (matched) return matched;
+  }
+  return COLOR_PALETTES[((fallbackIndex % COLOR_PALETTES.length) + COLOR_PALETTES.length) % COLOR_PALETTES.length];
+}
+function normalizeHabitData(input) {
+  if (!Array.isArray(input)) return [];
+  const seenIds = new Set();
+  const out = [];
+  input.slice(0, 300).forEach((raw, index) => {
+    if (!raw || typeof raw !== 'object') return;
+    const title = typeof raw.title === 'string' ? raw.title.trim().slice(0, 80) : '';
+    if (!title) return;
+    let id = typeof raw.id === 'string' && /^[\w-]{1,100}$/.test(raw.id) ? raw.id : makeId();
+    if (seenIds.has(id)) id = makeId();
+    seenIds.add(id);
+    const goalNumber = Number(raw.weeklyGoal);
+    const weeklyGoal = Number.isInteger(goalNumber) && goalNumber >= 1 && goalNumber <= 7 ? goalNumber : 7;
+    const sourceHistory = raw.history && typeof raw.history === 'object' && !Array.isArray(raw.history) ? raw.history : {};
+    const history = {};
+    Object.keys(sourceHistory).slice(-300).forEach(key => {
+      if (!/^W-\d{4}-\d{2}-\d{2}$/.test(key)) return;
+      const row = sourceHistory[key];
+      if (!Array.isArray(row)) return;
+      history[key] = Array.from({length:7}, (_, day) => row[day] === true);
+    });
+    out.push({ id, title, weeklyGoal, colorPalette: paletteFor(raw.colorPalette, index), history, currentStreak: 0 });
+  });
+  return out;
+}
+function cloneHabits(source=habits) {
+  return JSON.parse(JSON.stringify(source));
+}
+function dateOnlyNumber(date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+function isFutureDate(date) {
+  return dateOnlyNumber(date) > dateOnlyNumber(new Date());
+}
+function getSaturdayForDate(date, offset=0) {
+  const base = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const day = base.getDay();
+  const daysToSaturday = day === 6 ? 0 : -(day + 1);
+  base.setDate(base.getDate() + daysToSaturday + (offset * 7));
+  return base;
+}
+function getWeekKeyFromSaturday(saturday) {
+  return `W-${saturday.getFullYear()}-${String(saturday.getMonth()+1).padStart(2,'0')}-${String(saturday.getDate()).padStart(2,'0')}`;
+}
+function getJalaliStats(offset=0) {
+  const today = new Date();
+  const targetSat = getSaturdayForDate(today, offset);
+  const targetFri = new Date(targetSat);
+  targetFri.setDate(targetSat.getDate() + 6);
+  const jSat = jalaali.toJalaali(targetSat.getFullYear(), targetSat.getMonth()+1, targetSat.getDate());
+  const jFri = jalaali.toJalaali(targetFri.getFullYear(), targetFri.getMonth()+1, targetFri.getDate());
+  const jToday = jalaali.toJalaali(today.getFullYear(), today.getMonth()+1, today.getDate());
+  const currentTableDayIndex = today.getDay() === 6 ? 0 : today.getDay() + 1;
+  return {
+    weekKey: getWeekKeyFromSaturday(targetSat),
+    targetSat,
+    weekRangeStr: `${jSat.jd} ${JALAALI_MONTHS[jSat.jm-1]} تا ${jFri.jd} ${JALAALI_MONTHS[jFri.jm-1]} ${jFri.jy}`,
+    realJToday: jToday,
+    currentTableDayIndex
+  };
+}
+function getStatusByDate(habit, dateObj) {
+  const saturday = getSaturdayForDate(dateObj, 0);
+  const weekKey = getWeekKeyFromSaturday(saturday);
+  const dayIndex = dateObj.getDay() === 6 ? 0 : dateObj.getDay() + 1;
+  const weekData = habit.history && Array.isArray(habit.history[weekKey]) ? habit.history[weekKey] : [false,false,false,false,false,false,false];
+  return { isChecked: weekData[dayIndex] === true, weekKey, dayIndex };
+}
+function isGraceDayForDate(habit, dateObj) {
+  if (habit.weeklyGoal !== 7) return false;
+  if (getStatusByDate(habit, dateObj).isChecked) return false;
+  const before = new Date(dateObj); before.setDate(before.getDate()-1);
+  const after = new Date(dateObj); after.setDate(after.getDate()+1);
+  return getStatusByDate(habit, before).isChecked && getStatusByDate(habit, after).isChecked;
+}
+function calculateStreak(habit) {
+  let streak = 0;
+  let date = new Date();
+  date.setHours(12,0,0,0);
+  for (let i=0; i<90; i++) {
+    const done = getStatusByDate(habit, date).isChecked || isGraceDayForDate(habit, date);
+    if (done) streak++;
+    else if (i === 0) { date.setDate(date.getDate()-1); continue; }
+    else break;
+    date.setDate(date.getDate()-1);
+  }
+  return streak;
+}
+function recalculateStreaks() { habits.forEach(h => h.currentStreak = calculateStreak(h)); }
+function loadDataFromDisk() {
+  let raw = null;
+  try { raw = localStorage.getItem('habits_data'); } catch (_) {}
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      habits = normalizeHabitData(parsed);
+    } catch (error) {
+      let restored = false;
+      try {
+        const backup = localStorage.getItem('habits_data_backup');
+        if (backup) { habits = normalizeHabitData(JSON.parse(backup)); restored = true; }
+      } catch (_) {}
+      if (!restored) habits = [];
+      showToast(restored ? 'دادهٔ اصلی قابل خواندن نبود؛ آخرین نسخهٔ پشتیبان بازیابی شد.' : 'خواندن داده‌های ذخیره‌شده ناموفق بود؛ نسخهٔ پشتیبان را بررسی کن.', 'error');
+    }
+  } else {
+    habits = [];
+  }
+  recalculateStreaks();
+}
+function saveDataToDisk(options={}) {
+  const shouldSync = options.sync !== false;
+  try {
+    const oldRaw = localStorage.getItem('habits_data');
+    if (oldRaw) localStorage.setItem('habits_data_backup', oldRaw);
+    localStorage.setItem('habits_data', JSON.stringify(habits));
+    setSaveStatus('ذخیره روی این دستگاه انجام شد', 'text-emerald-600 dark:text-emerald-400');
+  } catch (error) {
+    setSaveStatus('خطا در ذخیرهٔ محلی', 'text-rose-600');
+    showToast('مرورگر نتوانست اطلاعات را ذخیره کند. فضای ذخیره‌سازی مرورگر را بررسی کن.', 'error');
+  }
+  if (shouldSync && cloudUser && supabaseClient) scheduleCloudSync();
+}
+function scheduleCloudSync() {
+  if (!cloudUser || !supabaseClient) return;
+  setSaveStatus('در صف همگام‌سازی ابری…', 'text-indigo-600 dark:text-indigo-400');
+  if (cloudSyncTimer) clearTimeout(cloudSyncTimer);
+  cloudSyncTimer = setTimeout(() => syncCloudNow(), 700);
+}
+async function syncCloudNow() {
+  if (!cloudUser || !supabaseClient) return false;
+  if (cloudSyncInFlight) { cloudSyncRequested = true; return null; }
+  cloudSyncInFlight = true;
+  const userId = cloudUser.id;
+  let succeeded = false;
+  try {
+    do {
+      cloudSyncRequested = false;
+      if (!cloudUser || cloudUser.id !== userId) break;
+      const snapshot = cloneHabits();
+      const { error } = await supabaseClient.from('habit_data').upsert({
+        user_id: userId,
+        data: snapshot,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+      if (error) throw error;
+      succeeded = true;
+      if (cloudUser && cloudUser.id === userId) setSaveStatus('همگام‌سازی ابری انجام شد ✓', 'text-emerald-600 dark:text-emerald-400');
+    } while (cloudSyncRequested && cloudUser && cloudUser.id === userId);
+  } catch (error) {
+    succeeded = false;
+    console.error('Cloud sync error:', error);
+    setSaveStatus('ذخیرهٔ محلی فعال؛ همگام‌سازی ناموفق', 'text-rose-600 dark:text-rose-400');
+    $('account-status').textContent = 'ورود انجام شده، اما همگام‌سازی خطا دارد. تنظیمات جدول و سیاست‌های RLS را بررسی کن.';
+  } finally {
+    cloudSyncInFlight = false;
+    if (cloudSyncRequested && cloudUser && cloudUser.id === userId) {
+      cloudSyncRequested = false;
+      setTimeout(syncCloudNow, 250);
+    }
+  }
+  return succeeded;
+}
+function mergeHabitSets(localSet, cloudSet) {
+  const merged = cloudSet.map(h => JSON.parse(JSON.stringify(h)));
+  const indexById = new Map(merged.map((h, index) => [h.id, index]));
+  localSet.forEach(local => {
+    if (!indexById.has(local.id)) {
+      merged.push(JSON.parse(JSON.stringify(local)));
+      return;
+    }
+    const index = indexById.get(local.id);
+    const cloud = merged[index];
+    const history = { ...(cloud.history || {}) };
+    Object.entries(local.history || {}).forEach(([weekKey, row]) => {
+      if (!Array.isArray(history[weekKey])) history[weekKey] = [false,false,false,false,false,false,false];
+      for (let i=0; i<7; i++) history[weekKey][i] = history[weekKey][i] === true || (Array.isArray(row) && row[i] === true);
+    });
+    merged[index] = { ...cloud, ...local, history, colorPalette: paletteFor(local.colorPalette, index) };
+  });
+  return normalizeHabitData(merged);
+}
+function showSyncConflict(localData, cloudData) {
+  pendingConflict = { local: cloneHabitsFrom(localData), cloud: cloneHabitsFrom(cloudData) };
+  $('sync-conflict-counts').textContent = `این دستگاه: ${toPersianDigits(localData.length)} عادت · حساب ابری: ${toPersianDigits(cloudData.length)} عادت`;
+  $('sync-conflict-modal').classList.remove('hidden');
+  $('account-status').textContent = 'برای انتخاب نسخهٔ اطلاعات، یکی از گزینه‌های پنجره را انتخاب کن.';
+}
+function cloneHabitsFrom(data) { return JSON.parse(JSON.stringify(data)); }
+function closeSyncConflict() { $('sync-conflict-modal').classList.add('hidden'); pendingConflict = null; }
+function applyHabitSet(newSet, sync=true) {
+  habits = normalizeHabitData(newSet);
+  recalculateStreaks();
+  saveDataToDisk({ sync });
+  renderApp();
+}
+async function handleSyncChoice(choice) {
+  if (!pendingConflict) return;
+  const { local, cloud } = pendingConflict;
+  closeSyncConflict();
+  if (choice === 'cloud') { applyHabitSet(cloud, false); $('account-status').textContent = 'اطلاعات حساب ابری روی این دستگاه بارگذاری شد.'; }
+  else if (choice === 'local') {
+    applyHabitSet(local, false); const result = await syncCloudNow();
+    $('account-status').textContent = result === true ? 'اطلاعات این مرورگر جایگزین نسخهٔ ابری شد.' : 'اطلاعات محلی حفظ شد، اما جایگزینی نسخهٔ ابری هنوز تأیید نشده است.';
+  } else {
+    applyHabitSet(mergeHabitSets(local, cloud), false); const result = await syncCloudNow();
+    $('account-status').textContent = result === true ? 'اطلاعات محلی و ابری ادغام و همگام شدند.' : 'اطلاعات ادغام‌شده روی این دستگاه حفظ شد؛ همگام‌سازی ابری ناموفق بود.';
+  }
+}
+function isCloudConfigured() {
+  return typeof SUPABASE_URL === 'string' && SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('YOUR_SUPABASE') && typeof SUPABASE_PUBLIC_KEY === 'string' && !SUPABASE_PUBLIC_KEY.includes('YOUR_SUPABASE');
+}
+function updateAccountUI(user) {
+  const signed = Boolean(user);
+  $('account-signed-in').classList.toggle('hidden', !signed);
+  $('account-signed-in').classList.toggle('flex', signed);
+  $('auth-form').classList.toggle('hidden', signed || !isCloudConfigured());
+  $('account-help').classList.toggle('hidden', !isCloudConfigured());
+  $('account-email').textContent = signed ? user.email || 'حساب کاربری' : '';
+  if (!isCloudConfigured()) {
+    $('account-config-warning').classList.remove('hidden');
+    $('account-status').textContent = 'حالت محلی فعال است؛ برای حساب مشترک، تنظیمات Supabase را تکمیل کن.';
+  } else {
+    $('account-config-warning').classList.add('hidden');
+    if (!signed && !$('account-status').dataset.custom) $('account-status').textContent = 'برای دسترسی به اطلاعات از دستگاه‌های مختلف، وارد حساب شو یا حساب بساز.';
+  }
+}
+async function activateCloudAccount(user) {
+  if (!user || !supabaseClient) return;
+  if (activeCloudUserId === user.id) return;
+  activeCloudUserId = user.id;
+  cloudUser = user;
+  updateAccountUI(user);
+  $('account-status').textContent = 'در حال دریافت اطلاعات حساب…';
+  try {
+    const { data: record, error } = await supabaseClient.from('habit_data').select('data, updated_at').eq('user_id', user.id).maybeSingle();
+    if (error) throw error;
+    const localSet = normalizeHabitData(habits);
+    const cloudSet = record ? normalizeHabitData(record.data) : null;
+    if (!record) {
+      const synced = await syncCloudNow();
+      if (localSet.length) {
+        $('account-status').textContent = synced === true ? 'اطلاعات این دستگاه برای نخستین بار در حساب ذخیره شد.' : 'اطلاعات این دستگاه محلی باقی ماند؛ ذخیره در ابر هنوز تأیید نشده است.';
+      } else {
+        $('account-status').textContent = synced === true ? 'حساب آماده است. عادت‌های جدید به‌صورت ابری همگام می‌شوند.' : 'حساب وارد شده، اما ایجاد نسخهٔ ابری ناموفق بود؛ اتصال و تنظیمات جدول را بررسی کن.';
+      }
+      setSaveStatus(synced === true ? 'حساب متصل است' : 'حساب متصل؛ همگام‌سازی ناموفق', synced === true ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+      return;
+    }
+    const localText = JSON.stringify(localSet);
+    const cloudText = JSON.stringify(cloudSet);
+    if (localSet.length && cloudSet.length && localText !== cloudText) {
+      showSyncConflict(localSet, cloudSet);
+      return;
+    }
+    let cloudWriteOk = true;
+    if (!localSet.length && cloudSet.length) {
+      applyHabitSet(cloudSet, false);
+      $('account-status').textContent = 'اطلاعات حساب ابری دریافت شد.';
+    } else if (localSet.length && !cloudSet.length) {
+      const synced = await syncCloudNow();
+      cloudWriteOk = synced === true;
+      $('account-status').textContent = synced === true ? 'اطلاعات این دستگاه در حساب ابری ذخیره شد.' : 'اطلاعات این دستگاه محلی باقی ماند؛ ذخیره در ابر هنوز تأیید نشده است.';
+    } else {
+      applyHabitSet(cloudSet, false);
+      $('account-status').textContent = 'اطلاعات حساب با این دستگاه همگام است.';
+    }
+    setSaveStatus(cloudWriteOk ? 'همگام‌سازی فعال است' : 'همگام‌سازی ناموفق', cloudWriteOk ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400');
+  } catch (error) {
+    console.error('Cloud account load error:', error);
+    $('account-status').textContent = 'حساب وارد شده، اما خواندن اطلاعات ابری ممکن نشد. فایل SQL و سیاست‌های RLS را بررسی کن.';
+    setSaveStatus('مشکل در اتصال ابری', 'text-rose-600 dark:text-rose-400');
+    showToast('ارتباط با جدول اطلاعات ناموفق بود. تنظیمات Supabase را بررسی کن.', 'error');
+  }
+}
+function initCloud() {
+  if (!isCloudConfigured()) { updateAccountUI(null); return; }
+  updateAccountUI(null);
+  if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+    $('auth-form').classList.add('hidden');
+    $('account-config-warning').classList.add('hidden');
+    $('account-status').textContent = 'کتابخانهٔ اتصال ابری بارگذاری نشد؛ اتصال اینترنت و CDN را بررسی کن.';
+    showToast('کتابخانهٔ Supabase در دسترس نیست.', 'error');
+    return;
+  }
+  try {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    updateAccountUI(null);
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+      const user = session && session.user ? session.user : null;
+      updateAccountUI(user);
+      if (user) {
+        setTimeout(() => activateCloudAccount(user), 0);
+      } else {
+        cloudUser = null;
+        activeCloudUserId = null;
+        if (cloudSyncTimer) clearTimeout(cloudSyncTimer);
+        setSaveStatus('ذخیره روی این دستگاه', 'text-slate-400');
+        $('account-status').textContent = 'از حساب خارج شدی؛ اطلاعات این دستگاه پاک نشده و همچنان محلی است.';
+      }
+    });
+    supabaseClient.auth.getSession().then(({ data, error }) => {
+      if (error) throw error;
+      if (data && data.session && data.session.user) activateCloudAccount(data.session.user);
+    }).catch(error => {
+      console.error('Session restore error:', error);
+      $('account-status').textContent = 'بازیابی نشست ممکن نشد. می‌توانی دوباره وارد شوی.';
+    });
+  } catch (error) {
+    console.error('Supabase init error:', error);
+    $('account-status').textContent = 'اتصال ابری پیکربندی نشد؛ مقادیر URL و کلید را بررسی کن.';
+  }
+}
+function getAuthValues() {
+  return { email: $('auth-email').value.trim(), password: $('auth-password').value };
+}
+async function signIn(event) {
+  if (event) event.preventDefault();
+  if (!supabaseClient || authBusy) return;
+  const { email, password } = getAuthValues();
+  if (!email || !password) { showToast('ایمیل و رمز عبور را وارد کن.', 'error'); return; }
+  authBusy = true; $('sign-in-btn').disabled = true; $('sign-up-btn').disabled = true;
+  try {
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    $('account-status').textContent = 'ورود موفق بود؛ در حال آماده‌سازی اطلاعات…';
+    $('auth-password').value = '';
+    showToast('ورود موفق بود.', 'success');
+  } catch (error) {
+    showToast(authErrorMessage(error), 'error');
+  } finally { authBusy = false; $('sign-in-btn').disabled = false; $('sign-up-btn').disabled = false; }
+}
+async function signUp() {
+  if (!supabaseClient || authBusy) return;
+  const { email, password } = getAuthValues();
+  if (!email || password.length < 8) { showToast('ایمیل معتبر و رمز عبور حداقل ۸ نویسه‌ای وارد کن.', 'error'); return; }
+  authBusy = true; $('sign-in-btn').disabled = true; $('sign-up-btn').disabled = true;
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({ email, password });
+    if (error) throw error;
+    $('auth-password').value = '';
+    if (data.session) showToast('حساب ساخته شد و وارد شدی.', 'success');
+    else showToast('حساب ساخته شد. ایمیلت را برای تأیید حساب بررسی کن.', 'success');
+  } catch (error) { showToast(authErrorMessage(error), 'error'); }
+  finally { authBusy = false; $('sign-in-btn').disabled = false; $('sign-up-btn').disabled = false; }
+}
+function authErrorMessage(error) {
+  const message = String(error && error.message || 'خطای ناشناخته');
+  if (/Invalid login credentials/i.test(message)) return 'ایمیل یا رمز عبور درست نیست.';
+  if (/Email not confirmed/i.test(message)) return 'ابتدا ایمیل خود را تأیید کن.';
+  if (/already registered/i.test(message)) return 'این ایمیل قبلاً ثبت شده است؛ وارد حساب شو.';
+  if (/rate limit/i.test(message)) return 'تعداد تلاش‌ها زیاد است؛ کمی بعد دوباره امتحان کن.';
+  return `عملیات حساب ناموفق بود: ${message.slice(0,180)}`;
+}
+async function signOut() {
+  if (!supabaseClient) return;
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) showToast(`خروج ناموفق بود: ${error.message}`, 'error');
+  else showToast('از حساب خارج شدی. اطلاعات محلی حفظ شده است.', 'success');
+}
 
-        function getJalaliStats(offset = 0) {
-            const today = new Date();
-            const currentDay = today.getDay();
-            const daysToSaturday = currentDay === 6 ? 0 : -(currentDay + 1);
-            
-            const targetSat = new Date(today);
-            targetSat.setDate(today.getDate() + daysToSaturday + (offset * 7));
-            
-            const targetFri = new Date(targetSat);
-            targetFri.setDate(targetSat.getDate() + 6);
+function setTheme(theme) {
+  const resolved = theme === 'system' ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme;
+  document.documentElement.classList.toggle('dark', resolved === 'dark');
+  $('theme-toggle').textContent = resolved === 'dark' ? '☀️ تم روشن' : '🌙 تم تاریک';
+  $('theme-toggle').setAttribute('aria-label', resolved === 'dark' ? 'تغییر به تم روشن' : 'تغییر به تم تاریک');
+}
+function initTheme() {
+  let saved = 'system';
+  try { saved = localStorage.getItem('habit_theme') || 'system'; } catch (_) {}
+  setTheme(saved);
+  $('theme-toggle').addEventListener('click', () => {
+    const dark = document.documentElement.classList.contains('dark');
+    const next = dark ? 'light' : 'dark';
+    try { localStorage.setItem('habit_theme', next); } catch (_) {}
+    setTheme(next);
+  });
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => {
+    let preference = 'system'; try { preference = localStorage.getItem('habit_theme') || 'system'; } catch (_) {}
+    if (preference === 'system') setTheme('system');
+  });
+}
 
-            const jSat = jalaali.toJalaali(targetSat.getFullYear(), targetSat.getMonth() + 1, targetSat.getDate());
-            const jFri = jalaali.toJalaali(targetFri.getFullYear(), targetFri.getMonth() + 1, targetFri.getDate());
-            
-            const weekKey = `W-${targetSat.getFullYear()}-${String(targetSat.getMonth()+1).padStart(2,'0')}-${String(targetSat.getDate()).padStart(2,'0')}`;
-            const jToday = jalaali.toJalaali(today.getFullYear(), today.getMonth() + 1, today.getDate());
+function createEditPanel(habit, index, compact=false) {
+  const panel = document.createElement('div');
+  panel.dataset.habitEdit = 'true';
+  panel.className = `habit-edit-panel ${isEditMode ? '' : 'hidden'} mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-3`;
+  panel.innerHTML = `
+    <div class="flex gap-2 items-end">
+      <div class="flex-1 min-w-0"><label class="block text-[11px] font-bold text-slate-500 mb-1" for="edit-title-${index}">نام عادت</label><input id="edit-title-${index}" data-role="edit-title" type="text" maxlength="80" class="w-full min-w-0 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-2 text-xs" value=""></div>
+      <button type="button" data-action="save-name" class="shrink-0 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-3 py-2 text-xs font-bold">ذخیره</button>
+    </div>
+    <div class="grid grid-cols-1 ${compact ? '' : 'sm:grid-cols-2'} gap-3">
+      <div><label class="block text-[11px] font-bold text-slate-500 mb-1" for="edit-goal-${index}">هدف در هفته</label><select id="edit-goal-${index}" data-action="set-goal" class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2.5 py-2 text-xs"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز</option><option value="5">۵ روز</option><option value="4">۴ روز</option><option value="3">۳ روز</option><option value="2">۲ روز</option><option value="1">۱ روز</option></select></div>
+      <div><span class="block text-[11px] font-bold text-slate-500 mb-1.5">رنگ عادت</span><div class="flex items-center gap-2 flex-wrap">${COLOR_PALETTES.map((p,i)=>`<button type="button" data-action="set-color" data-palette-index="${i}" class="palette-choice w-7 h-7 rounded-full ${p.dot} border-2 border-transparent" title="${p.name}" aria-label="رنگ ${p.name}"></button>`).join('')}</div></div>
+    </div>
+    <div class="flex items-center justify-between gap-2 border-t border-slate-200 dark:border-slate-800 pt-3">
+      <div class="flex items-center gap-1.5"><button type="button" data-action="move-up" class="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs hover:bg-white dark:hover:bg-slate-800">↑ جابه‌جایی به بالا</button><button type="button" data-action="move-down" class="rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2 text-xs hover:bg-white dark:hover:bg-slate-800">↓ پایین</button></div>
+      <button type="button" data-action="delete-habit" class="rounded-lg border border-rose-200 dark:border-rose-900 text-rose-700 dark:text-rose-300 px-3 py-2 text-xs font-bold hover:bg-rose-50 dark:hover:bg-rose-950/40">حذف عادت</button>
+    </div>`;
+  const input = panel.querySelector('[data-role="edit-title"]'); input.value = habit.title;
+  const goal = panel.querySelector('[data-action="set-goal"]'); goal.value = String(habit.weeklyGoal);
+  panel.querySelectorAll('[data-action="set-color"]').forEach(btn => {
+    const chosen = COLOR_PALETTES[Number(btn.dataset.paletteIndex)].bg === habit.colorPalette.bg;
+    if (chosen) btn.classList.add('ring-2','ring-offset-2','ring-slate-500','dark:ring-offset-slate-950');
+  });
+  panel.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
+  return panel;
+}
+function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette, compact=false) {
+  const info = getStatusByDate(habit, date);
+  const checked = info.isChecked;
+  const grace = !checked && isGraceDayForDate(habit, date);
+  const future = isFutureDate(date);
+  const disabled = future || isEditMode;
+  let classes = 'day-button mx-auto flex items-center justify-center rounded-lg border-2 text-sm font-extrabold transition focus-visible:z-10 ';
+  if (checked) classes += `${palette.bg} ${palette.border} text-white shadow-sm`;
+  else if (grace) classes += `${palette.opacityBg} border-transparent`;
+  else classes += 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-transparent hover:border-slate-400 dark:hover:border-slate-500';
+  if (disabled) classes += ' opacity-40 cursor-not-allowed hover:border-slate-200 dark:hover:border-slate-700';
+  const content = checked || grace ? '✓' : '·';
+  const title = future ? 'ثبت روز آینده غیرفعال است' : (isEditMode ? 'برای ثبت وضعیت از حالت ویرایش خارج شو' : `ثبت وضعیت روز ${toPersianDigits(date.getDate())}`);
+  return `<button type="button" data-action="toggle-day" data-day-index="${dayIndex}" data-week-key="${weekKey}" class="${classes}" title="${title}" aria-label="${title}" ${disabled ? 'disabled aria-disabled="true"' : ''}>${content}</button>`;
+}
+function renderApp() {
+  const tbody = $('habits-table-body');
+  const mobile = $('mobile-habits-list');
+  const emptyState = $('empty-state');
+  const trends = $('monthly-trends-section');
+  const matrix = $('monthly-charts-container');
+  const stats = getJalaliStats(weekOffset);
+  $('current-week-display').textContent = `هفتهٔ ${toPersianDigits(stats.weekRangeStr)}`;
+  $('habits-count-badge').textContent = `${toPersianDigits(habits.length)} عادت`;
+  $('edit-mode-btn').textContent = isEditMode ? '✓ خروج از ویرایش' : '⚙️ حالت ویرایش';
+  $('edit-mode-btn').className = isEditMode ? 'text-sm font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-950 border border-slate-900 dark:border-white px-3.5 py-2 rounded-xl transition shadow-sm' : 'text-sm font-bold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-3.5 py-2 rounded-xl transition shadow-sm';
+  $('edit-mode-note').classList.toggle('hidden', !isEditMode);
+  $('th-operation').classList.toggle('hidden', !isEditMode);
+  tbody.replaceChildren(); mobile.replaceChildren(); matrix.replaceChildren();
+  for (let i=0; i<7; i++) {
+    const th = $(`th-day-${i}`);
+    const todayColumn = weekOffset === 0 && i === stats.currentTableDayIndex;
+    th.className = `p-3 text-center min-w-[50px] ${todayColumn ? 'text-slate-900 dark:text-white bg-indigo-50 dark:bg-indigo-950/40 font-extrabold' : 'text-slate-500 dark:text-slate-400'}`;
+  }
+  emptyState.classList.toggle('hidden', habits.length > 0);
+  $('desktop-habits-wrap').classList.toggle('hidden', habits.length === 0);
+  $('desktop-habits-wrap').classList.toggle('md:block', habits.length > 0);
+  mobile.classList.toggle('hidden', habits.length === 0);
+  trends.classList.toggle('hidden', habits.length === 0);
+  if (!habits.length) return;
 
-            const currentTableDayIndex = today.getDay() === 6 ? 0 : today.getDay() + 1;
+  const weekDataKey = stats.weekKey;
+  const tableSaturday = stats.targetSat;
+  habits.forEach((habit, habitIndex) => {
+    if (!Array.isArray(habit.history[weekDataKey])) habit.history[weekDataKey] = [false,false,false,false,false,false,false];
+    const weekData = habit.history[weekDataKey];
+    const palette = paletteFor(habit.colorPalette, habitIndex);
+    let effectiveCompletions = 0;
+    for (let idx=0; idx<7; idx++) {
+      const checkDate = new Date(tableSaturday); checkDate.setDate(tableSaturday.getDate()+idx);
+      if (weekData[idx] === true || isGraceDayForDate(habit, checkDate)) effectiveCompletions++;
+    }
+    const percentage = Math.min(Math.round((effectiveCompletions / habit.weeklyGoal) * 100), 100);
+    let daysHtml = '';
+    for (let i=0; i<7; i++) {
+      const date = new Date(tableSaturday); date.setDate(tableSaturday.getDate()+i);
+      const todayColumn = weekOffset === 0 && i === stats.currentTableDayIndex;
+      daysHtml += `<td class="p-1.5 text-center ${todayColumn ? 'bg-indigo-50/60 dark:bg-indigo-950/20' : ''}">${getDayButtonMarkup(habit,i,weekDataKey,date,palette)}</td>`;
+    }
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-slate-50/70 dark:hover:bg-slate-800/30 transition-colors';
+    tr.innerHTML = `
+      <td class="p-3 sm:p-4 align-top min-w-[245px] bg-white dark:bg-slate-900">
+        <div class="flex items-start gap-2.5"><span class="mt-1.5 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><div class="habit-title font-bold text-slate-900 dark:text-white text-sm break-words"></div><div class="flex flex-wrap items-center gap-1.5 mt-1.5"><span class="text-xs text-slate-500 dark:text-slate-400 habit-goal-label"></span><span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span><span class="text-xs font-bold ${palette.text}">🔥 ${toPersianDigits(habit.currentStreak)}</span></div></div></div>
+        <div class="edit-panel-mount"></div>
+      </td>
+      ${daysHtml}
+      <td class="p-3 text-center align-middle"><div class="flex flex-col items-center gap-1.5"><span class="text-sm font-extrabold text-slate-600 dark:text-slate-300">${toPersianDigits(percentage)}٪</span><div class="w-16 bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden"><div class="${palette.bg} h-full rounded-full" style="width:${percentage}%"></div></div><span class="text-[10px] text-slate-400">${toPersianDigits(effectiveCompletions)} از ${toPersianDigits(habit.weeklyGoal)} روز</span></div></td>
+      <td class="operation-cell p-2 text-center align-middle ${isEditMode ? '' : 'hidden'}"><button type="button" data-action="delete-habit" class="p-2 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30" aria-label="حذف عادت" title="حذف عادت">⌫</button></td>`;
+    tr.querySelector('.habit-title').textContent = habit.title;
+    tr.querySelector('.habit-goal-label').textContent = `هدف: ${toPersianDigits(habit.weeklyGoal)} روز`;
+    tr.querySelector('.edit-panel-mount').appendChild(createEditPanel(habit, habitIndex, false));
+    tr.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
+    tbody.appendChild(tr);
 
-            return { weekKey, weekRangeStr: `${jSat.jd} ${JALAALI_MONTHS[jSat.jm - 1]} تا ${jFri.jd} ${JALAALI_MONTHS[jFri.jm - 1]} ${jFri.jy}`, realJToday: jToday, currentTableDayIndex };
-        }
+    // نسخهٔ موبایل با هفت ستون روز؛ به‌جای مجبور کردن کاربر به پیمایش افقی جدول.
+    const card = document.createElement('article');
+    card.className = 'rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-sm';
+    let mobileDays = '';
+    for (let i=0; i<7; i++) {
+      const date = new Date(tableSaturday); date.setDate(tableSaturday.getDate()+i);
+      const todayColumn = weekOffset === 0 && i === stats.currentTableDayIndex;
+      mobileDays += `<div class="flex flex-col items-center gap-1.5 rounded-lg py-1 ${todayColumn ? 'bg-indigo-50 dark:bg-indigo-950/40' : ''}"><span class="text-[10px] font-bold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-400'}">${WEEKDAYS_SHORT[i]}</span>${getDayButtonMarkup(habit,i,weekDataKey,date,palette,true)}</div>`;
+    }
+    card.innerHTML = `
+      <div class="flex items-start gap-2.5"><span class="mt-1.5 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><h3 class="habit-title-mobile font-extrabold text-sm text-slate-900 dark:text-white break-words"></h3><div class="flex flex-wrap items-center gap-2 mt-1"><span class="goal-label-mobile text-xs text-slate-500 dark:text-slate-400"></span><span class="text-xs font-bold ${palette.text}">🔥 ${toPersianDigits(habit.currentStreak)}</span><span class="text-xs text-slate-500 mr-auto">${toPersianDigits(percentage)}٪ این هفته</span></div></div></div>
+      <div class="grid grid-cols-7 gap-1 mt-3">${mobileDays}</div>
+      <div class="h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-3"><div class="${palette.bg} h-full rounded-full" style="width:${percentage}%"></div></div>
+      <div class="mobile-edit-mount"></div>`;
+    card.querySelector('.habit-title-mobile').textContent = habit.title;
+    card.querySelector('.habit-title-mobile').title = habit.title;
+    card.querySelector('.goal-label-mobile').textContent = `هدف ${toPersianDigits(habit.weeklyGoal)} روز در هفته`;
+    card.querySelector('.mobile-edit-mount').appendChild(createEditPanel(habit, habitIndex + 1000, true));
+    card.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
+    mobile.appendChild(card);
 
-        function getStatusByDate(habit, dateObj) {
-            const cDay = dateObj.getDay();
-            const daysToSat = cDay === 6 ? 0 : -(cDay + 1);
-            const sat = new Date(dateObj);
-            sat.setDate(dateObj.getDate() + daysToSat);
-            
-            const wkKey = `W-${sat.getFullYear()}-${String(sat.getMonth()+1).padStart(2,'0')}-${String(sat.getDate()).padStart(2,'0')}`;
-            const dIdx = dateObj.getDay() === 6 ? 0 : dateObj.getDay() + 1;
+    // ماتریس ۲۸روزه عمداً از شنبهٔ سه هفتهٔ قبل شروع می‌شود و هر ردیف دقیقاً شنبه تا جمعه است.
+    const matrixCard = document.createElement('div');
+    matrixCard.className = 'bg-slate-50/70 dark:bg-slate-950/50 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3';
+    let weeksRowsHtml = '';
+    const baseSat = new Date();
+    const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay()+1);
+    baseSat.setDate(baseSat.getDate() + dToSat - 21);
+    for (let weekIdx=0; weekIdx<4; weekIdx++) {
+      let dots = '';
+      let completions = 0;
+      for (let dayIdx=0; dayIdx<7; dayIdx++) {
+        const dayCellDate = new Date(baseSat); dayCellDate.setDate(baseSat.getDate() + (weekIdx*7) + dayIdx);
+        const info = getStatusByDate(habit, dayCellDate);
+        const done = info.isChecked || isGraceDayForDate(habit, dayCellDate);
+        if (done) completions++;
+        const jDate = jalaali.toJalaali(dayCellDate.getFullYear(),dayCellDate.getMonth()+1,dayCellDate.getDate());
+        const dotClass = done ? `w-2 h-2 ${palette.bg} rounded-sm` : 'w-2 h-2 bg-slate-200 dark:bg-slate-800 rounded-sm';
+        dots += `<span class="${dotClass}" title="${toPersianDigits(jDate.jd)} ${JALAALI_MONTHS[jDate.jm-1]}"></span>`;
+      }
+      const metGoal = completions >= habit.weeklyGoal;
+      const rowClass = metGoal ? `${palette.weekCapsule} rounded-full` : 'rounded-full';
+      weeksRowsHtml += `<div class="flex items-center justify-center ${rowClass} py-1 px-2"><div class="flex items-center gap-1.5">${dots}</div></div>`;
+    }
+    matrixCard.innerHTML = `<div class="flex items-center justify-between gap-2 mb-3"><span class="matrix-habit-title font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 truncate"></span><span class="text-[10px] font-bold px-2 py-1 rounded-md ${palette.lightBg} ${palette.text} shrink-0">۲۸ روز</span></div><div class="space-y-1.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg p-2.5">${weeksRowsHtml}</div>`;
+    matrixCard.querySelector('.matrix-habit-title').textContent = habit.title;
+    matrixCard.querySelector('.matrix-habit-title').title = habit.title;
+    matrix.appendChild(matrixCard);
+  });
+}
 
-            const weekData = habit.history[wkKey] || [false, false, false, false, false, false, false];
-            return { isChecked: weekData[dIdx] === true, weekKey: wkKey, dayIndex: dIdx };
-        }
+function addHabit(event) {
+  event.preventDefault();
+  const input = $('habit-title');
+  const title = input.value.trim().slice(0,80);
+  if (!title) { showToast('نام عادت را وارد کن.', 'error'); input.focus(); return; }
+  const habit = { id: makeId(), title, weeklyGoal: Number($('habit-goal').value) || 7, colorPalette: COLOR_PALETTES[habits.length % COLOR_PALETTES.length], history: {}, currentStreak: 0 };
+  habit.history[getJalaliStats(0).weekKey] = [false,false,false,false,false,false,false];
+  habits.push(habit);
+  recalculateStreaks();
+  input.value = ''; $('habit-goal').value = '7';
+  saveDataToDisk(); renderApp(); showToast('عادت اضافه شد.', 'success');
+}
+function getHabit(id) { return habits.find(h => h.id === id); }
+function findHabitEditPanel(button) { return button.closest('[data-habit-edit]'); }
+function handleAction(button) {
+  const action = button.dataset.action;
+  const habitId = button.dataset.habitId;
+  if (action === 'navigate-week') { weekOffset += Number(button.dataset.direction) || 0; renderApp(); return; }
+  if (action === 'toggle-day') {
+    if (button.disabled) return;
+    const habit = getHabit(habitId); if (!habit || isEditMode) return;
+    const dayIndex = Number(button.dataset.dayIndex);
+    const weekKey = button.dataset.weekKey;
+    if (!Number.isInteger(dayIndex) || dayIndex < 0 || dayIndex > 6 || !/^W-\d{4}-\d{2}-\d{2}$/.test(weekKey || '')) return;
+    const date = new Date(`${weekKey.slice(2)}T12:00:00`);
+    date.setDate(date.getDate() + dayIndex);
+    if (isFutureDate(date)) { showToast('ثبت روزهای آینده مجاز نیست.', 'error'); return; }
+    if (!Array.isArray(habit.history[weekKey])) habit.history[weekKey] = [false,false,false,false,false,false,false];
+    habit.history[weekKey][dayIndex] = !habit.history[weekKey][dayIndex];
+    recalculateStreaks(); saveDataToDisk(); renderApp(); return;
+  }
+  if (action === 'save-name') {
+    const habit = getHabit(habitId); const panel = findHabitEditPanel(button); const input = panel && panel.querySelector('[data-role="edit-title"]');
+    if (!habit || !input) return;
+    const title = input.value.trim().slice(0,80);
+    if (!title) { showToast('نام عادت نمی‌تواند خالی باشد.', 'error'); input.focus(); return; }
+    habit.title = title; saveDataToDisk(); renderApp(); showToast('نام عادت ذخیره شد.', 'success'); return;
+  }
+  if (action === 'move-up' || action === 'move-down') {
+    const index = habits.findIndex(h => h.id === habitId); if (index < 0) return;
+    const other = index + (action === 'move-up' ? -1 : 1);
+    if (other < 0 || other >= habits.length) { showToast('عادت در این جهت قابل جابه‌جایی نیست.'); return; }
+    [habits[index], habits[other]] = [habits[other], habits[index]];
+    saveDataToDisk(); renderApp(); return;
+  }
+  if (action === 'set-color') {
+    const habit = getHabit(habitId); const index = Number(button.dataset.paletteIndex);
+    if (!habit || !Number.isInteger(index) || !COLOR_PALETTES[index]) return;
+    habit.colorPalette = COLOR_PALETTES[index]; saveDataToDisk(); renderApp(); return;
+  }
+  if (action === 'delete-habit') {
+    const habit = getHabit(habitId); if (!habit) return;
+    if (!isEditMode) return;
+    if (!window.confirm(`عادت «${habit.title}» حذف شود؟ این کار سابقهٔ همین عادت را نیز از این دستگاه و حساب متصل حذف می‌کند.`)) return;
+    habits = habits.filter(h => h.id !== habitId); recalculateStreaks(); saveDataToDisk(); renderApp(); showToast('عادت حذف شد.', 'success'); return;
+  }
+}
+document.addEventListener('click', (event) => {
+  const actionButton = event.target.closest('[data-action]');
+  if (actionButton) handleAction(actionButton);
+  const conflictButton = event.target.closest('[data-sync-choice]');
+  if (conflictButton) handleSyncChoice(conflictButton.dataset.syncChoice);
+});
+document.addEventListener('change', (event) => {
+  const select = event.target.closest('select[data-action="set-goal"]');
+  if (!select) return;
+  const habit = getHabit(select.dataset.habitId);
+  const goal = Number(select.value);
+  if (!habit || !Number.isInteger(goal) || goal < 1 || goal > 7) return;
+  habit.weeklyGoal = goal; recalculateStreaks(); saveDataToDisk(); renderApp(); showToast('هدف هفتگی ذخیره شد.', 'success');
+});
+$('edit-mode-btn').addEventListener('click', () => { isEditMode = !isEditMode; renderApp(); });
+$('add-habit-form').addEventListener('submit', addHabit);
+$('auth-form').addEventListener('submit', signIn);
+$('sign-up-btn').addEventListener('click', signUp);
+$('sign-out-btn').addEventListener('click', signOut);
 
-        function isGraceDayForDate(habit, dateObj) {
-            if (habit.weeklyGoal !== 7) return false;
-            const currentInfo = getStatusByDate(habit, dateObj);
-            if (currentInfo.isChecked) return false;
-
-            let beforeDate = new Date(dateObj); beforeDate.setDate(beforeDate.getDate() - 1);
-            const hasCheckedBefore = getStatusByDate(habit, beforeDate).isChecked;
-
-            let afterDate = new Date(dateObj); afterDate.setDate(afterDate.getDate() + 1);
-            const hasCheckedAfter = getStatusByDate(habit, afterDate).isChecked;
-
-            return hasCheckedBefore && hasCheckedAfter;
-        }
-
-        function calculateJalaliStreak(habit) {
-            let streak = 0; let checkDate = new Date(); 
-            for (let i = 0; i < 90; i++) {
-                const currentInfo = getStatusByDate(habit, checkDate);
-                const isGrace = isGraceDayForDate(habit, checkDate);
-                if (currentInfo.isChecked || isGrace) { streak++; } else { if (i === 0) { checkDate.setDate(checkDate.getDate() - 1); continue; } break; }
-                checkDate.setDate(checkDate.getDate() - 1); 
-            }
-            return streak;
-        }
-
-        window.navigateWeek = function(direction) { weekOffset += direction; renderApp(); };
-
-        window.toggleEditMode = function() {
-            isEditMode = !isEditMode;
-            const btn = document.getElementById('edit-mode-btn');
-            if (isEditMode) {
-                btn.innerText = "✓ خروج";
-                btn.className = "text-sm font-bold bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95";
-            } else {
-                btn.innerText = "⚙️ ویرایش";
-                btn.className = "text-sm font-medium bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 px-3.5 py-1.5 rounded-xl transition-all shadow-2xs flex items-center gap-1 active:scale-95";
-            }
-            renderApp();
-        };
-
-        window.editHabitTitle = function(id) {
-            const habit = habits.find(h => h.id === id);
-            if (!habit) return;
-            const newTitle = prompt("نام جدید این عادت را وارد کنید:", habit.title);
-            if (newTitle && newTitle.trim() !== "") {
-                habit.title = newTitle.trim();
-                saveDataToDisk();
-                renderApp();
-            }
-        };
-
-        window.moveHabit = function(id, direction) {
-            const index = habits.findIndex(h => h.id === id);
-            if (index === -1) return;
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= habits.length) return;
-
-            const temp = habits[index];
-            habits[index] = habits[newIndex];
-            habits[newIndex] = temp;
-
-            saveDataToDisk();
-            renderApp();
-        };
-
-        window.toggleDayNode = function(habitId, weekKey, dayIndex) {
-            if (isEditMode) return;
-
-            const habitObj = habits.find(h => h.id === habitId);
-            if (!habitObj) return;
-            if (!habitObj.history[weekKey]) habitObj.history[weekKey] = [false, false, false, false, false, false, false];
-
-            habitObj.history[weekKey][dayIndex] = !habitObj.history[weekKey][dayIndex];
-            habits.forEach(h => h.currentStreak = calculateJalaliStreak(h));
-            
-            saveDataToDisk();
-            renderApp();
-        };
-
-        function renderApp() {
-            const tbody = document.getElementById('habits-table-body');
-            const emptyState = document.getElementById('empty-state');
-            const badgeCount = document.getElementById('habits-count-badge');
-            const trendsSection = document.getElementById('monthly-trends-section');
-            const chartsContainer = document.getElementById('monthly-charts-container');
-            
-            const stats = getJalaliStats(weekOffset);
-            document.getElementById('current-week-display').innerText = `هفتهٔ ${toPersianDigits(stats.weekRangeStr)}`;
-            tbody.innerHTML = ''; chartsContainer.innerHTML = '';
-            badgeCount.innerText = `${toPersianDigits(habits.length)} عادت`;
-
-            for (let i = 0; i < 7; i++) {
-                const th = document.getElementById(`th-day-${i}`);
-                if (th) {
-                    if (weekOffset === 0 && i === stats.currentTableDayIndex) {
-                        th.className = "p-4 text-center px-1 text-slate-900 dark:text-white bg-slate-500/5 dark:bg-white/5 rounded-t-2xl font-black";
-                    } else {
-                        th.className = "p-4 text-center px-1 text-slate-400 dark:text-slate-500 font-bold rounded-none";
-                    }
-                }
-            }
-
-            if (habits.length === 0) {
-                emptyState.classList.remove('hidden'); trendsSection.classList.add('hidden'); return;
-            } else {
-                emptyState.classList.add('hidden'); trendsSection.classList.remove('hidden');
-            }
-
-            habits.forEach((habit, habitIndex) => {
-                if (!habit.history[stats.weekKey]) habit.history[stats.weekKey] = [false, false, false, false, false, false, false];
-                const weekData = habit.history[stats.weekKey];
-                
-                let effectiveCompletions = 0;
-                weekData.forEach((status, idx) => {
-                    const targetSat = new Date(); const currentDay = targetSat.getDay();
-                    const daysToSaturday = currentDay === 6 ? 0 : -(currentDay + 1);
-                    targetSat.setDate(targetSat.getDate() + daysToSaturday + (weekOffset * 7));
-                    const currentCheckDate = new Date(targetSat); currentCheckDate.setDate(targetSat.getDate() + idx);
-                    if (status === true || isGraceDayForDate(habit, currentCheckDate)) effectiveCompletions++;
-                });
-                const percentage = Math.min(Math.round((effectiveCompletions / habit.weeklyGoal) * 100), 100);
-                const palette = habit.colorPalette;
-
-                const tr = document.createElement('tr'); tr.className = "hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors";
-                let daysHtml = '';
-                for (let i = 0; i < 7; i++) {
-                    const isChecked = weekData[i];
-                    const targetSat = new Date(); const currentDay = targetSat.getDay();
-                    const daysToSaturday = currentDay === 6 ? 0 : -(currentDay + 1);
-                    targetSat.setDate(targetSat.getDate() + daysToSaturday + (weekOffset * 7));
-                    const currentCheckDate = new Date(targetSat); currentCheckDate.setDate(targetSat.getDate() + i);
-                    const isGrace = isGraceDayForDate(habit, currentCheckDate);
-                    
-                    let btnClasses = "w-8 h-8 rounded-lg flex items-center justify-center border-2 transition-all duration-200 mx-auto text-sm font-bold active:scale-90 hover:scale-105 ";
-                    let content = "";
-                    if (isChecked) { btnClasses += `${palette.bg} ${palette.border} text-white shadow-2xs`; content = "✓"; }
-                    else if (isGrace) { btnClasses += `${palette.opacityBg} border-transparent`; content = "✓"; }
-                    else { btnClasses += `bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-transparent`; content = " "; }
-
-                    const isTodayColumn = (weekOffset === 0 && i === stats.currentTableDayIndex);
-                    let borderRoundClass = "rounded-none";
-                    if (isTodayColumn && habitIndex === habits.length - 1) {
-                        borderRoundClass = "rounded-b-2xl";
-                    }
-                    const tdBgClass = isTodayColumn ? `bg-slate-500/5 dark:bg-white/5 ${borderRoundClass}` : "";
-
-                    daysHtml += `<td class="p-1.5 text-center ${tdBgClass}"><button ${isEditMode ? 'disabled' : ''} onclick="toggleDayNode('${habit.id}', '${stats.weekKey}', ${i})" class="${btnClasses} ${isEditMode ? 'opacity-30 cursor-not-allowed hover:scale-100 active:scale-100' : ''}">${content}</button></td>`;
-                }
-
-                const editControlsHtml = isEditMode ? `
-                    <div class="flex items-center gap-1 ml-1 bg-slate-50 dark:bg-slate-950 p-1 rounded-md border border-slate-200 dark:border-slate-800 shadow-2xs">
-                        <button onclick="editHabitTitle('${habit.id}')" class="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors p-0.5" title="ویرایش نام">✏️</button>
-                        <div class="flex flex-col gap-0.5">
-                            <button onclick="moveHabit('${habit.id}', -1)" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" title="بالا بردن">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 15l7-7 7 7" /></svg>
-                            </button>
-                            <button onclick="moveHabit('${habit.id}', 1)" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition-colors" title="پایین آوردن">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
-                            </button>
-                        </div>
-                    </div>
-                ` : '';
-
-                tr.innerHTML = `
-                    <td class="p-4">
-                        <div class="flex items-center gap-1.5">
-                            ${editControlsHtml}
-                            <div>
-                                <div class="font-bold text-slate-900 dark:text-white text-base">${habit.title}</div>
-                                <div class="flex items-center gap-1.5 mt-1">
-                                    <span class="text-xs text-slate-400 dark:text-slate-500">هدف: ${toPersianDigits(habit.weeklyGoal)} روز</span>
-                                    <span class="inline-block w-1 h-1 bg-slate-200 dark:bg-slate-800 rounded-full"></span>
-                                    <span class="text-xs font-bold ${palette.text}">🔥 ${toPersianDigits(habit.currentStreak)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                    ${daysHtml}
-                    <td class="p-4 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 max-w-[65px] overflow-hidden hidden sm:block"><div class="${palette.bg} h-full rounded-full" style="width: ${percentage}%"></div></div>
-                            <span class="text-sm font-bold text-slate-500 dark:text-slate-400">${toPersianDigits(percentage)}٪</span>
-                        </div>
-                    </td>
-                    <td class="p-4 text-center">
-                        <button onclick="deleteHabitNode('${habit.id}')" class="text-slate-300 dark:text-slate-700 hover:text-rose-600 dark:hover:text-rose-400 transition-colors p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
-                    </td>`;
-                tbody.appendChild(tr);
-
-                // ساخت کارت‌های مینیاتوری فشرده ۲۸ روزه
-                const matrixCard = document.createElement('div'); 
-                matrixCard.className = "bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-800/60 rounded-xl p-2.5 sm:p-3 flex flex-col justify-between";
-                
-                let weeksRowsHtml = ''; 
-                const baseSat = new Date(); 
-                const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay() + 1);
-                baseSat.setDate(baseSat.getDate() + dToSat - 21); 
-
-                for (let weekIdx = 0; weekIdx < 4; weekIdx++) {
-                    let singleWeekDots = '';
-                    let completionsInThisWeek = 0;
-
-                    for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
-                        const dayCellDate = new Date(baseSat); 
-                        dayCellDate.setDate(baseSat.getDate() + (weekIdx * 7) + dayIdx);
-                        const info = getStatusByDate(habit, dayCellDate); 
-                        const isDone = info.isChecked || isGraceDayForDate(habit, dayCellDate);
-                        if (isDone) completionsInThisWeek++;
-
-                        const jCellDate = jalaali.toJalaali(dayCellDate.getFullYear(), dayCellDate.getMonth() + 1, dayCellDate.getDate());
-                        // ریزتر کردن سایز نقطه‌ها به w-2 h-2
-                        const dotClass = isDone ? `w-2 h-2 ${palette.bg} rounded-sm` : `w-2 h-2 bg-slate-200 dark:bg-slate-800 rounded-sm`;
-                        singleWeekDots += `<div class="${dotClass}" title="روز ${toPersianDigits(jCellDate.jd)} ${JALAALI_MONTHS[jCellDate.jm - 1]}"></div>`;
-                    }
-
-                    const isGoalAchieved = completionsInThisWeek >= habit.weeklyGoal;
-                    const rowContainerClass = isGoalAchieved 
-                        ? `${palette.weekCapsule} rounded-full px-2 py-0.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]` 
-                        : "px-2 py-0.5 bg-transparent";
-
-                    weeksRowsHtml += `
-                        <div class="flex items-center justify-center transition-all ${rowContainerClass}">
-                            <div class="flex items-center gap-1 sm:gap-1.5">${singleWeekDots}</div>
-                        </div>`;
-                }
-
-                matrixCard.innerHTML = `
-                    <div class="flex justify-between items-center mb-2 gap-1">
-                        <span class="font-bold text-slate-800 dark:text-slate-200 text-xs sm:text-sm truncate" title="${habit.title}">${habit.title}</span>
-                        <span class="text-[10px] sm:text-xs font-semibold px-1.5 py-0.5 rounded ${palette.lightBg} ${palette.text} shrink-0">۲۸روز</span>
-                    </div>
-                    <div class="space-y-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/60 rounded-lg p-2 shadow-3xs flex flex-col justify-center min-h-[90px]">
-                        ${weeksRowsHtml}
-                    </div>`;
-                chartsContainer.appendChild(matrixCard);
-            });
-        }
-
-        document.getElementById('add-habit-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const titleInput = document.getElementById('habit-title'); const goalSelect = document.getElementById('habit-goal');
-            
-            const newHabit = {
-                id: 'habit_' + Math.random().toString(36).substr(2, 9),
-                title: titleInput.value.trim(),
-                weeklyGoal: parseInt(goalSelect.value, 10),
-                colorPalette: COLOR_PALETTES[habits.length % COLOR_PALETTES.length], 
-                history: {}, currentStreak: 0
-            };
-            newHabit.history[getJalaliStats(0).weekKey] = [false, false, false, false, false, false, false];
-            habits.push(newHabit);
-            titleInput.value = ''; goalSelect.value = '7';
-
-            saveDataToDisk();
-            renderApp();
-        });
-
-        window.deleteHabitNode = function(id) {
-            if (confirm('آیا از حذف این عادت اطمینان دارید؟')) {
-                habits = habits.filter(h => h.id !== id);
-                saveDataToDisk();
-                renderApp();
-            }
-        };
-
-        function saveDataToDisk() {
-            localStorage.setItem('habits_data', JSON.stringify(habits));
-        }
-
-        function loadDataFromDisk() {
-            const savedHabits = localStorage.getItem('habits_data');
-            if (savedHabits) {
-                try { habits = JSON.parse(savedHabits); } catch(e) { habits = []; }
-            } else { habits = []; }
-            habits.forEach(h => h.currentStreak = calculateJalaliStreak(h));
-        }
-
-        function checkAppVersionUpdate() {
-            const lastSavedVersion = localStorage.getItem('app_version_key');
-            document.getElementById('app-version-display').innerText = `v${CURRENT_VERSION}`;
-            
-            if (lastSavedVersion !== CURRENT_VERSION) {
-                localStorage.setItem('app_version_key', CURRENT_VERSION);
-                if (lastSavedVersion !== null) {
-                    window.location.reload(true);
-                }
-            }
-        }
-
-        window.onload = function() {
-            checkAppVersionUpdate();
-            const stats = getJalaliStats(0);
-            const prDate = `${WEEKDAYS_FA[new Date().getDay()]}، ${stats.realJToday.jd} ${JALAALI_MONTHS[stats.realJToday.jm - 1]} ${stats.realJToday.jy}`;
-            document.getElementById('current-date-display').innerText = `امروز: ${toPersianDigits(prDate)}`;
-            loadDataFromDisk();
-            renderApp();
-        };
-    </script>
+function initializeApp() {
+  $('app-version-display').textContent = `v${CURRENT_VERSION}`;
+  const stats = getJalaliStats(0);
+  const today = new Date();
+  const weekday = WEEKDAYS_FA[today.getDay()];
+  $('current-date-display').textContent = `امروز: ${toPersianDigits(`${weekday}، ${stats.realJToday.jd} ${JALAALI_MONTHS[stats.realJToday.jm-1]} ${stats.realJToday.jy}`)}`;
+  initTheme();
+  loadDataFromDisk();
+  renderApp();
+  initCloud();
+}
+initializeApp();
+</script>
 </body>
 </html>
