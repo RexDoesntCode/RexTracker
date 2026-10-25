@@ -196,14 +196,30 @@
   </div>
 
   <div id="sync-conflict-modal" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm p-4 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="sync-conflict-title">
-    <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-5 sm:p-6">
-      <h2 id="sync-conflict-title" class="text-lg font-extrabold text-slate-900 dark:text-white">دو نسخه از اطلاعات پیدا شد</h2>
-      <p class="text-sm text-slate-600 dark:text-slate-300 mt-2 leading-7">هم در این مرورگر و هم در حساب ابری عادت‌هایی وجود دارد. برای جلوگیری از حذف ناخواستهٔ اطلاعات، روش ادامه را انتخاب کن.</p>
-      <div id="sync-conflict-counts" class="text-xs text-slate-500 dark:text-slate-400 mt-2"></div>
-      <div class="grid grid-cols-1 gap-2 mt-5">
-        <button type="button" data-sync-choice="cloud" class="rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-4 py-3 text-sm font-bold">استفاده از اطلاعات حساب ابری</button>
-        <button type="button" data-sync-choice="merge" class="rounded-xl border border-indigo-300 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200 px-4 py-3 text-sm font-bold hover:bg-indigo-50 dark:hover:bg-indigo-950/40">ادغام دو نسخه (پیشنهادی برای حفظ اطلاعات)</button>
-        <button type="button" data-sync-choice="local" class="rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 py-3 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800">جایگزینی نسخهٔ ابری با این مرورگر</button>
+    <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-5 sm:p-6">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 shrink-0 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 flex items-center justify-center" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.3 4.7 2.8 18a1.7 1.7 0 0 0 1.5 2.5h15.4a1.7 1.7 0 0 0 1.5-2.5l-7.5-13.3a1.7 1.7 0 0 0-3 0Z"/></svg>
+        </div>
+        <div>
+          <h2 id="sync-conflict-title" class="text-lg font-extrabold text-slate-900 dark:text-white">اطلاعات این مرورگر و حسابت یکی نیست</h2>
+          <p class="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-7">هر دو نسخه عادت دارند. انتخاب کن کدام را نگه داریم؛ اگر مطمئن نیستی، «ترکیب هر دو نسخه» انتخاب مناسب‌تری است.</p>
+        </div>
+      </div>
+      <div id="sync-conflict-counts" class="rounded-xl bg-slate-50 dark:bg-slate-800/70 px-3 py-2.5 text-xs text-slate-600 dark:text-slate-300 mt-4"></div>
+      <div class="grid grid-cols-1 gap-3 mt-4">
+        <button type="button" data-sync-choice="merge" class="text-right rounded-xl border border-indigo-300 dark:border-indigo-700 bg-indigo-50/70 dark:bg-indigo-950/30 px-4 py-3 hover:bg-indigo-100/70 dark:hover:bg-indigo-950/60 transition">
+          <span class="block text-sm font-extrabold text-indigo-900 dark:text-indigo-100">اطلاعات هر دو نسخه رو ترکیب کن <span class="text-xs font-bold">(پیشنهادی)</span></span>
+          <span class="block mt-1 text-xs font-normal leading-6 text-slate-600 dark:text-slate-300">عادت‌های هر دو طرف و روزهایی که انجامشان را ثبت کرده‌ای حفظ می‌شوند. اگر اسم یا هدف یک عادت فرق داشته باشد، اطلاعات این مرورگر در اولویت است.</span>
+        </button>
+        <button type="button" data-sync-choice="cloud" class="text-right rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+          <span class="block text-sm font-extrabold text-slate-800 dark:text-slate-100">اطلاعات حساب رو روی این مرورگر بیار</span>
+          <span class="block mt-1 text-xs font-normal leading-6 text-slate-600 dark:text-slate-300">عادت‌ها و ثبت‌های داخل حساب روی این مرورگر می‌آیند و جای اطلاعات فعلی این مرورگر را می‌گیرند. چیزهایی که فقط روی این دستگاه ثبت کرده‌ای، در نسخهٔ فعال باقی نمی‌مانند.</span>
+        </button>
+        <button type="button" data-sync-choice="local" class="text-right rounded-xl border border-rose-200 dark:border-rose-900/70 px-4 py-3 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition">
+          <span class="block text-sm font-extrabold text-rose-800 dark:text-rose-300">اطلاعات این مرورگر رو جای اطلاعات حساب بذار</span>
+          <span class="block mt-1 text-xs font-normal leading-6 text-slate-600 dark:text-slate-300">اطلاعات این مرورگر روی حسابت ذخیره می‌شود و نسخهٔ فعلی حساب را جایگزین می‌کند. عادت‌ها یا ثبت‌هایی که فقط داخل حساب هستند، در نسخهٔ جدید حساب باقی نمی‌مانند.</span>
+        </button>
       </div>
     </div>
   </div>
@@ -216,7 +232,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '2.3';
+const CURRENT_VERSION = '2.4';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
 const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
@@ -521,7 +537,7 @@ function mergeHabitSets(localSet, cloudSet) {
 }
 function showSyncConflict(localData, cloudData) {
   pendingConflict = { local: cloneHabitsFrom(localData), cloud: cloneHabitsFrom(cloudData) };
-  $('sync-conflict-counts').textContent = `این دستگاه: ${toPersianDigits(localData.length)} عادت · حساب ابری: ${toPersianDigits(cloudData.length)} عادت`;
+  $('sync-conflict-counts').textContent = `این مرورگر: ${toPersianDigits(localData.length)} عادت  ·  داخل حساب: ${toPersianDigits(cloudData.length)} عادت`;
   $('sync-conflict-modal').classList.remove('hidden');
   $('account-status').textContent = 'برای انتخاب نسخهٔ اطلاعات، یکی از گزینه‌های پنجره را انتخاب کن.';
 }
@@ -540,10 +556,10 @@ async function handleSyncChoice(choice) {
   if (choice === 'cloud') { applyHabitSet(cloud, false); $('account-status').textContent = 'اطلاعات حساب ابری روی این دستگاه بارگذاری شد.'; }
   else if (choice === 'local') {
     applyHabitSet(local, false); const result = await syncCloudNow();
-    $('account-status').textContent = result === true ? 'اطلاعات این مرورگر جایگزین نسخهٔ ابری شد.' : 'اطلاعات محلی حفظ شد، اما جایگزینی نسخهٔ ابری هنوز تأیید نشده است.';
+    $('account-status').textContent = result === true ? 'اطلاعات این مرورگر جایگزین نسخهٔ ابری شد.' : 'اطلاعات این مرورگر حفظ شد، اما جایگزینی اطلاعات حساب تأیید نشد.';
   } else {
     applyHabitSet(mergeHabitSets(local, cloud), false); const result = await syncCloudNow();
-    $('account-status').textContent = result === true ? 'اطلاعات محلی و ابری ادغام و همگام شدند.' : 'اطلاعات ادغام‌شده روی این دستگاه حفظ شد؛ همگام‌سازی ابری ناموفق بود.';
+    $('account-status').textContent = result === true ? 'اطلاعات هر دو نسخه ترکیب و همگام شدند.' : 'اطلاعات ترکیب‌شده روی این دستگاه حفظ شد؛ همگام‌سازی حساب ناموفق بود.';
   }
 }
 function isCloudConfigured() {
