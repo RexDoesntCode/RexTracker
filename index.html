@@ -2,8 +2,9 @@
 <html lang="fa" dir="rtl" class="h-full">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#f3f6fa">
+  <meta name="format-detection" content="telephone=no">
   <meta name="description" content="Rex Tracker | رهگیری عادت‌ها و پیشرفت روزانه">
   <meta name="application-name" content="Rex Tracker">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -308,6 +309,101 @@
   @media (prefers-reduced-motion: reduce) {
     *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
   }
+
+  /* v3.1 accessibility, touch and responsive refinements */
+  #save-status { transition:background-color .2s ease,color .2s ease,border-color .2s ease; }
+  #save-status.status-local { color:#35536d !important; background:#edf4fb !important; border-color:#cbd9e7 !important; }
+  #save-status.status-saving { color:#744d00 !important; background:#fff6d9 !important; border-color:#ebd58a !important; }
+  #save-status.status-success { color:#086847 !important; background:#e4f8ef !important; border-color:#a9e4c9 !important; }
+  #save-status.status-error { color:#a51f36 !important; background:#fff0f2 !important; border-color:#f3bbc4 !important; }
+  html.dark #save-status.status-local { color:#d7e6f4 !important; background:#182d42 !important; border-color:#38516a !important; }
+  html.dark #save-status.status-saving { color:#ffe5a0 !important; background:#423315 !important; border-color:#705b28 !important; }
+  html.dark #save-status.status-success { color:#a7f3d0 !important; background:#10382f !important; border-color:#216b57 !important; }
+  html.dark #save-status.status-error { color:#ffc0ca !important; background:#451e2a !important; border-color:#813b4a !important; }
+
+  /* Readable secondary text in both themes; keep semantic/accent colors intact. */
+  html:not(.dark) .text-slate-400 { color:#687b8f !important; }
+  html:not(.dark) .text-slate-500 { color:#53697f !important; }
+  html:not(.dark) .text-gray-400 { color:#687b8f !important; }
+  html:not(.dark) .text-gray-500 { color:#53697f !important; }
+  html.dark .text-slate-400 { color:#a8bdcf !important; }
+  html.dark .text-slate-500 { color:#b8cbdc !important; }
+  html.dark .text-gray-400 { color:#a8bdcf !important; }
+  html.dark .text-gray-500 { color:#b8cbdc !important; }
+  #current-date-display { color:#405a73 !important; }
+  html.dark #current-date-display { color:#d0dfed !important; }
+  .brand-subtitle { color:#526b82 !important; }
+  html.dark .brand-subtitle { color:#afc3d6 !important; }
+  .welcome-description { color:#586f85 !important; }
+  html.dark .welcome-description { color:#b6c8d8 !important; }
+  .habit-table .habit-goal-label { color:#65798d !important; }
+  html.dark .habit-table .habit-goal-label { color:#a7bbcd !important; }
+  input::placeholder, textarea::placeholder { color:#6f8296 !important; opacity:1; }
+  html.dark input::placeholder, html.dark textarea::placeholder { color:#9cb0c2 !important; opacity:1; }
+
+  /* Responsive layout: compact first screen, larger controls, safe-area aware. */
+  .app-shell { padding-bottom:calc(28px + env(safe-area-inset-bottom)); }
+  button, select, input, textarea { touch-action:manipulation; }
+  .day-button { min-width:34px; min-height:38px; height:38px; border-radius:12px !important; font-size:15px !important; }
+  .day-button:focus-visible { outline:3px solid #13a9cb; outline-offset:2px; z-index:3; }
+  .day-button[aria-pressed="true"] { transform:scale(.97); }
+  .habit-table tbody tr { transition:background-color .18s ease,box-shadow .18s ease; }
+  .habit-table tbody tr:has(.day-button:focus-visible) { box-shadow:inset 0 0 0 1px rgba(19,169,203,.24); }
+  .action-btn, #add-habit-open-btn, #edit-mode-btn { min-height:44px; }
+  #toast-container .toast { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px; width:max-content; }
+  #toast-container .toast .toast-message { min-width:0; }
+  #toast-container .toast .toast-undo { min-height:36px; padding:6px 12px; border-radius:10px; border:1px solid rgba(255,255,255,.38); color:#fff; font-weight:800; background:rgba(255,255,255,.14); }
+  #toast-container .toast .toast-undo:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+  .day-button { -webkit-user-select:none; user-select:none; }
+  @media (max-width: 720px) {
+    .app-shell { padding:10px 10px calc(24px + env(safe-area-inset-bottom)); }
+    .topbar { gap:10px; padding:12px; }
+    .brand-lockup { gap:10px; }
+    .brand-icon { width:40px; height:40px; }
+    .topbar-actions { display:grid; grid-template-columns:auto 1fr; align-items:stretch; gap:8px; }
+    #theme-toggle { min-width:44px; }
+    #auth-open-btn { margin:0; justify-self:stretch; }
+    #account-signed-in { grid-column:1 / -1; width:100%; display:flex; flex-wrap:wrap; gap:7px; padding:7px; }
+    #account-email { max-width:100%; flex:1 1 100%; padding:5px 6px; }
+    #sync-now-btn { flex:1 1 auto; }
+    #sign-out-btn { flex:0 0 auto; }
+    .welcome-section { margin-top:12px; padding:16px; gap:13px; }
+    .eyebrow { margin-bottom:8px; font-size:12px; }
+    .welcome-title { font-size:22px; line-height:1.45; }
+    .welcome-description { margin-top:7px; font-size:13px; line-height:1.85; }
+    .date-status-row { align-items:flex-start; flex-direction:column; gap:8px; margin-top:13px; }
+    #save-status { font-size:12px; padding:6px 9px; }
+    .week-panel { padding:13px; }
+    .week-label { font-size:13px; }
+    .section-actions button { min-height:44px; }
+    #mobile-habits-list { padding:8px !important; gap:10px !important; }
+    #mobile-habits-list > article { padding:14px !important; border-radius:17px !important; }
+    #mobile-habits-list .day-button { width:clamp(29px,8.5vw,36px); min-width:clamp(29px,8.5vw,36px); height:36px; min-height:36px; border-radius:10px !important; font-size:14px !important; }
+    .mobile-habits-grid > article > .grid { column-gap:2px !important; }
+    .habit-edit-panel button { min-height:40px; }
+    .modal-overlay { align-items:flex-end !important; padding:8px 8px calc(8px + env(safe-area-inset-bottom)) !important; }
+    .modal-overlay > div, #sync-conflict-modal > div { width:100%; max-height:calc(100dvh - 16px - env(safe-area-inset-top)); overflow-y:auto; overscroll-behavior:contain; padding:16px !important; border-radius:22px 22px 16px 16px !important; }
+    input, select, textarea, [contenteditable="true"] { font-size:16px !important; line-height:1.5 !important; }
+    input[type="checkbox"], input[type="radio"] { font-size:initial !important; }
+    .action-btn { font-size:12px; }
+    #monthly-trends-section { padding:14px; }
+  }
+  @media (max-width: 360px) {
+    .brand-title { font-size:17px; }
+    .topbar-actions { grid-template-columns:44px minmax(0,1fr); }
+    .action-btn { padding-inline:8px; }
+    #mobile-habits-list > article { padding:11px !important; }
+    #mobile-habits-list .day-button { width:29px; min-width:29px; height:34px; min-height:34px; }
+  }
+  /* Explicitly disable page zoom per user request. This can reduce accessibility. */
+  html, body { touch-action:pan-x pan-y; }
+  @media (prefers-reduced-motion: reduce) {
+    .topbar, .welcome-section, #monthly-trends-section, .modal-overlay.is-open,
+    .modal-overlay > div, #sync-conflict-modal > div, #toast-container .toast,
+    .welcome-section::before { animation:none !important; }
+    *,*::before,*::after { scroll-behavior:auto !important; }
+  }
+
 </style>
 </head>
 <body class="min-h-full pb-10 antialiased selection:bg-sky-100 dark:selection:bg-sky-950 transition-colors duration-200">
@@ -508,7 +604,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.0';
+const CURRENT_VERSION = '3.1';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
 const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
@@ -533,6 +629,8 @@ let cloudSyncInFlight = false;
 let cloudSyncRequested = false;
 let authBusy = false;
 let lastToastTimer = null;
+let pendingDeletedHabit = null;
+let pendingDeleteTimer = null;
 const $ = (id) => document.getElementById(id);
 
 function toPersianDigits(value) {
@@ -541,16 +639,41 @@ function toPersianDigits(value) {
 }
 function showToast(message, type='info') {
   const box = document.createElement('div');
-  const style = type === 'error' ? 'bg-rose-700' : type === 'success' ? 'bg-emerald-700' : 'bg-slate-900 dark:bg-slate-700';
+  const style = type === 'error' ? 'bg-rose-800' : type === 'success' ? 'bg-emerald-800' : 'bg-slate-900 dark:bg-slate-700';
   box.className = `toast pointer-events-auto max-w-lg rounded-xl ${style} px-4 py-3 text-sm font-medium text-white shadow-lg`;
-  box.textContent = message;
+  const text = document.createElement('span');
+  text.className = 'toast-message';
+  text.textContent = message;
+  box.appendChild(text);
   $('toast-container').appendChild(box);
   window.setTimeout(() => box.remove(), 4200);
 }
+function showUndoToast(message, onUndo, duration=8000) {
+  const box = document.createElement('div');
+  box.className = 'toast pointer-events-auto max-w-lg rounded-xl bg-slate-900 dark:bg-slate-700 px-4 py-3 text-sm font-medium text-white shadow-lg';
+  const text = document.createElement('span');
+  text.className = 'toast-message';
+  text.textContent = message;
+  const undo = document.createElement('button');
+  undo.type = 'button';
+  undo.className = 'toast-undo';
+  undo.textContent = 'برگرداندن';
+  undo.setAttribute('aria-label', 'برگرداندن عادت حذف‌شده');
+  undo.addEventListener('click', () => {
+    if (typeof onUndo === 'function') onUndo();
+    box.remove();
+  }, { once:true });
+  box.append(text, undo);
+  $('toast-container').appendChild(box);
+  window.setTimeout(() => box.remove(), duration);
+}
 function setSaveStatus(message, color='text-slate-400 dark:text-slate-400') {
   const el = $('save-status');
+  if (!el) return;
+  const kind = /rose|red/.test(color) ? 'status-error' : /indigo|amber|yellow/.test(color) ? 'status-saving' : /emerald|green/.test(color) ? 'status-success' : 'status-local';
   el.textContent = message;
-  el.className = `inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 ${color}`;
+  el.className = `inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${kind}`;
+  el.setAttribute('data-status', kind.replace('status-', ''));
 }
 function makeId() {
   try { if (crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID(); } catch (_) {}
@@ -683,9 +806,9 @@ function saveDataToDisk(options={}) {
     const oldRaw = localStorage.getItem('habits_data');
     if (oldRaw) localStorage.setItem('habits_data_backup', oldRaw);
     localStorage.setItem('habits_data', JSON.stringify(habits));
-    setSaveStatus('ذخیره روی این دستگاه انجام شد', 'text-emerald-600 dark:text-emerald-400');
+    setSaveStatus('ذخیره روی دستگاه انجام شد', 'text-emerald-600 dark:text-emerald-400');
   } catch (error) {
-    setSaveStatus('خطا در ذخیرهٔ محلی', 'text-rose-600');
+    setSaveStatus('ذخیرهٔ محلی ناموفق بود', 'text-rose-600 dark:text-rose-400');
     showToast('مرورگر نتوانست اطلاعات را ذخیره کند. فضای ذخیره‌سازی مرورگر را بررسی کن.', 'error');
   }
   if (shouldSync && cloudUser && supabaseClient) scheduleCloudSync();
@@ -1073,7 +1196,7 @@ function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette, compact=fal
   if (disabled) classes += ' opacity-40 cursor-not-allowed hover:border-slate-200 dark:hover:border-slate-700';
   const content = checked || grace ? '✓' : '·';
   const title = future ? 'ثبت روز آینده غیرفعال است' : (isEditMode ? 'برای ثبت وضعیت از حالت ویرایش خارج شو' : `ثبت وضعیت روز ${toPersianDigits(date.getDate())}`);
-  return `<button type="button" data-action="toggle-day" data-day-index="${dayIndex}" data-week-key="${weekKey}" class="${classes}" title="${title}" aria-label="${title}" ${disabled ? 'disabled aria-disabled="true"' : ''}>${content}</button>`;
+  return `<button type="button" data-action="toggle-day" data-day-index="${dayIndex}" data-week-key="${weekKey}" class="${classes}" title="${title}" aria-label="${title}" aria-pressed="${checked ? 'true' : 'false'}" ${disabled ? 'disabled aria-disabled="true"' : ''}>${content}</button>`;
 }
 
 function updateSummaryStats(stats) {
@@ -1268,8 +1391,27 @@ function handleAction(button) {
   if (action === 'delete-habit') {
     const habit = getHabit(habitId); if (!habit) return;
     if (!isEditMode) return;
-    if (!window.confirm(`عادت «${habit.title}» حذف شود؟ این کار سابقهٔ همین عادت را نیز از این دستگاه و حساب متصل حذف می‌کند.`)) return;
-    habits = habits.filter(h => h.id !== habitId); recalculateStreaks(); saveDataToDisk(); renderApp(); showToast('عادت حذف شد.', 'success'); return;
+    if (!window.confirm(`عادت «${habit.title}» حذف شود؟ سابقهٔ آن هم حذف می‌شود، اما تا چند ثانیه می‌توانی برش گردانی.`)) return;
+    const index = habits.findIndex(item => item.id === habitId);
+    const deletedCopy = JSON.parse(JSON.stringify(habit));
+    if (pendingDeleteTimer) clearTimeout(pendingDeleteTimer);
+    const undoEntry = { habit: deletedCopy, index };
+    pendingDeletedHabit = undoEntry;
+    habits = habits.filter(h => h.id !== habitId);
+    recalculateStreaks(); saveDataToDisk(); renderApp();
+    showUndoToast('عادت حذف شد.', () => {
+      if (pendingDeletedHabit !== undoEntry) { showToast('مهلت برگرداندن این عادت به پایان رسیده است.', 'error'); return; }
+      const entry = undoEntry;
+      pendingDeletedHabit = null;
+      if (pendingDeleteTimer) clearTimeout(pendingDeleteTimer);
+      pendingDeleteTimer = null;
+      if (getHabit(entry.habit.id)) { showToast('این عادت از قبل وجود دارد؛ برگرداندن انجام نشد.', 'error'); return; }
+      habits.splice(Math.max(0, Math.min(entry.index, habits.length)), 0, entry.habit);
+      recalculateStreaks(); saveDataToDisk(); renderApp();
+      showToast('عادت و سابقه‌اش برگردانده شد.', 'success');
+    }, 8000);
+    pendingDeleteTimer = setTimeout(() => { if (pendingDeletedHabit === undoEntry) pendingDeletedHabit = null; pendingDeleteTimer = null; }, 8000);
+    return;
   }
 }
 document.addEventListener('click', (event) => {
@@ -1308,6 +1450,19 @@ document.addEventListener('keydown', (event) => {
     });
   }
 });
+
+// Disable browser zoom gestures as explicitly requested. Inputs remain usable, but browser zoom/accessibility magnification is disabled.
+(function disablePageZoomGestures() {
+  const prevent = (event) => { if (event.cancelable) event.preventDefault(); };
+  ['gesturestart','gesturechange','gestureend'].forEach(type => document.addEventListener(type, prevent, { passive:false }));
+  document.addEventListener('wheel', event => { if (event.ctrlKey || event.metaKey) prevent(event); }, { passive:false });
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', event => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 280 && event.cancelable) event.preventDefault();
+    lastTouchEnd = now;
+  }, { passive:false });
+})();
 
 function initializeApp() {
   $('app-version-display').textContent = `v${CURRENT_VERSION}`;
