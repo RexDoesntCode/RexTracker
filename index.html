@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f8fafc">
-  <meta name="description" content="پیشخوان شخصی رهگیری عادات با تقویم شمسی و همگام‌سازی بین دستگاه‌ها">
-  <title>پیشخوان هوشمند رهگیری عادات</title>
+  <meta name="description" content="Rex Tracker | رهگیری عادات؛ رهگیری عادت‌ها با تقویم شمسی و همگام‌سازی بین دستگاه‌ها">
+  <title>Rex Tracker | رهگیری عادات</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +25,9 @@
     .habit-table tbody tr:hover td:first-child { background: #f8fafc; }
     .dark .habit-table tbody tr:hover td:first-child { background: #111c30; }
     .day-button { min-width: 2rem; min-height: 2rem; }
+    .modal-overlay { display: none; }
+    .modal-overlay.is-open { display: flex; }
+    body.modal-open { overflow: hidden; }
     #toast-container.toast-container {
       position: fixed;
       left: 50%;
@@ -56,16 +59,22 @@
   <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8">
     <header class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-6 mb-4 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
       <div class="min-w-0">
-        <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">پیشخوان هوشمند رهگیری عادات</h1>
+        <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Rex Tracker | رهگیری عادات</h1>
         <div class="flex flex-wrap items-center gap-2 mt-2">
           <p id="current-date-display" class="text-sm text-slate-500 dark:text-slate-400">امروز: ...</p>
           <span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>
-          <span id="app-version-display" class="text-xs text-slate-400 font-mono">v2.0</span>
+          <span id="app-version-display" class="text-xs text-slate-400 font-mono">v2.2</span>
           <span id="save-status" class="text-xs text-slate-400" role="status" aria-live="polite">ذخیره روی این دستگاه</span>
         </div>
       </div>
       <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
         <button id="theme-toggle" type="button" class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="تغییر تم">🌙 تم</button>
+        <button id="auth-open-btn" type="button" class="px-3 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-sm font-bold hover:opacity-90">ورود | ثبت نام</button>
+        <div id="account-signed-in" class="hidden items-center gap-2 flex-wrap">
+          <span id="account-email" class="max-w-[12rem] text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 break-all" title="حساب کاربری"></span>
+          <button id="sync-now-btn" type="button" class="px-3 py-2 rounded-xl border border-indigo-200 dark:border-indigo-800 text-indigo-800 dark:text-indigo-200 text-sm font-bold hover:bg-indigo-50 dark:hover:bg-indigo-950/40 disabled:opacity-50" title="همگام‌سازی فوری اطلاعات با حساب ابری">↻ Sync اجباری</button>
+          <button id="sign-out-btn" type="button" class="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">خروج</button>
+        </div>
         <div class="flex items-center gap-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200/70 dark:border-slate-800 p-1 rounded-xl mr-auto lg:mr-0">
           <button type="button" data-action="navigate-week" data-direction="1" class="p-2 hover:bg-white dark:hover:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300 transition active:scale-95" title="هفته بعدی" aria-label="هفته بعدی">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
@@ -78,38 +87,17 @@
       </div>
     </header>
 
-    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mb-7 shadow-sm" aria-labelledby="account-heading">
-      <div class="flex items-start sm:items-center gap-3 justify-between flex-col sm:flex-row">
-        <div class="min-w-0">
-          <h2 id="account-heading" class="font-bold text-slate-900 dark:text-white flex items-center gap-2"><span class="inline-flex w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 items-center justify-center">☁️</span> حساب کاربری و همگام‌سازی</h2>
-          <p id="account-status" class="text-sm text-slate-500 dark:text-slate-400 mt-2" role="status" aria-live="polite">اطلاعات روی این دستگاه ذخیره می‌شود.</p>
-        </div>
-        <div id="account-signed-in" class="hidden w-full sm:w-auto flex-col sm:flex-row sm:items-center gap-2">
-          <span id="account-email" class="text-sm font-semibold text-slate-700 dark:text-slate-200 break-all"></span>
-          <button id="sign-out-btn" type="button" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">خروج از حساب</button>
-        </div>
-      </div>
-      <div id="account-config-warning" class="mt-4 rounded-xl border border-amber-200 dark:border-amber-900/70 bg-amber-50/70 dark:bg-amber-950/20 p-3 text-sm text-amber-900 dark:text-amber-200">
-        ورود و همگام‌سازی ابری هنوز پیکربندی نشده است. اپلیکیشن در حالت محلی کار می‌کند. برای فعال کردن حساب، مراحل فایل <span class="font-bold">README-setup-fa.md</span> را انجام بده و کلیدهای پروژهٔ Supabase را در تنظیمات ابتدای اسکریپت قرار بده.
-      </div>
-      <form id="auth-form" class="hidden mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto_auto] gap-3 items-end">
-        <div><label for="auth-email" class="block text-xs font-semibold text-slate-500 mb-1.5">ایمیل</label><input id="auth-email" type="email" autocomplete="email" required maxlength="254" placeholder="name@example.com" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"></div>
-        <div><label for="auth-password" class="block text-xs font-semibold text-slate-500 mb-1.5">رمز عبور</label><input id="auth-password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" placeholder="حداقل ۸ نویسه" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"></div>
-        <button type="submit" id="sign-in-btn" class="rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-4 py-2.5 text-sm font-bold hover:opacity-90">ورود</button>
-        <button type="button" id="sign-up-btn" class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800">ساخت حساب</button>
-      </form>
-      <p id="account-help" class="hidden mt-3 text-xs text-slate-500 dark:text-slate-400">ورود روی این مرورگر ماندگار می‌ماند. برای دیدن اطلاعات روی دستگاه دیگر، با همان حساب وارد شو.</p>
-    </section>
+
 
     <main class="mb-8">
       <div class="flex flex-wrap justify-between items-center gap-3 mb-4 px-1">
         <div>
           <h2 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2"><span class="w-1 h-4 bg-slate-800 dark:bg-slate-200 rounded-full inline-block"></span> جدول هفتگی ارزیابی عادات</h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">روزهای گذشته قابل ویرایش‌اند؛ ثبت روزهای آینده غیرفعال است.</p>
         </div>
         <div class="flex items-center gap-2">
           <span id="habits-count-badge" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs px-3 py-2 rounded-lg font-bold">۰ عادت</span>
-          <button id="edit-mode-btn" type="button" class="text-sm font-bold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-3.5 py-2 rounded-xl transition shadow-sm">⚙️ حالت ویرایش</button>
+          <button id="add-habit-open-btn" type="button" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-2xl leading-none font-medium shadow-sm" aria-label="تعریف عادت جدید" title="تعریف عادت جدید">+</button>
+          <button id="edit-mode-btn" type="button" class="text-sm font-bold bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-3.5 py-2 rounded-xl transition shadow-sm">ویرایش</button>
         </div>
       </div>
       <div id="edit-mode-note" class="hidden mb-3 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 text-sm text-indigo-800 dark:text-indigo-200">حالت ویرایش فعال است. نام، هدف هفتگی، رنگ، ترتیب و حذف هر عادت از همین بخش قابل مدیریت است.</div>
@@ -127,7 +115,7 @@
         </div>
         <div id="mobile-habits-list" class="md:hidden p-3 space-y-3"></div>
         <div id="empty-state" class="hidden text-center py-14 px-5">
-          <div class="text-3xl mb-3">🌱</div><p class="font-bold text-slate-700 dark:text-slate-200">هنوز عادتی ثبت نشده است.</p><p class="text-sm text-slate-500 mt-1">از فرم پایین صفحه اولین عادتت را اضافه کن.</p>
+          <div class="text-3xl mb-3">🌱</div><p class="font-bold text-slate-700 dark:text-slate-200">هنوز عادتی ثبت نشده است.</p><p class="text-sm text-slate-500 mt-1">با دکمهٔ + کنار «ویرایش» اولین عادتت را اضافه کن.</p>
         </div>
       </div>
     </main>
@@ -141,16 +129,47 @@
       <div id="monthly-charts-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3"></div>
     </section>
 
-    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
-      <h2 class="text-sm font-extrabold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2"><span class="w-1 h-4 bg-slate-400 rounded-full inline-block"></span> تعریف عادت جدید</h2>
-      <form id="add-habit-form" class="grid grid-cols-1 md:grid-cols-[1fr_200px_auto] gap-3 items-end">
-        <div><label for="habit-title" class="block text-xs font-semibold text-slate-500 mb-1.5">نام عادت</label><input type="text" id="habit-title" required maxlength="80" placeholder="مثلاً: ورزش، مطالعه، تمرین پیانو..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 placeholder:text-slate-400"></div>
-        <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
-        <button type="submit" class="w-full md:w-auto bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">+ افزودن عادت</button>
-      </form>
-    </section>
+
 
     <footer class="text-center text-xs text-slate-400 dark:text-slate-600 mt-7">داده‌ها ابتدا روی دستگاه ذخیره می‌شوند؛ با فعال‌سازی حساب، نسخهٔ ابری نیز همگام خواهد شد.</footer>
+  </div>
+
+
+  <div id="auth-modal" class="modal-overlay fixed inset-0 z-[60] bg-slate-950/60 backdrop-blur-sm p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <div class="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-4">
+        <h2 id="auth-modal-title" class="text-lg font-extrabold text-slate-900 dark:text-white">ورود یا ساخت حساب</h2>
+        <button type="button" data-close-modal="auth-modal" class="w-9 h-9 shrink-0 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="بستن">✕</button>
+      </div>
+      <p id="account-status" class="text-sm text-slate-500 dark:text-slate-400 mb-3" role="status" aria-live="polite">برای دسترسی به اطلاعات از دستگاه‌های مختلف، وارد حساب شو یا حساب بساز.</p>
+      <div id="account-config-warning" class="hidden mt-4 rounded-xl border border-amber-200 dark:border-amber-900/70 bg-amber-50/70 dark:bg-amber-950/20 p-3 text-sm text-amber-900 dark:text-amber-200">
+        ورود و همگام‌سازی ابری هنوز پیکربندی نشده است. اپلیکیشن در حالت محلی کار می‌کند. برای فعال کردن حساب، مقادیر Supabase را بررسی کن.
+      </div>
+      <form id="auth-form" class="hidden mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+        <div><label for="auth-email" class="block text-xs font-semibold text-slate-500 mb-1.5">ایمیل</label><input id="auth-email" type="email" autocomplete="email" required maxlength="254" placeholder="name@example.com" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"></div>
+        <div><label for="auth-password" class="block text-xs font-semibold text-slate-500 mb-1.5">رمز عبور</label><input id="auth-password" type="password" autocomplete="current-password" required minlength="8" maxlength="128" placeholder="حداقل ۸ نویسه" class="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/30"></div>
+        <div class="sm:col-span-2 flex flex-wrap items-center justify-end gap-2 pt-2">
+          <button type="button" data-close-modal="auth-modal" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">انصراف</button>
+          <button type="button" id="sign-up-btn" class="rounded-xl border border-slate-200 dark:border-slate-700 px-4 py-2.5 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800">ثبت نام</button>
+          <button type="submit" id="sign-in-btn" class="rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-4 py-2.5 text-sm font-bold hover:opacity-90">ورود</button>
+        </div>
+      </form>
+      <p id="account-help" class="hidden mt-3 text-xs text-slate-500 dark:text-slate-400">ورود روی این مرورگر ماندگار می‌ماند. برای دیدن اطلاعات روی دستگاه دیگر، با همان حساب وارد شو.</p>
+    </div>
+  </div>
+
+  <div id="add-habit-modal" class="modal-overlay fixed inset-0 z-[60] bg-slate-950/60 backdrop-blur-sm p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="add-habit-modal-title">
+    <div class="w-full max-w-lg rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-2xl p-5 sm:p-6">
+      <div class="flex items-center justify-between gap-3 mb-5">
+        <h2 id="add-habit-modal-title" class="text-lg font-extrabold text-slate-900 dark:text-white">تعریف عادت جدید</h2>
+        <button type="button" data-close-modal="add-habit-modal" class="w-9 h-9 shrink-0 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800" aria-label="بستن">✕</button>
+      </div>
+            <form id="add-habit-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
+        <div><label for="habit-title" class="block text-xs font-semibold text-slate-500 mb-1.5">نام عادت</label><input type="text" id="habit-title" required maxlength="80" placeholder="مثلاً: ورزش، مطالعه، تمرین پیانو..." class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 placeholder:text-slate-400"></div>
+        <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
+        <div class="sm:col-span-2 flex items-center justify-end gap-2 pt-2"><button type="button" data-close-modal="add-habit-modal" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">انصراف</button><button type="submit" class="bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">افزودن عادت</button></div>
+      </form>
+    </div>
   </div>
 
   <div id="sync-conflict-modal" class="hidden fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm p-4 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="sync-conflict-title">
@@ -174,7 +193,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '2.1';
+const CURRENT_VERSION = '2.2';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const WEEKDAYS_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
 const WEEKDAYS_SHORT = ['ش','ی','د','س','چ','پ','ج'];
@@ -396,6 +415,68 @@ async function syncCloudNow() {
   }
   return succeeded;
 }
+async function forceCloudSync() {
+  if (!supabaseClient || !cloudUser) {
+    showToast('برای همگام‌سازی، ابتدا وارد حساب کاربری شو.', 'error');
+    if (isCloudConfigured()) openModal('auth-modal');
+    return;
+  }
+  const button = $('sync-now-btn');
+  if (cloudSyncInFlight) {
+    cloudSyncRequested = true;
+    showToast('همگام‌سازی در حال انجام است؛ درخواست فعلی هم در صف قرار گرفت.');
+    return;
+  }
+  button.disabled = true;
+  const originalText = button.textContent;
+  button.textContent = 'در حال Sync…';
+  if (cloudSyncTimer) { clearTimeout(cloudSyncTimer); cloudSyncTimer = null; }
+  setSaveStatus('در حال بررسی نسخهٔ ابری…', 'text-indigo-600 dark:text-indigo-400');
+  try {
+    const userId = cloudUser.id;
+    const { data: record, error } = await supabaseClient.from('habit_data')
+      .select('data, updated_at').eq('user_id', userId).maybeSingle();
+    if (error) throw error;
+    if (!cloudUser || cloudUser.id !== userId) throw new Error('حساب کاربری تغییر کرده است.');
+    const localSet = normalizeHabitData(habits);
+    const cloudSet = record ? normalizeHabitData(record.data) : null;
+
+    if (!record) {
+      const ok = await syncCloudNow();
+      if (ok === true) showToast('همگام‌سازی اجباری انجام شد؛ اطلاعات این دستگاه در ابر ذخیره شد.', 'success');
+      else throw new Error('ذخیرهٔ اطلاعات روی سرور تأیید نشد.');
+      return;
+    }
+    if (JSON.stringify(localSet) === JSON.stringify(cloudSet)) {
+      setSaveStatus('اطلاعات با ابر همگام است ✓', 'text-emerald-600 dark:text-emerald-400');
+      showToast('اطلاعات این دستگاه و حساب ابری یکسان‌اند.', 'success');
+      return;
+    }
+    if (localSet.length && cloudSet.length) {
+      showSyncConflict(localSet, cloudSet);
+      showToast('نسخهٔ محلی و ابری متفاوت‌اند؛ در پنجرهٔ بازشده انتخاب کن چطور همگام شوند.');
+      return;
+    }
+    if (cloudSet.length && !localSet.length) {
+      applyHabitSet(cloudSet, false);
+      setSaveStatus('اطلاعات از ابر دریافت شد ✓', 'text-emerald-600 dark:text-emerald-400');
+      $('account-status').textContent = 'اطلاعات حساب ابری روی این دستگاه بارگذاری شد.';
+      showToast('اطلاعات حساب ابری دریافت شد.', 'success');
+      return;
+    }
+    const ok = await syncCloudNow();
+    if (ok === true) showToast('همگام‌سازی اجباری انجام شد.', 'success');
+    else throw new Error('ذخیرهٔ اطلاعات روی سرور تأیید نشد.');
+  } catch (error) {
+    console.error('Forced sync error:', error);
+    setSaveStatus('همگام‌سازی ناموفق', 'text-rose-600 dark:text-rose-400');
+    showToast(`همگام‌سازی ناموفق بود: ${String(error && error.message || 'خطای ناشناخته').slice(0,140)}`, 'error');
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
+  }
+}
+
 function mergeHabitSets(localSet, cloudSet) {
   const merged = cloudSet.map(h => JSON.parse(JSON.stringify(h)));
   const indexById = new Map(merged.map((h, index) => [h.id, index]));
@@ -449,11 +530,14 @@ function updateAccountUI(user) {
   const signed = Boolean(user);
   $('account-signed-in').classList.toggle('hidden', !signed);
   $('account-signed-in').classList.toggle('flex', signed);
+  $('auth-open-btn').classList.toggle('hidden', signed);
   $('auth-form').classList.toggle('hidden', signed || !isCloudConfigured());
   $('account-help').classList.toggle('hidden', !isCloudConfigured());
-  $('account-email').textContent = signed ? user.email || 'حساب کاربری' : '';
+  const metadata = user && user.user_metadata ? user.user_metadata : {};
+  $('account-email').textContent = signed ? (metadata.username || metadata.full_name || metadata.name || user.email || 'حساب کاربری') : '';
   if (!isCloudConfigured()) {
     $('account-config-warning').classList.remove('hidden');
+    $('auth-form').classList.add('hidden');
     $('account-status').textContent = 'حالت محلی فعال است؛ برای حساب مشترک، تنظیمات Supabase را تکمیل کن.';
   } else {
     $('account-config-warning').classList.add('hidden');
@@ -548,6 +632,21 @@ function initCloud() {
     $('account-status').textContent = 'اتصال ابری پیکربندی نشد؛ مقادیر URL و کلید را بررسی کن.';
   }
 }
+function openModal(id) {
+  const modal = $(id);
+  if (!modal) return;
+  modal.classList.add('is-open');
+  document.body.classList.add('modal-open');
+  const focusTarget = id === 'auth-modal' ? $('auth-email') : id === 'add-habit-modal' ? $('habit-title') : null;
+  if (focusTarget) window.setTimeout(() => focusTarget.focus(), 40);
+}
+function closeModal(id) {
+  const modal = $(id);
+  if (!modal) return;
+  modal.classList.remove('is-open');
+  if (!document.querySelector('.modal-overlay.is-open')) document.body.classList.remove('modal-open');
+}
+
 function getAuthValues() {
   return { email: $('auth-email').value.trim(), password: $('auth-password').value };
 }
@@ -562,6 +661,7 @@ async function signIn(event) {
     if (error) throw error;
     $('account-status').textContent = 'ورود موفق بود؛ در حال آماده‌سازی اطلاعات…';
     $('auth-password').value = '';
+    closeModal('auth-modal');
     showToast('ورود موفق بود.', 'success');
   } catch (error) {
     showToast(authErrorMessage(error), 'error');
@@ -577,7 +677,7 @@ async function signUp() {
     const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { emailRedirectTo } });
     if (error) throw error;
     $('auth-password').value = '';
-    if (data.session) showToast('حساب ساخته شد و وارد شدی.', 'success');
+    if (data.session) { closeModal('auth-modal'); showToast('حساب ساخته شد و وارد شدی.', 'success'); }
     else showToast('حساب ساخته شد. ایمیلت را برای تأیید حساب بررسی کن.', 'success');
   } catch (error) { showToast(authErrorMessage(error), 'error'); }
   finally { authBusy = false; $('sign-in-btn').disabled = false; $('sign-up-btn').disabled = false; }
@@ -783,7 +883,7 @@ function addHabit(event) {
   habits.push(habit);
   recalculateStreaks();
   input.value = ''; $('habit-goal').value = '7';
-  saveDataToDisk(); renderApp(); showToast('عادت اضافه شد.', 'success');
+  saveDataToDisk(); renderApp(); closeModal('add-habit-modal'); showToast('عادت اضافه شد.', 'success');
 }
 function getHabit(id) { return habits.find(h => h.id === id); }
 function findHabitEditPanel(button) { return button.closest('[data-habit-edit]'); }
@@ -845,10 +945,27 @@ document.addEventListener('change', (event) => {
   habit.weeklyGoal = goal; recalculateStreaks(); saveDataToDisk(); renderApp(); showToast('هدف هفتگی ذخیره شد.', 'success');
 });
 $('edit-mode-btn').addEventListener('click', () => { isEditMode = !isEditMode; renderApp(); });
+$('add-habit-open-btn').addEventListener('click', () => openModal('add-habit-modal'));
+$('auth-open-btn').addEventListener('click', () => openModal('auth-modal'));
+$('sync-now-btn').addEventListener('click', forceCloudSync);
 $('add-habit-form').addEventListener('submit', addHabit);
 $('auth-form').addEventListener('submit', signIn);
 $('sign-up-btn').addEventListener('click', signUp);
 $('sign-out-btn').addEventListener('click', signOut);
+document.addEventListener('click', (event) => {
+  const closeButton = event.target.closest('[data-close-modal]');
+  if (closeButton) { closeModal(closeButton.dataset.closeModal); return; }
+  if (event.target.classList && event.target.classList.contains('modal-overlay')) {
+    if (event.target.id === 'auth-modal' || event.target.id === 'add-habit-modal') closeModal(event.target.id);
+  }
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.is-open').forEach(modal => {
+      if (modal.id === 'auth-modal' || modal.id === 'add-habit-modal') closeModal(modal.id);
+    });
+  }
+});
 
 function initializeApp() {
   $('app-version-display').textContent = `v${CURRENT_VERSION}`;
