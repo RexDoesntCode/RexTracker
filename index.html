@@ -412,135 +412,102 @@
 
 
 
-  /* v3.3 — compact, legible 28-day habit history. Calendar/data logic remains unchanged. */
+    /* v3.4 — original minimalist 28-day dots, with tighter spacing only. */
   #monthly-trends-section {
-    margin-top:24px !important;
-    padding:clamp(14px,2vw,22px) !important;
-    border-radius:22px !important;
+    margin-top:18px !important;
+    padding:16px !important;
+    border-radius:18px !important;
   }
   .trends-heading {
-    display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
-    margin-bottom:14px;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    margin-bottom:10px;
   }
   .trends-heading-copy { min-width:0; }
   #monthly-trends-title {
-    display:flex; align-items:center; gap:9px;
-    margin:0 !important; font-size:16px !important; line-height:1.6 !important;
+    display:flex; align-items:center; gap:8px;
+    margin:0 !important; font-size:15px !important; line-height:1.6 !important;
     font-weight:850 !important; letter-spacing:-.02em;
   }
   #monthly-trends-title > span {
-    display:inline-block; width:4px !important; height:22px !important; flex:0 0 4px;
+    display:inline-block; width:4px !important; height:20px !important; flex:0 0 4px;
   }
   .trends-description {
-    margin-top:4px; color:#687b8e; font-size:11px; line-height:1.9;
+    margin-top:3px; color:#687b8e; font-size:10px; line-height:1.7;
   }
   html.dark .trends-description { color:#a3b5c7; }
   .trends-period-chip {
-    display:inline-flex; align-items:center; justify-content:center; gap:7px;
-    flex-shrink:0; padding:6px 10px; border:1px solid #dce7f0; border-radius:999px;
-    color:#526a80; background:rgba(246,250,253,.92); font-size:11px; font-weight:800;
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    flex-shrink:0; padding:5px 8px; border:1px solid #dce7f0; border-radius:999px;
+    color:#526a80; background:rgba(246,250,253,.92); font-size:10px; font-weight:800;
     white-space:nowrap;
   }
   .trends-period-dot { width:6px; height:6px; border-radius:50%; background:#20b8cc; }
   html.dark .trends-period-chip { color:#cedce9; border-color:rgba(150,184,208,.18); background:rgba(6,20,32,.4); }
   #monthly-charts-container {
     display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    align-items:start; gap:12px !important; margin-top:0 !important;
+    align-items:start; gap:10px !important; margin-top:0 !important;
   }
-  #monthly-charts-container:has(> .matrix-card:only-child) { grid-template-columns:minmax(0,1fr) !important; }
-  #monthly-charts-container > .matrix-card:only-child { width:min(100%,640px); justify-self:center; }
   #monthly-charts-container > .matrix-card {
-    min-width:0; padding:13px !important; border:1px solid #e0e9f1 !important;
-    border-radius:17px !important; background:rgba(255,255,255,.92) !important;
-    box-shadow:0 5px 16px rgba(21,53,83,.035) !important;
-    transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+    min-width:0; padding:10px !important; border:1px solid #e2eaf1 !important;
+    border-radius:14px !important; background:rgba(255,255,255,.92) !important;
+    box-shadow:none !important; transition:border-color .16s ease;
   }
   #monthly-charts-container > .matrix-card:hover {
-    transform:translateY(-1px); border-color:#bfd8e8 !important;
-    box-shadow:0 9px 22px rgba(21,53,83,.06) !important;
+    border-color:#c8dce9 !important;
   }
   html.dark #monthly-charts-container > .matrix-card {
     background:rgba(12,28,43,.88) !important; border-color:rgba(146,183,210,.16) !important;
-    box-shadow:0 6px 17px rgba(0,0,0,.12) !important;
+    box-shadow:none !important;
   }
   html.dark #monthly-charts-container > .matrix-card:hover { border-color:rgba(76,171,207,.4) !important; }
-  #monthly-charts-container > .matrix-card > .matrix-week-list {
-    padding:0 !important; margin-top:12px !important; border:0 !important;
-    border-radius:0 !important; background:transparent !important; box-shadow:none !important;
-  }
-  html.dark #monthly-charts-container > .matrix-card > .matrix-week-list { background:transparent !important; }
-  .matrix-card-header { display:flex; align-items:center; gap:9px; min-width:0; }
-  .matrix-habit-dot { width:9px; height:9px; border-radius:50%; flex:0 0 9px; }
-  .matrix-habit-copy { min-width:0; flex:1 1 auto; }
+  .matrix-card-header { display:flex; align-items:center; gap:7px; min-width:0; margin-bottom:8px; }
+  .matrix-habit-dot { width:8px; height:8px; border-radius:50%; flex:0 0 8px; }
   .matrix-habit-title {
-    min-width:0; overflow-wrap:anywhere; color:#243d55; font-size:13px;
-    line-height:1.65; font-weight:850; margin:0;
+    min-width:0; overflow-wrap:anywhere; color:#243d55; font-size:12px;
+    line-height:1.6; font-weight:800; margin:0;
   }
+  @media (min-width:640px) { .matrix-habit-title { font-size:14px; } }
   html.dark .matrix-habit-title { color:#e7f0f8; }
-  .matrix-habit-meta { color:#6b8094; font-size:10px; line-height:1.7; margin:1px 0 0; }
-  html.dark .matrix-habit-meta { color:#a8bacb; }
-  .matrix-streak {
-    flex:0 0 auto; padding:5px 7px; border:1px solid #edf0f4; border-radius:9px;
-    background:#f8fafc; color:#53697e; font-size:10px; font-weight:800; white-space:nowrap;
+  #monthly-charts-container > .matrix-card > .matrix-week-list {
+    display:grid; gap:4px; margin-top:0 !important; padding:7px !important;
+    border:1px solid #edf1f5 !important; border-radius:9px !important;
+    background:#fff !important; box-shadow:none !important;
   }
-  html.dark .matrix-streak { border-color:rgba(147,180,205,.13); background:rgba(3,17,29,.35); color:#d0dce8; }
-  .matrix-week-list { display:grid; gap:8px; margin-top:12px; }
-  .matrix-week {
-    min-width:0; padding:9px; border:1px solid #e7edf3; border-radius:12px;
-    background:linear-gradient(180deg,#fbfdff,#f7fafd);
+  html.dark #monthly-charts-container > .matrix-card > .matrix-week-list {
+    border-color:rgba(145,181,208,.13) !important; background:rgba(4,17,29,.32) !important;
   }
-  html.dark .matrix-week { border-color:rgba(140,176,201,.13); background:linear-gradient(180deg,rgba(5,20,33,.46),rgba(7,22,35,.72)); }
-  .matrix-week-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; min-width:0; }
-  .matrix-week-range { color:#53697e; min-width:0; font-size:10px; line-height:1.6; font-weight:750; overflow-wrap:anywhere; }
-  html.dark .matrix-week-range { color:#c1d0de; }
-  .matrix-week-count {
-    flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; gap:3px;
-    min-height:22px; padding:3px 6px; border-radius:7px; background:#edf3f8;
-    color:#465f76; font-size:10px; font-weight:850; line-height:1.2; white-space:nowrap;
+  .matrix-week-row {
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    min-height:16px; padding:4px 8px; border-radius:999px;
+    background:transparent; transition:background-color .16s ease;
   }
-  .matrix-week-count-text { opacity:1 !important; font-size:10px !important; white-space:nowrap; }
-  html.dark .matrix-week-count { background:#1b3042; color:#d0e1ef; }
-  .matrix-week.is-goal-met .matrix-week-count { background:var(--matrix-accent-soft,#e5f6f6); color:var(--matrix-accent,#1677a9); }
-  html.dark .matrix-week.is-goal-met .matrix-week-count { background:color-mix(in srgb,var(--matrix-accent,#1677a9) 20%,#102236); color:color-mix(in srgb,var(--matrix-accent,#1677a9) 55%,#ffffff); }
-  .matrix-goal-check { font-size:10px; line-height:1; }
-  .matrix-days-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; direction:rtl; }
-  .matrix-day {
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
-    min-width:0; min-height:43px; padding:4px 1px; border:1px solid #e3eaf1;
-    border-radius:8px; background:#eef3f7; color:#4f667c; line-height:1.15;
-    transition:background-color .16s ease,border-color .16s ease,transform .16s ease;
+  .matrix-day-square {
+    display:inline-block; width:8px; height:8px; flex:0 0 8px;
+    border-radius:2px; background:#e2e8f0;
   }
-  .matrix-day-label { font-size:9px; font-weight:800; opacity:.8; }
-  .matrix-day-number { font-size:12px; font-weight:850; font-variant-numeric:tabular-nums; }
-  html.dark .matrix-day { background:#14283a; border-color:rgba(145,180,205,.16); color:#c4d4e2; }
-  .matrix-day.is-done { color:#fff !important; background:var(--matrix-accent,#168bce) !important; border-color:transparent !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 4px rgba(19,70,105,.08); }
-  .matrix-day.is-done .matrix-day-label { color:rgba(255,255,255,.86); }
-  .matrix-day.is-today:not(.is-done) { border-color:var(--matrix-accent,#168bce) !important; box-shadow:inset 0 0 0 1px var(--matrix-accent,#168bce); background:#f4fbff; }
-  html.dark .matrix-day.is-today:not(.is-done) { background:rgba(26,139,183,.12); }
+  html.dark .matrix-day-square { background:#334155; }
+  .matrix-day-square.is-done { background:var(--matrix-accent,#168bce) !important; }
   @media (max-width:720px) {
-    #monthly-trends-section { margin-top:18px !important; padding:13px !important; border-radius:18px !important; }
-    .trends-heading { gap:8px; margin-bottom:11px; }
-    .trends-period-chip { padding:5px 8px; font-size:10px; }
-    #monthly-trends-title { font-size:15px !important; }
-    .trends-description { font-size:10px; line-height:1.7; }
-    #monthly-charts-container { grid-template-columns:minmax(0,1fr) !important; gap:9px !important; }
-    #monthly-charts-container > .matrix-card { padding:11px !important; border-radius:15px !important; }
-    .matrix-week-list { gap:7px; margin-top:10px; }
-    .matrix-week { padding:8px; }
-    .matrix-day { min-height:42px; border-radius:8px; }
+    #monthly-trends-section { margin-top:16px !important; padding:12px !important; border-radius:15px !important; }
+    .trends-heading { gap:7px; margin-bottom:8px; }
+    .trends-period-chip { padding:4px 7px; font-size:9px; }
+    #monthly-trends-title { font-size:14px !important; }
+    .trends-description { font-size:10px; line-height:1.6; }
+    #monthly-charts-container { grid-template-columns:minmax(0,1fr) !important; gap:7px !important; }
+    #monthly-charts-container > .matrix-card { padding:9px !important; border-radius:12px !important; }
+    .matrix-card-header { margin-bottom:7px; }
+    #monthly-charts-container > .matrix-card > .matrix-week-list { padding:6px !important; gap:3px; }
+    .matrix-week-row { padding:3px 7px; gap:6px; }
   }
   @media (max-width:390px) {
-    .trends-heading { flex-direction:column; align-items:stretch; }
+    .trends-heading { flex-direction:row; align-items:flex-start; }
     .trends-period-chip { align-self:flex-start; }
-    .matrix-week { padding:7px; }
-    .matrix-days-grid { gap:3px; }
-    .matrix-day { min-height:39px; }
-    .matrix-day-label { font-size:8px; }
-    .matrix-day-number { font-size:11px; }
-    .matrix-week-range { font-size:9px; }
+    #monthly-trends-title { font-size:13px !important; }
+    .trends-description { font-size:9px; }
+    .matrix-week-row { gap:5px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    #monthly-charts-container > .matrix-card, .matrix-day { transition:none !important; }
+    #monthly-charts-container > .matrix-card, .matrix-week-row { transition:none !important; }
     #monthly-charts-container > .matrix-card:hover { transform:none !important; }
   }
 
@@ -1514,44 +1481,44 @@ function renderApp() {
     card.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
     mobile.appendChild(card);
 
-    // ماتریس ۲۸روزه عمداً از شنبهٔ سه هفتهٔ قبل شروع می‌شود و هر ردیف یک هفتهٔ واقعی شنبه تا جمعه است.
+    // ماتریس تاریخچه: ۲۸ مربع کوچک؛ چهار ردیف، هر کدام یک هفتهٔ واقعی از شنبه تا جمعه.
     const matrixCard = document.createElement('article');
     matrixCard.className = 'matrix-card';
+    const paletteColors = {
+      'سبز': { accent: '#10b981', soft: 'rgba(16,185,129,.10)' },
+      'آبی': { accent: '#0ea5e9', soft: 'rgba(14,165,233,.10)' },
+      'نیلی': { accent: '#6366f1', soft: 'rgba(99,102,241,.10)' },
+      'بنفش': { accent: '#a855f7', soft: 'rgba(168,85,247,.10)' },
+      'صورتی': { accent: '#f43f5e', soft: 'rgba(244,63,94,.10)' },
+      'کهربایی': { accent: '#d97706', soft: 'rgba(217,119,6,.10)' }
+    };
+    const matrixColor = paletteColors[palette.name] || { accent: '#168bce', soft: 'rgba(22,139,206,.10)' };
     let weeksRowsHtml = '';
     const baseSat = new Date();
-    const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay()+1);
+    const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay() + 1);
     baseSat.setDate(baseSat.getDate() + dToSat - 21);
-    const paletteColors = {
-      'سبز':{accent:'#10b981', soft:'#e7f9f0'},
-      'آبی':{accent:'#0ea5e9', soft:'#e7f5fd'},
-      'نیلی':{accent:'#6366f1', soft:'#eeefff'},
-      'بنفش':{accent:'#a855f7', soft:'#f6edff'},
-      'صورتی':{accent:'#f43f5e', soft:'#fff0f3'},
-      'کهربایی':{accent:'#d97706', soft:'#fff5df'}
-    };
-    const matrixColor = paletteColors[palette.name] || {accent:'#168bce',soft:'#e5f6fc'};
-    const paletteAccent = matrixColor.accent;
-    const paletteAccentSoft = matrixColor.soft;
-    for (let weekIdx=0; weekIdx<4; weekIdx++) {
-      let daysHtml = '';
+
+    for (let weekIdx = 0; weekIdx < 4; weekIdx++) {
+      let squares = '';
       let completions = 0;
       const weekStart = new Date(baseSat);
-      weekStart.setDate(baseSat.getDate() + (weekIdx * 7));
-      for (let dayIdx=0; dayIdx<7; dayIdx++) {
+      weekStart.setDate(baseSat.getDate() + weekIdx * 7);
+      for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
         const dayCellDate = new Date(weekStart);
         dayCellDate.setDate(weekStart.getDate() + dayIdx);
         const info = getStatusByDate(habit, dayCellDate);
         const done = info.isChecked || isGraceDayForDate(habit, dayCellDate);
         if (done) completions++;
-        const isToday = dateOnlyNumber(dayCellDate) === dateOnlyNumber(new Date());
+        const accessibleDate = `${WEEKDAYS_FA[dayCellDate.getDay()]} ${formatCalendarDate(dayCellDate, { weekday: false })}`;
         const statusLabel = done ? 'ثبت‌شده' : 'ثبت‌نشده';
-        const accessibleDate = `${WEEKDAYS_FA[dayCellDate.getDay()]} ${formatCalendarDate(dayCellDate, { weekday:false })}`;
-        daysHtml += `<div class="matrix-day ${done ? 'is-done' : ''} ${isToday ? 'is-today' : ''}" title="${accessibleDate} · ${statusLabel}" aria-label="${accessibleDate}، ${statusLabel}" style="--matrix-accent:${paletteAccent};--matrix-accent-soft:${paletteAccentSoft}"><span class="matrix-day-label">${WEEKDAYS_SHORT[dayIdx]}</span><span class="matrix-day-number">${toPersianDigits(getCalendarDayNumber(dayCellDate))}</span></div>`;
+        squares += `<span class="matrix-day-square ${done ? 'is-done' : ''}" role="img" aria-label="${accessibleDate}، ${statusLabel}" title="${accessibleDate} · ${statusLabel}" style="--matrix-accent:${matrixColor.accent}"></span>`;
       }
       const metGoal = completions >= habit.weeklyGoal;
-      weeksRowsHtml += `<div class="matrix-week ${metGoal ? 'is-goal-met' : ''}" style="--matrix-accent:${paletteAccent};--matrix-accent-soft:${paletteAccentSoft}"><div class="matrix-week-head"><span class="matrix-week-range">${formatCalendarWeekRange(weekStart)}</span><span class="matrix-week-count" aria-label="${toPersianDigits(completions)} روز از هفت روز"><span class="matrix-week-count-text" dir="rtl">${toPersianDigits(completions)} از ۷</span>${metGoal ? '<span class="matrix-goal-check" aria-hidden="true">✓</span>' : ''}</span></div><div class="matrix-days-grid">${daysHtml}</div></div>`;
+      const goalStyle = metGoal ? `style="background:${matrixColor.soft}"` : '';
+      weeksRowsHtml += `<div class="matrix-week-row ${metGoal ? 'is-goal-met' : ''}" ${goalStyle} aria-label="${toPersianDigits(completions)} روز ثبت‌شده از ۷ روز">${squares}</div>`;
     }
-    matrixCard.innerHTML = `<div class="matrix-card-header"><span class="matrix-habit-dot ${palette.dot}" aria-hidden="true"></span><div class="matrix-habit-copy"><h3 class="matrix-habit-title"></h3><p class="matrix-habit-meta">هدف هفتگی: ${toPersianDigits(habit.weeklyGoal)} روز</p></div><span class="matrix-streak" title="تداوم فعلی">🔥 ${toPersianDigits(habit.currentStreak)}</span></div><div class="matrix-week-list">${weeksRowsHtml}</div>`;
+
+    matrixCard.innerHTML = `<div class="matrix-card-header"><span class="matrix-habit-dot" aria-hidden="true" style="background:${matrixColor.accent}"></span><h3 class="matrix-habit-title"></h3></div><div class="matrix-week-list">${weeksRowsHtml}</div>`;
     matrixCard.querySelector('.matrix-habit-title').textContent = habit.title;
     matrixCard.querySelector('.matrix-habit-title').title = habit.title;
     matrix.appendChild(matrixCard);
