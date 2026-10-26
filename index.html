@@ -580,7 +580,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v5a6 6 0 0 1-12 0V4Z"/><path d="M6 4H4a2 2 0 0 0-2 2v1a5 5 0 0 0 5 5"/><path d="M18 4h2a2 2 0 0 1 2 2v1a5 5 0 0 1-5 5"/><path d="M9 20h6M12 15v5"/></svg>
         </div>
         <div class="stat-copy">
-          <p class="stat-label" data-i18n="stat.bestRecord">رکورد تداوم</p>
+          <p class="stat-label" data-i18n="stat.bestRecord">رکورد طولانی‌ترین زنجیره</p>
           <div class="stat-value-line">
             <strong id="summary-best-record" class="stat-value">۰</strong>
             <span class="stat-unit" data-i18n="unit.day">روز</span>
@@ -593,7 +593,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
         </div>
         <div class="stat-copy">
-          <p class="stat-label" data-i18n="stat.streak">بیشترین تداوم فعلی</p>
+          <p class="stat-label" data-i18n="stat.streak">طولانی‌ترین زنجیره فعلی</p>
           <div class="stat-value-line">
             <strong id="summary-streak-count" class="stat-value">۰</strong>
             <span class="stat-unit" data-i18n="unit.day">روز</span>
@@ -642,7 +642,7 @@
         <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
         <div class="sm:col-span-2 rounded-xl bg-sky-50/70 dark:bg-sky-950/25 border border-sky-200/70 dark:border-sky-900/50 p-3.5">
           <p class="text-sm leading-7 text-slate-700 dark:text-slate-200">
-            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> می‌تونه نجاتت بده — اگه یه روز جا موندی، کافیه روز بعد جبران کنی و زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که عادت‌ها رو می‌کشه «دو روز پشت سر هم» هست. البته می‌تونی این قانون رو از تنظیمات غیرفعال کنی
+            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> .می‌تونه اعمال بشه — اینجوری اگه یه روز جا موندی، کافیه روز بعد جبران کنی تا زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که زنجیره عادت‌ها رو می‌کشه «دو روز پشت سر هم» هست. البته می‌تونی این قانون رو از تنظیمات غیرفعال کنی
           </p>
         </div>
         <div class="sm:col-span-2 flex items-center justify-end gap-2 pt-2"><button type="button" data-close-modal="add-habit-modal" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">انصراف</button><button type="submit" class="bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">افزودن عادت</button></div>
@@ -810,8 +810,8 @@ const I18N = {
     'ring.desc': 'درصد پیشرفت بر اساس هدف هفتگی هر عادت محاسبه می‌شود. هفته را از بالا تغییر بده و سابقه‌ات را مرور کن.',
     'stat.today': 'ثبت‌های امروز',
     'stat.completions': 'ثبت‌های هفتگی',
-    'stat.bestRecord': 'رکورد تداوم',
-    'stat.streak': 'بیشترین تداوم فعلی',
+    'stat.bestRecord': 'رکورد طولانی‌ترین زنجیره',
+    'stat.streak': 'بیشترین زنجیره فعلی',
     'unit.of': 'از',
     'unit.day': 'روز',
     'unit.habit': 'عادت',
@@ -1823,11 +1823,11 @@ function updateSummaryStats(stats) {
   const weeklyAvg = getWeeklyAverageCompletions(8);
   const compSub = $('summary-completions-sub');
   if (weeklyAvg === null) {
-    compSub.textContent = language === 'en' ? 'Week avg: —' : 'میانگین هفته: —';
+    compSub.textContent = language === 'en' ? 'Week avg: —' : ' میانگین هفته های قبل: —';
   } else {
     compSub.textContent = language === 'en'
       ? `Week avg: ${weeklyAvg}`
-      : `میانگین هفته: ${toPersianDigits(weeklyAvg)}`;
+      : `میانگین هفته های قبل: ${toPersianDigits(weeklyAvg)}`;
   }
 
   // Card 3: best record
@@ -1845,7 +1845,7 @@ function updateSummaryStats(stats) {
   $('summary-streak-count').textContent = toPersianDigits(currentBest.best);
   const streakSub = $('summary-streak-sub');
   if (currentBest.best === 0 || !currentBest.habit) {
-    streakSub.textContent = language === 'en' ? 'No streak yet' : 'هنوز تداومی نداری';
+    streakSub.textContent = language === 'en' ? 'No streak yet' : 'هنوز زنجیره‌ عادتی ایجاد نکردی';
   } else {
     streakSub.textContent = currentBest.habit.title;
   }
