@@ -101,11 +101,35 @@
   html.dark #save-status.status-saving { color:#ffe5a0 !important; background:#423315 !important; border-color:#705b28 !important; }
   html.dark #save-status.status-success { color:#a7f3d0 !important; background:#10382f !important; border-color:#216b57 !important; }
   html.dark #save-status.status-error { color:#ffc0ca !important; background:#451e2a !important; border-color:#813b4a !important; }
-  .week-panel { align-self:stretch; display:flex; flex-direction:column; justify-content:space-between; min-width:0; padding:21px; border-radius:22px; background:rgba(255,255,255,.74); border:1px solid rgba(214,231,242,.84); box-shadow:0 7px 25px rgba(22,67,106,.045),inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
-  html.dark .week-panel { background:rgba(7,22,36,.46); border-color:rgba(148,193,220,.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
-  .week-panel-top { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  .week-panel-label { color:var(--muted); font-weight:750; font-size:13px; }
-  .week-stepper { display:flex; align-items:stretch; gap:0; padding:3px; border:1px solid var(--line); border-radius:13px; background:rgba(246,249,252,.85); box-shadow:inset 0 1px 2px rgba(25,59,89,.04); }
+  /* Sync hint — moved out of footer, shown next to save-status; hidden when signed in */
+  #sync-hint {
+    font-size:11px;
+    color:#7d8fa2;
+    line-height:1.7;
+    padding-inline-start:10px;
+    border-inline-start:1px solid rgba(125,143,162,.22);
+    max-width:100%;
+  }
+  html.dark #sync-hint { color:#95a9bc; border-inline-start-color:rgba(149,169,188,.22); }
+  #sync-hint.hidden { display:none !important; }
+
+  /* Week panel: subtle top 1/3 shading + restructured top row */
+  .week-panel { align-self:stretch; display:flex; flex-direction:column; justify-content:space-between; min-width:0; padding:21px; border-radius:22px;
+    background:
+      linear-gradient(180deg, rgba(30,60,90,.055) 0%, rgba(30,60,90,.055) 33%, rgba(30,60,90,0) 33%),
+      rgba(255,255,255,.74);
+    border:1px solid rgba(214,231,242,.84); box-shadow:0 7px 25px rgba(22,67,106,.045),inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
+  html.dark .week-panel {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.20) 33%, rgba(0,0,0,0) 33%),
+      rgba(7,22,36,.46);
+    border-color:rgba(148,193,220,.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
+  .week-panel-top { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .week-panel-label { flex:0 0 auto; color:var(--muted); font-weight:750; font-size:13px; }
+  /* Week title now sits between label and stepper */
+  .week-label-inline { flex:1 1 auto; min-width:0; margin:0; padding:0 6px; text-align:center; font-size:13px; color:#1f3851; font-weight:850; line-height:1.55; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.dark .week-label-inline { color:#e2eef8; }
+  .week-stepper { flex:0 0 auto; display:flex; align-items:stretch; gap:0; padding:3px; border:1px solid var(--line); border-radius:13px; background:rgba(246,249,252,.85); box-shadow:inset 0 1px 2px rgba(25,59,89,.04); }
   html.dark .week-stepper { background:rgba(7,19,31,.55); box-shadow:inset 0 1px 2px rgba(0,0,0,.25); }
   .week-stepper button { min-width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:9px; color:#5a6e83; font-size:12px; font-weight:800; transition:all .16s ease; }
   .week-stepper button:hover:not(:disabled) { background:#e9f5ff; color:#1876d5; }
@@ -115,19 +139,18 @@
   html.dark .week-stepper button { color:#c2d4e4; }
   html.dark .week-stepper button:hover:not(:disabled) { background:rgba(43,120,174,.16); color:#9ed7ff; }
   html.dark .week-stepper button.is-current { color:#fff; }
-  .week-label { font-size:14px; color:#1f3851; font-weight:850; line-height:1.8; text-align:center; margin:16px 0 13px; }
-  html.dark .week-label { color:#e2eef8; }
-  .week-progress-row { display:flex; align-items:center; gap:15px; }
-  .progress-ring { position:relative; display:grid; place-items:center; width:91px; height:91px; flex-shrink:0; }
+  .week-progress-row { display:flex; align-items:center; gap:16px; margin-top:14px; }
+  /* Bigger ring so "میانگین پیشرفت" fits comfortably inside */
+  .progress-ring { position:relative; display:grid; place-items:center; width:115px; height:115px; flex-shrink:0; }
   .progress-ring svg { width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }
   .progress-ring circle { fill:none; stroke-width:7; }
   .progress-ring .ring-track { stroke:#e9f0f5; }
   html.dark .progress-ring .ring-track { stroke:rgba(169,202,226,.12); }
   .progress-ring .ring-value { stroke:url(#ring-gradient); stroke-linecap:round; stroke-dasharray:226.2; stroke-dashoffset:226.2; transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1); filter:drop-shadow(0 2px 4px rgba(26,157,222,.2)); }
   .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; }
-  #week-progress-value { direction:ltr; unicode-bidi:isolate; font-size:21px; color:#193b58; font-weight:900; letter-spacing:-.04em; }
+  #week-progress-value { direction:ltr; unicode-bidi:isolate; font-size:24px; color:#193b58; font-weight:900; letter-spacing:-.04em; line-height:1.15; }
   html.dark #week-progress-value { color:#f1f8ff; }
-  .ring-caption { font-size:11px; color:#6a7d92; font-weight:650; }
+  .ring-caption { font-size:12px; color:#6a7d92; font-weight:650; line-height:1.4; }
   .week-progress-copy { min-width:0; }
   .week-progress-copy strong { display:block; font-size:15px; line-height:1.8; color:#264158; }
   html.dark .week-progress-copy strong { color:#e0edf7; }
@@ -167,7 +190,6 @@
   #habits-count-badge { display:inline-flex; align-items:center; padding:9px 12px; color:#587088; background:#eef4f8; border:1px solid #e2ebf2; border-radius:11px; font-size:13px; font-weight:800; white-space:nowrap; }
   html.dark #habits-count-badge { background:#14283a; border-color:rgba(144,181,208,.12); color:#bbd0e2; }
   #add-habit-open-btn { width:auto; min-height:44px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 15px; border:1px solid transparent; border-radius:13px; color:#fff; background:linear-gradient(115deg,#1677ff,#14a8de); box-shadow:0 7px 18px rgba(22,119,255,.18); font-size:14px; font-weight:850; }
-  /* FIX #1 — bold text label, keep + sign light */
   #add-habit-open-btn > span:first-child { font-size:21px; font-weight:400; line-height:1; }
   #add-habit-open-btn > span:last-child { font-weight:850; }
   #add-habit-open-btn:hover { transform:translateY(-2px); box-shadow:0 11px 23px rgba(22,119,255,.25); }
@@ -213,7 +235,6 @@
   html.dark .habit-table .habit-title { color:#e1edf7; }
   html.dark .habit-table .habit-goal-label { color:#a7bbcd; }
 
-  /* FIX #2 — perfectly square day buttons (width = height) */
   .day-button { width:40px; min-width:40px; height:40px; min-height:40px; border-radius:12px !important; border-width:2px !important; font-size:18px !important; margin-inline:auto; transition:transform .17s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease,color .2s ease !important; -webkit-user-select:none; user-select:none; }
   .day-button:not(:disabled):hover { transform:translateY(-2px) scale(1.04); box-shadow:0 6px 13px rgba(28,106,165,.11); }
   .day-button:not(:disabled):active { transform:scale(.94); }
@@ -241,7 +262,6 @@
   html.dark #mobile-habits-list > article { background:rgba(15,30,46,.95) !important; border-color:rgba(150,187,213,.14) !important; box-shadow:0 9px 26px rgba(0,0,0,.12); }
   #mobile-habits-list .habit-title-mobile { color:#1e3650; font-size:16px; line-height:1.8; }
   html.dark #mobile-habits-list .habit-title-mobile { color:#e9f3fc; }
-  /* FIX #2 — mobile squares also width=height */
   #mobile-habits-list .day-button { width:clamp(32px,9vw,40px); min-width:clamp(32px,9vw,40px); height:clamp(32px,9vw,40px); min-height:clamp(32px,9vw,40px); border-radius:10px !important; font-size:16px !important; }
   #empty-state { padding:58px 20px !important; color:#8698aa; }
   #empty-state > div:first-child { width:64px; height:64px; display:grid; place-items:center; margin:0 auto 16px; border-radius:22px; background:linear-gradient(145deg,#e7f7ff,#f0f9ff); font-size:29px; box-shadow:inset 0 1px 0 #fff; }
@@ -264,7 +284,6 @@
   html.dark #monthly-trends-section { background:rgba(14,28,43,.84); border-color:rgba(151,188,215,.13); box-shadow:0 14px 36px rgba(0,0,0,.12); }
   .trends-heading { display:block; margin-bottom:10px; }
   .trends-heading-copy { min-width:0; }
-  /* FIX #3 — title: mark and text are separate, no clipping, one blue bar */
   #monthly-trends-title { display:flex; align-items:center; gap:8px; margin:0 !important; font-size:18px !important; line-height:1.6 !important; font-weight:850 !important; letter-spacing:-.02em; color:#213a53 !important; white-space:nowrap; }
   #monthly-trends-title > .title-mark { display:inline-block; width:4px; height:20px; flex:0 0 4px; border-radius:5px; background:linear-gradient(180deg,#25c4d7,#3683ff); }
   #monthly-trends-title > .title-text { display:inline-block; flex:0 1 auto; min-width:0; white-space:nowrap; color:inherit; font:inherit; background:none; border:0; padding:0; height:auto; width:auto; }
@@ -286,8 +305,6 @@
   .matrix-day-square { display:inline-block; width:10px; height:10px; flex:0 0 10px; border-radius:2px; background:#e2e8f0; }
   html.dark .matrix-day-square { background:#334155; }
   .matrix-day-square.is-done { background:var(--matrix-accent,#168bce) !important; }
-
-  footer { padding:18px 8px 0; color:#7d90a4 !important; font-size:12px !important; line-height:1.8; }
 
   input, select, textarea { border-radius:12px !important; background:#f7fafd !important; border-color:#dfe8f0 !important; color:#213b53 !important; box-shadow:inset 0 1px 2px rgba(25,59,89,.025); font-size:15px; }
   input:focus, select:focus, textarea:focus { border-color:#52b6e9 !important; box-shadow:0 0 0 4px rgba(38,163,220,.11) !important; outline:none !important; }
@@ -339,6 +356,9 @@
   @media (max-width: 920px) {
     .welcome-section { grid-template-columns:minmax(0,1fr) minmax(260px,.75fr); gap:16px; padding:22px; }
     .week-panel { padding:17px; }
+    .progress-ring { width:105px; height:105px; }
+    #week-progress-value { font-size:22px; }
+    .ring-caption { font-size:11px; }
     .stats-grid { gap:10px; }
     .stat-card { padding:14px; gap:10px; }
     .stat-icon { width:38px; height:38px; border-radius:12px; }
@@ -367,8 +387,15 @@
     .welcome-description { margin-top:7px; font-size:14px; line-height:1.85; }
     .date-status-row { align-items:flex-start; flex-direction:column; gap:8px; margin-top:13px; }
     #save-status { font-size:12px; padding:6px 9px; }
+    #sync-hint { border-inline-start:0; padding-inline-start:0; font-size:11px; }
     .week-panel { padding:13px; }
-    .week-label { font-size:13px; }
+    .week-label-inline { font-size:12px; padding:0 4px; }
+    .week-progress-row { gap:12px; margin-top:12px; }
+    .progress-ring { width:100px; height:100px; }
+    #week-progress-value { font-size:21px; }
+    .ring-caption { font-size:11px; }
+    .week-progress-copy strong { font-size:14px; }
+    .week-progress-copy p { font-size:12px; }
     main { margin-top:27px; }
     .section-heading { align-items:flex-start; flex-direction:column; gap:12px; margin-bottom:13px; }
     .section-title { font-size:20px; }
@@ -427,7 +454,7 @@
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.9.1</span>
+            <span id="app-version-display">v3.9.2</span>
           </div>
           <p class="brand-subtitle" data-i18n="app.subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -462,11 +489,13 @@
             <p id="current-date-display">امروز: ...</p>
           </div>
           <span id="save-status" role="status" aria-live="polite" aria-atomic="true">ذخیره روی این دستگاه</span>
+          <span id="sync-hint" data-i18n="sync.hint">اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.</span>
         </div>
       </div>
       <div class="week-panel">
         <div class="week-panel-top">
           <span class="week-panel-label" data-i18n="week.overview">نمای کلی هفته</span>
+          <p id="current-week-display" class="week-label-inline">...</p>
           <div class="week-stepper" role="group" aria-label="انتخاب هفته">
             <button type="button" data-action="navigate-week" data-direction="-1" title="هفته قبل" aria-label="هفته قبل">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
@@ -477,7 +506,6 @@
             </button>
           </div>
         </div>
-        <p id="current-week-display" class="week-label">...</p>
         <div class="week-progress-row">
           <div class="progress-ring" role="img" aria-label="میانگین تحقق اهداف هفتگی">
             <svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#27c7d9"/><stop offset="100%" stop-color="#2879ff"/></linearGradient></defs><circle class="ring-track" cx="50" cy="50" r="36"/><circle id="week-progress-ring" class="ring-value" cx="50" cy="50" r="36"/></svg>
@@ -552,8 +580,6 @@
       </div>
       <div id="monthly-charts-container" class="matrix-grid"></div>
     </section>
-
-    <footer data-i18n="footer">اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.</footer>
   </div>
 
   <div id="auth-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
@@ -592,10 +618,9 @@
       <form id="add-habit-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
         <div><label for="habit-title" class="block text-xs font-semibold text-slate-500 mb-1.5">نام عادت</label><input type="text" id="habit-title" required maxlength="80" placeholder="مثلاً: ورزش، مطالعه، تمرین پیانو..." class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 placeholder:text-slate-400"></div>
         <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
-        <!-- FIX #4 — Never Miss Twice guidance -->
         <div class="sm:col-span-2 rounded-xl bg-sky-50/70 dark:bg-sky-950/25 border border-sky-200/70 dark:border-sky-900/50 p-3.5">
           <p class="text-sm leading-7 text-slate-700 dark:text-slate-200">
-            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> می‌تونه نجاتت بده — اگه یه روز جا موندی، کافیه روز بعد جبران کنی و زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که عادت‌ها رو می‌کشه «دو روز پشت سر هم» هست.  البته می‌تونی این قانون رو از تنظیمات غیرفعال کنی
+            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> می‌تونه نجاتت بده — اگه یه روز جا موندی، کافیه روز بعد جبران کنی و زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که عادت‌ها رو می‌کشه «دو روز پشت سر هم» هست. البته می‌تونی این قانون رو از تنظیمات غیرفعال کنی
           </p>
         </div>
         <div class="sm:col-span-2 flex items-center justify-end gap-2 pt-2"><button type="button" data-close-modal="add-habit-modal" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">انصراف</button><button type="submit" class="bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">افزودن عادت</button></div>
@@ -726,7 +751,7 @@
 
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.9.1';
+const CURRENT_VERSION = '3.9.2';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAY_NAMES_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
@@ -779,7 +804,7 @@ const I18N = {
     'empty.cta': 'افزودن اولین عادت',
     'trends.title': 'مرور ۲۸ روز اخیر',
     'trends.desc': 'چهار هفتهٔ پیوسته؛ هر ردیف از ابتدای هفته تا انتهای هفته.',
-    'footer': 'اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.',
+    'sync.hint': 'اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.',
     'settings.title': 'تنظیمات',
     'settings.weekStart': 'شروع هفته',
     'settings.weekStart.sat': 'شنبه',
@@ -828,7 +853,7 @@ const I18N = {
     'empty.cta': 'Add your first habit',
     'trends.title': 'Last 28 days',
     'trends.desc': 'Four consecutive weeks; each row is one full week.',
-    'footer': 'Data is saved on this device first. When you sign in, your records sync across devices.',
+    'sync.hint': 'Data is saved on this device first. When you sign in, your records sync across devices.',
     'settings.title': 'Settings',
     'settings.weekStart': 'Week starts on',
     'settings.weekStart.sat': 'Saturday',
@@ -1298,6 +1323,9 @@ function updateAccountUI(user) {
   $('auth-open-btn').classList.toggle('hidden', signed);
   $('auth-form').classList.toggle('hidden', signed || !isCloudConfigured());
   $('account-help').classList.toggle('hidden', !isCloudConfigured());
+  // Hide the sync hint when signed in (user asked: no need when syncing is active)
+  const hint = $('sync-hint');
+  if (hint) hint.classList.toggle('hidden', signed);
   const metadata = user && user.user_metadata ? user.user_metadata : {};
   $('account-email').textContent = signed ? (metadata.username || metadata.full_name || metadata.name || user.email || (language === 'en' ? 'Account' : 'حساب کاربری')) : '';
   if (!isCloudConfigured()) {
