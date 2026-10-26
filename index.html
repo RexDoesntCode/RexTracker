@@ -412,7 +412,7 @@
 
 
 
-    /* v3.4 — original minimalist 28-day dots, with tighter spacing only. */
+    /* v3.5 — same minimalist dots, compact matrix cards and denser desktop grid. */
   #monthly-trends-section {
     margin-top:18px !important;
     padding:16px !important;
@@ -444,12 +444,13 @@
   .trends-period-dot { width:6px; height:6px; border-radius:50%; background:#20b8cc; }
   html.dark .trends-period-chip { color:#cedce9; border-color:rgba(150,184,208,.18); background:rgba(6,20,32,.4); }
   #monthly-charts-container {
-    display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    align-items:start; gap:10px !important; margin-top:0 !important;
+    /* Keep each matrix compact so more habits fit across each desktop row. */
+    display:grid !important; grid-template-columns:repeat(auto-fill,minmax(145px,150px)) !important;
+    justify-content:start; align-items:start; gap:10px !important; margin-top:0 !important;
   }
   #monthly-charts-container > .matrix-card {
-    min-width:0; padding:10px !important; border:1px solid #e2eaf1 !important;
-    border-radius:14px !important; background:rgba(255,255,255,.92) !important;
+    min-width:0; padding:8px !important; border:1px solid #e2eaf1 !important;
+    border-radius:12px !important; background:rgba(255,255,255,.92) !important;
     box-shadow:none !important; transition:border-color .16s ease;
   }
   #monthly-charts-container > .matrix-card:hover {
@@ -460,25 +461,26 @@
     box-shadow:none !important;
   }
   html.dark #monthly-charts-container > .matrix-card:hover { border-color:rgba(76,171,207,.4) !important; }
-  .matrix-card-header { display:flex; align-items:center; gap:7px; min-width:0; margin-bottom:8px; }
-  .matrix-habit-dot { width:8px; height:8px; border-radius:50%; flex:0 0 8px; }
+  .matrix-card-header { display:flex; align-items:center; gap:6px; min-width:0; margin-bottom:6px; }
+  .matrix-habit-dot { width:7px; height:7px; border-radius:50%; flex:0 0 7px; }
   .matrix-habit-title {
     min-width:0; overflow-wrap:anywhere; color:#243d55; font-size:12px;
-    line-height:1.6; font-weight:800; margin:0;
+    line-height:1.5; font-weight:800; margin:0;
   }
-  @media (min-width:640px) { .matrix-habit-title { font-size:14px; } }
+  @media (min-width:640px) { .matrix-habit-title { font-size:12px; } }
   html.dark .matrix-habit-title { color:#e7f0f8; }
   #monthly-charts-container > .matrix-card > .matrix-week-list {
-    display:grid; gap:4px; margin-top:0 !important; padding:7px !important;
-    border:1px solid #edf1f5 !important; border-radius:9px !important;
+    display:grid; width:max-content; max-width:100%; margin:0 auto !important;
+    gap:3px; padding:5px 6px !important;
+    border:1px solid #edf1f5 !important; border-radius:8px !important;
     background:#fff !important; box-shadow:none !important;
   }
   html.dark #monthly-charts-container > .matrix-card > .matrix-week-list {
     border-color:rgba(145,181,208,.13) !important; background:rgba(4,17,29,.32) !important;
   }
   .matrix-week-row {
-    display:flex; align-items:center; justify-content:center; gap:6px;
-    min-height:16px; padding:4px 8px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center; gap:5px;
+    min-height:14px; padding:3px 4px; border-radius:7px;
     background:transparent; transition:background-color .16s ease;
   }
   .matrix-day-square {
@@ -718,7 +720,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.3';
+const CURRENT_VERSION = '3.5';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAYS_SAT_FIRST = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
