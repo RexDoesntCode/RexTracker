@@ -513,6 +513,131 @@
     #monthly-charts-container > .matrix-card:hover { transform:none !important; }
   }
 
+
+
+  /* v3.7 — consistent, legible typography across the entire app. */
+  :root {
+    --type-caption: 12px;
+    --type-small: 13px;
+    --type-body: 15px;
+    --type-body-large: 16px;
+    --type-heading: 22px;
+  }
+  body { font-size:var(--type-body); }
+
+  /* Tailwind text utilities are used in buttons, forms, modals, messages and cards. */
+  .text-xs { font-size:13px !important; }
+  .text-sm { font-size:15px !important; }
+  .text-base { font-size:16px !important; }
+  .text-lg { font-size:20px !important; }
+  .text-xl { font-size:23px !important; }
+  .text-2xl { font-size:27px !important; }
+  .text-3xl { font-size:31px !important; }
+  [class~="text-[9px]"] { font-size:11px !important; }
+  [class~="text-[10px]"] { font-size:12px !important; }
+  [class~="text-[11px]"] { font-size:13px !important; }
+  [class~="text-[12px]"] { font-size:14px !important; }
+
+  /* Header and main dashboard hierarchy. */
+  .brand-title { font-size:22px; }
+  .brand-subtitle { font-size:13px; }
+  #app-version-display { font-size:11px; }
+  .action-btn { font-size:14px; }
+  .eyebrow { font-size:12px; }
+  .welcome-title { font-size:clamp(27px,3.1vw,37px); }
+  .welcome-description { font-size:15px; line-height:1.9; }
+  #current-date-display { font-size:14px; }
+  .calendar-mode-toggle { font-size:12px; min-height:30px; }
+  #save-status { font-size:12px; }
+  .week-panel-label { font-size:13px; }
+  .week-label { font-size:14px; }
+  .ring-caption { font-size:11px; }
+  .week-progress-copy strong { font-size:15px; }
+  .week-progress-copy p { font-size:13px; }
+  .stat-label { font-size:12px; }
+  .stat-value { font-size:25px; }
+  .stat-unit { font-size:12px; }
+
+  /* Section headings and action controls. */
+  .section-kicker { font-size:12px; }
+  .section-title { font-size:22px; }
+  .section-description { font-size:13px; }
+  #habits-count-badge { font-size:13px; }
+  #add-habit-open-btn, #edit-mode-btn { font-size:14px; }
+  #edit-mode-note { font-size:13px; }
+
+  /* Weekly table: raise labels while keeping its grid geometry unchanged. */
+  .habit-table { font-size:14px; }
+  .habit-table thead th { font-size:12px; }
+  .habit-table thead th:first-child { font-size:13px; }
+  .habit-table thead th span { font-size:12px !important; }
+  .habit-table tbody td:first-child { padding-inline:18px !important; }
+  .habit-table .habit-title { font-size:15px; }
+  .habit-table .habit-goal-label { font-size:12px; }
+  .day-button { font-size:16px !important; }
+  .habit-edit-panel label, .habit-edit-panel > div > span { font-size:13px !important; }
+  .habit-edit-panel input, .habit-edit-panel select, .habit-edit-panel button { font-size:14px !important; }
+
+  /* Mobile habit cards and their weekday/date labels. */
+  #mobile-habits-list .habit-title-mobile { font-size:16px; }
+  #mobile-habits-list .goal-label-mobile { font-size:13px !important; }
+  #mobile-habits-list .grid.grid-cols-7 > div > span { font-size:12px !important; }
+  #empty-state p:first-of-type { font-size:16px; }
+  #empty-state p:not(:first-of-type) { font-size:14px; }
+
+  /* 28-day matrix remains compact; typography grows without changing the squares or card layout. */
+  #monthly-trends-title { font-size:18px !important; }
+  .trends-description { font-size:12px; line-height:1.8; }
+  .trends-period-chip { font-size:12px; }
+  .matrix-habit-title { font-size:13px !important; line-height:1.55; }
+  .matrix-card-header { gap:7px; }
+
+  /* Forms, dialog copy, sync choices and toasts. */
+  label { font-size:13px; }
+  input, select, textarea { font-size:15px; }
+  .modal-overlay h2, #sync-conflict-modal h2 { font-size:21px; }
+  #account-status, #account-config-warning { font-size:15px; }
+  [data-sync-choice] > span:first-child { font-size:15px !important; }
+  [data-sync-choice] > span:nth-child(2) { font-size:13px !important; }
+  #sync-conflict-counts { font-size:13px !important; }
+  #account-help { font-size:13px !important; }
+  #toast-container .toast { font-size:14px !important; }
+  footer { font-size:12px !important; }
+
+  @media (max-width:920px) {
+    .welcome-title { font-size:28px; }
+    .stat-label { font-size:12px; }
+    .stat-value { font-size:23px; }
+  }
+  @media (max-width:720px) {
+    .brand-title { font-size:19px; }
+    .brand-subtitle { font-size:13px; }
+    .action-btn { font-size:13px; }
+    .welcome-title { font-size:24px; line-height:1.5; }
+    .welcome-description { font-size:14px; }
+    .section-title { font-size:20px; }
+    .section-description { font-size:13px; }
+    .stat-label { font-size:12px; }
+    .stat-value { font-size:22px; }
+    .stat-unit { font-size:12px; }
+    #add-habit-open-btn, #edit-mode-btn { font-size:14px; }
+    .habit-table thead th span { font-size:12px !important; }
+    #monthly-trends-title { font-size:17px !important; }
+    .trends-description { font-size:12px; }
+    .trends-period-chip { font-size:11px; }
+    .matrix-habit-title { font-size:14px !important; }
+    input, select, textarea, [contenteditable="true"] { font-size:16px !important; }
+  }
+  @media (max-width:390px) {
+    .brand-title { font-size:18px; }
+    .welcome-title { font-size:23px; }
+    .stat-label { font-size:11px; }
+    .stat-value { font-size:21px; }
+    #monthly-trends-title { font-size:16px !important; }
+    .matrix-habit-title { font-size:13px !important; }
+    .trends-period-chip { font-size:11px; }
+  }
+
 </style>
 </head>
 <body class="min-h-full pb-10 antialiased selection:bg-sky-100 dark:selection:bg-sky-950 transition-colors duration-200">
@@ -523,7 +648,7 @@
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.6</span>
+            <span id="app-version-display">v3.7</span>
           </div>
           <p class="brand-subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -720,7 +845,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.6';
+const CURRENT_VERSION = '3.7';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAYS_SAT_FIRST = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
