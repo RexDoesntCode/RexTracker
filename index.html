@@ -105,15 +105,19 @@
   html.dark #sync-hint { color:#95a9bc; border-inline-start-color:rgba(149,169,188,.22); }
   #sync-hint.hidden { display:none !important; }
 
-  .week-panel { align-self:stretch; display:flex; flex-direction:column; justify-content:space-between; min-width:0; padding:21px; border-radius:22px;
-    background: linear-gradient(180deg, rgba(30,60,90,.055) 0%, rgba(30,60,90,.055) 33%, rgba(30,60,90,0) 33%), rgba(255,255,255,.74);
+  /* Week panel: two-row layout in header, background follows .week-panel-top */
+  .week-panel { align-self:stretch; display:flex; flex-direction:column; min-width:0; padding:0; border-radius:22px; overflow:hidden;
+    background: rgba(255,255,255,.74);
     border:1px solid rgba(214,231,242,.84); box-shadow:0 7px 25px rgba(22,67,106,.045),inset 0 1px 0 rgba(255,255,255,.92); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
-  html.dark .week-panel { background: linear-gradient(180deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.20) 33%, rgba(0,0,0,0) 33%), rgba(7,22,36,.46); border-color:rgba(148,193,220,.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
-  .week-panel-top { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
-  .week-panel-label { flex:0 0 auto; color:var(--muted); font-weight:750; font-size:13px; }
-  .week-label-inline { flex:1 1 auto; min-width:0; margin:0; padding:0 6px; text-align:center; font-size:13px; color:#1f3851; font-weight:850; line-height:1.55; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  html.dark .week-panel { background: rgba(7,22,36,.46); border-color:rgba(148,193,220,.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
+  .week-panel-top { display:flex; flex-direction:column; gap:10px; padding:18px 21px 14px 21px; background:rgba(30,60,90,.055); }
+  html.dark .week-panel-top { background: rgba(0,0,0,.20); }
+  .week-panel-top-row-1 { display:flex; align-items:center; justify-content:flex-start; }
+  .week-panel-label { color:var(--muted); font-weight:750; font-size:13px; }
+  .week-panel-top-row-2 { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .week-label-inline { min-width:0; margin:0; font-size:14px; color:#1f3851; font-weight:850; line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   html.dark .week-label-inline { color:#e2eef8; }
-  .week-stepper { flex:0 0 auto; display:flex; align-items:stretch; gap:0; padding:3px; border:1px solid var(--line); border-radius:13px; background:rgba(246,249,252,.85); box-shadow:inset 0 1px 2px rgba(25,59,89,.04); }
+  .week-stepper { display:flex; align-items:stretch; gap:0; padding:3px; border:1px solid var(--line); border-radius:13px; background:rgba(246,249,252,.85); box-shadow:inset 0 1px 2px rgba(25,59,89,.04); flex-shrink:0; }
   html.dark .week-stepper { background:rgba(7,19,31,.55); box-shadow:inset 0 1px 2px rgba(0,0,0,.25); }
   .week-stepper button { min-width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:9px; color:#5a6e83; font-size:12px; font-weight:800; transition:all .16s ease; }
   .week-stepper button:hover:not(:disabled) { background:#e9f5ff; color:#1876d5; }
@@ -123,7 +127,8 @@
   html.dark .week-stepper button { color:#c2d4e4; }
   html.dark .week-stepper button:hover:not(:disabled) { background:rgba(43,120,174,.16); color:#9ed7ff; }
   html.dark .week-stepper button.is-current { color:#fff; }
-  .week-progress-row { display:flex; align-items:center; gap:16px; margin-top:14px; }
+  
+  .week-progress-row { display:flex; align-items:center; gap:16px; padding:14px 21px 21px 21px; flex:1; }
   .progress-ring { position:relative; display:grid; place-items:center; width:115px; height:115px; flex-shrink:0; }
   .progress-ring svg { width:100%; height:100%; transform:rotate(-90deg); overflow:visible; }
   .progress-ring circle { fill:none; stroke-width:7; }
@@ -340,7 +345,8 @@
 
   @media (max-width: 920px) {
     .welcome-section { grid-template-columns:minmax(0,1fr) minmax(260px,.75fr); gap:16px; padding:22px; }
-    .week-panel { padding:17px; }
+    .week-panel-top { padding:17px 17px 10px 17px; gap:9px; }
+    .week-progress-row { padding:0 17px 17px 17px; gap:12px; }
     .progress-ring { width:105px; height:105px; }
     #week-progress-value { font-size:22px; }
     .ring-caption { font-size:11px; }
@@ -373,9 +379,9 @@
     .date-status-row { align-items:flex-start; flex-direction:column; gap:8px; margin-top:13px; }
     #save-status { font-size:12px; padding:6px 9px; }
     #sync-hint { border-inline-start:0; padding-inline-start:0; font-size:11px; }
-    .week-panel { padding:13px; }
-    .week-label-inline { font-size:12px; padding:0 4px; }
-    .week-progress-row { gap:12px; margin-top:12px; }
+    .week-panel-top { padding:13px 13px 10px 13px; gap:8px; }
+    .week-label-inline { font-size:13px; }
+    .week-progress-row { padding:0 13px 13px 13px; gap:12px; }
     .progress-ring { width:100px; height:100px; }
     #week-progress-value { font-size:21px; }
     .ring-caption { font-size:11px; }
@@ -407,7 +413,6 @@
     .stat-card { flex-direction:column; align-items:flex-start; gap:7px; }
     .stat-icon { width:32px; height:32px; }
     .stat-value-line { margin-top:2px; }
-    .week-panel-top { flex-wrap:wrap; }
     #monthly-charts-container { grid-template-columns:1fr; }
     .action-btn { padding-inline:8px; }
     #account-email { max-width:calc(100vw - 190px); }
@@ -440,7 +445,7 @@
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.9.3</span>
+            <span id="app-version-display">v3.9.5</span>
           </div>
           <p class="brand-subtitle" data-i18n="app.subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -479,17 +484,22 @@
         </div>
       </div>
       <div class="week-panel">
+        <!-- Structure change: Two rows inside top block -->
         <div class="week-panel-top">
-          <span class="week-panel-label" data-i18n="week.overview">نمای کلی هفته</span>
-          <p id="current-week-display" class="week-label-inline">...</p>
-          <div class="week-stepper" role="group" aria-label="انتخاب هفته">
-            <button type="button" data-action="navigate-week" data-direction="-1" title="هفته قبل" aria-label="هفته قبل">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
-            </button>
-            <button type="button" data-action="navigate-week" data-direction="0" class="is-current" title="این هفته" aria-label="رفتن به این هفته"><span data-i18n="week.this">این هفته</span></button>
-            <button type="button" data-action="navigate-week" data-direction="1" title="هفته بعد" aria-label="هفته بعد">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-            </button>
+          <div class="week-panel-top-row-1">
+            <span class="week-panel-label" data-i18n="week.overview">نمای کلی هفته</span>
+          </div>
+          <div class="week-panel-top-row-2">
+            <p id="current-week-display" class="week-label-inline">...</p>
+            <div class="week-stepper" role="group" aria-label="انتخاب هفته">
+              <button type="button" data-action="navigate-week" data-direction="-1" title="هفته قبل" aria-label="هفته قبل">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+              </button>
+              <button type="button" data-action="navigate-week" data-direction="0" class="is-current" title="این هفته" aria-label="رفتن به این هفته"><span data-i18n="week.this">این هفته</span></button>
+              <button type="button" data-action="navigate-week" data-direction="1" title="هفته بعد" aria-label="هفته بعد">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+              </button>
+            </div>
           </div>
         </div>
         <div class="week-progress-row">
@@ -548,7 +558,6 @@
       <div id="monthly-charts-container" class="matrix-grid"></div>
     </section>
 
-    <!-- Stats grid moved after monthly trends (main content = table is now closer to top) -->
     <section class="stats-grid" aria-label="خلاصه عملکرد">
       <article class="stat-card">
         <div class="stat-icon blue">
@@ -580,7 +589,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h12v5a6 6 0 0 1-12 0V4Z"/><path d="M6 4H4a2 2 0 0 0-2 2v1a5 5 0 0 0 5 5"/><path d="M18 4h2a2 2 0 0 1 2 2v1a5 5 0 0 1-5 5"/><path d="M9 20h6M12 15v5"/></svg>
         </div>
         <div class="stat-copy">
-          <p class="stat-label" data-i18n="stat.bestRecord">رکورد طولانی‌ترین زنجیره</p>
+          <p class="stat-label" data-i18n="stat.bestRecord">رکورد تداوم</p>
           <div class="stat-value-line">
             <strong id="summary-best-record" class="stat-value">۰</strong>
             <span class="stat-unit" data-i18n="unit.day">روز</span>
@@ -593,7 +602,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
         </div>
         <div class="stat-copy">
-          <p class="stat-label" data-i18n="stat.streak">طولانی‌ترین زنجیره فعلی</p>
+          <p class="stat-label" data-i18n="stat.streak">بیشترین تداوم فعلی</p>
           <div class="stat-value-line">
             <strong id="summary-streak-count" class="stat-value">۰</strong>
             <span class="stat-unit" data-i18n="unit.day">روز</span>
@@ -603,6 +612,10 @@
       </article>
     </section>
   </div>
+      <footer class="w-full text-center pt-6 pb-2 mt-6 text-[11px] text-slate-400 dark:text-slate-500">
+      <span data-i18n="footer.madeWith">ساخته شده با ❤️ توسط</span>
+      <a href="https://github.com/RexDoesntCode" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">RexDoesntCode</a>
+    </footer>
 
   <div id="auth-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
     <div class="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-6">
@@ -642,7 +655,7 @@
         <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
         <div class="sm:col-span-2 rounded-xl bg-sky-50/70 dark:bg-sky-950/25 border border-sky-200/70 dark:border-sky-900/50 p-3.5">
           <p class="text-sm leading-7 text-slate-700 dark:text-slate-200">
-            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> .می‌تونه اعمال بشه — اینجوری اگه یه روز جا موندی، کافیه روز بعد جبران کنی تا زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که زنجیره عادت‌ها رو می‌کشه «دو روز پشت سر هم» هست. البته می‌تونی این قانون رو از تنظیمات غیرفعال کنی
+            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> می‌تونه نجاتت بده — اگه یه روز جا موندی، کافیه روز بعد جبران کنی و زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که عادت‌ها رو می‌کشه «دو روز پشت سر هم» هست. البته می‌تونی این قانون رو از تنظیمات غیرفعال کنی
           </p>
         </div>
         <div class="sm:col-span-2 flex items-center justify-end gap-2 pt-2"><button type="button" data-close-modal="add-habit-modal" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">انصراف</button><button type="submit" class="bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">افزودن عادت</button></div>
@@ -773,7 +786,7 @@
 
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.9.3';
+const CURRENT_VERSION = '3.9.5';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAY_NAMES_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
@@ -810,8 +823,8 @@ const I18N = {
     'ring.desc': 'درصد پیشرفت بر اساس هدف هفتگی هر عادت محاسبه می‌شود. هفته را از بالا تغییر بده و سابقه‌ات را مرور کن.',
     'stat.today': 'ثبت‌های امروز',
     'stat.completions': 'ثبت‌های هفتگی',
-    'stat.bestRecord': 'رکورد طولانی‌ترین زنجیره',
-    'stat.streak': 'بیشترین زنجیره فعلی',
+    'stat.bestRecord': 'رکورد تداوم',
+    'stat.streak': 'بیشترین تداوم فعلی',
     'unit.of': 'از',
     'unit.day': 'روز',
     'unit.habit': 'عادت',
@@ -839,6 +852,7 @@ const I18N = {
     'settings.language': 'زبان',
     'settings.nmt.desc': 'عادت‌های ۷ روزه اجازه می‌دهند یک روز از دست رفته زنجیره را نشکند (اگر بین دو روز متوالی ثبت‌شده باشد).',
     'today.prefix': 'امروز:'
+    'footer.madeWith': 'ساخته شده با ❤️ توسط',
   },
   en: {
     'app.subtitle': 'Habit tracker focused on consistency',
@@ -889,6 +903,7 @@ const I18N = {
     'settings.language': 'Language',
     'settings.nmt.desc': 'Habits with a 7-day goal may skip one missed day without breaking the streak (when between two logged days).',
     'today.prefix': 'Today:'
+    'footer.madeWith': 'Made with ❤️ by',
   }
 };
 
@@ -1741,7 +1756,6 @@ function buildHabitMatrixCard(habit, habitIndex, palette) {
   return matrixCard;
 }
 
-// ---- Summary stats helpers ----
 function getCompletionsOnDate(dateObj) {
   let count = 0;
   habits.forEach(h => { if (getStatusByDate(h, dateObj).isChecked) count++; });
@@ -1788,7 +1802,6 @@ function getCurrentBestAcrossHabits() {
 
 function updateSummaryStats(stats) {
   const totalHabits = habits.length;
-  // Card 2 + ring base
   let completedDays = 0;
   let totalProgress = 0;
   habits.forEach(habit => {
@@ -1803,7 +1816,6 @@ function updateSummaryStats(stats) {
   });
   const avg = totalHabits ? Math.round(totalProgress / totalHabits) : 0;
 
-  // Card 1: today
   const { today: todayCount, yesterday: yesterdayCount } = getTodayAndYesterdayCounts();
   $('summary-today-count').textContent = toPersianDigits(todayCount);
   $('summary-today-total').textContent = toPersianDigits(totalHabits);
@@ -1818,19 +1830,17 @@ function updateSummaryStats(stats) {
       : `دیروز: ${toPersianDigits(yesterdayCount)} از ${toPersianDigits(totalHabits)}`;
   }
 
-  // Card 2: weekly completions + average
   $('summary-completions-count').textContent = toPersianDigits(completedDays);
   const weeklyAvg = getWeeklyAverageCompletions(8);
   const compSub = $('summary-completions-sub');
   if (weeklyAvg === null) {
-    compSub.textContent = language === 'en' ? 'Week avg: —' : ' میانگین هفته های قبل: —';
+    compSub.textContent = language === 'en' ? 'Week avg: —' : 'میانگین هفته: —';
   } else {
     compSub.textContent = language === 'en'
       ? `Week avg: ${weeklyAvg}`
-      : `میانگین هفته های قبل: ${toPersianDigits(weeklyAvg)}`;
+      : `میانگین هفته: ${toPersianDigits(weeklyAvg)}`;
   }
 
-  // Card 3: best record
   const record = getBestRecordAcrossHabits();
   $('summary-best-record').textContent = toPersianDigits(record.best);
   const recSub = $('summary-best-record-sub');
@@ -1840,17 +1850,15 @@ function updateSummaryStats(stats) {
     recSub.textContent = record.habit.title;
   }
 
-  // Card 4: current best streak
   const currentBest = getCurrentBestAcrossHabits();
   $('summary-streak-count').textContent = toPersianDigits(currentBest.best);
   const streakSub = $('summary-streak-sub');
   if (currentBest.best === 0 || !currentBest.habit) {
-    streakSub.textContent = language === 'en' ? 'No streak yet' : 'هنوز زنجیره‌ عادتی ایجاد نکردی';
+    streakSub.textContent = language === 'en' ? 'No streak yet' : 'هنوز تداومی نداری';
   } else {
     streakSub.textContent = currentBest.habit.title;
   }
 
-  // Ring
   $('week-progress-value').textContent = `${toPersianDigits(avg)}٪`;
   const ring = $('week-progress-ring');
   if (ring) ring.style.strokeDashoffset = String(226.2 * (1 - avg / 100));
