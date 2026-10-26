@@ -1839,11 +1839,11 @@ function updateSummaryStats(stats) {
   const weeklyAvg = getWeeklyAverageCompletions(8);
   const compSub = $('summary-completions-sub');
   if (weeklyAvg === null) {
-    compSub.textContent = language === 'en' ? 'Week avg: —' : 'میانگین هفته: —';
+    compSub.textContent = language === 'en' ? 'Week avg: —' : 'میانگین هفته‌های قبل: —';
   } else {
     compSub.textContent = language === 'en'
       ? `Week avg: ${weeklyAvg}`
-      : `میانگین هفته: ${toPersianDigits(weeklyAvg)}`;
+      : `میانگین هفته‌های قبل: ${toPersianDigits(weeklyAvg)}`;
   }
 
   const record = getBestRecordAcrossHabits();
