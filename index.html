@@ -455,6 +455,9 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
   </style>
 </head>
 <body class="min-h-full pb-10 antialiased selection:bg-sky-100 dark:selection:bg-sky-950 transition-colors duration-200">
+  <!-- iOS Haptic Feedback Trick Switch -->
+  <input type="checkbox" id="ios-haptic-switch" switch style="display:none; position:absolute; opacity:0; pointer-events:none;" aria-hidden="true" tabindex="-1">
+
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-lockup">
@@ -481,11 +484,11 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
           <span id="account-email" class="max-w-[9rem] truncate text-xs font-semibold" title="حساب کاربری"></span>
           <button id="sync-now-btn" type="button" class="action-btn" title="همگام‌سازی اجباری اطلاعات با حساب ابری">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M21 2v6h-6"></path>
-  <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
-  <path d="M3 22v-6h6"></path>
-  <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
-</svg><span data-i18n="btn.sync">همگام‌سازی</span>
+              <path d="M21 2v6h-6"></path>
+              <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
+              <path d="M3 22v-6h6"></path>
+              <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+            </svg><span data-i18n="btn.sync">همگام‌سازی</span>
           </button>
           <button id="sign-out-btn" type="button" class="action-btn" data-i18n="btn.signout">خروج</button>
         </div>
@@ -506,7 +509,6 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
         </div>
       </div>
       <div class="week-panel">
-        <!-- Structure change: Two rows inside top block -->
         <div class="week-panel-top">
           <div class="week-panel-top-row-1">
             <span class="week-panel-label" data-i18n="week.overview">نمای کلی هفته</span>
@@ -634,10 +636,11 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
       </article>
     </section>
   </div>
-      <footer class="w-full text-center pt-6 pb-2 mt-6 text-[11px] text-slate-400 dark:text-slate-500">
-      <span data-i18n="footer.madeWith">ساخته شده با ❤️ توسط</span>
-      <a href="https://github.com/RexDoesntCode" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">RexDoesntCode</a>
-    </footer>
+  
+  <footer class="w-full text-center pt-6 pb-2 mt-6 text-[11px] text-slate-400 dark:text-slate-500">
+    <span data-i18n="footer.madeWith">ساخته شده با ❤️ توسط</span>
+    <a href="https://github.com/RexDoesntCode" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors">RexDoesntCode</a>
+  </footer>
 
   <div id="auth-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
     <div class="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-6">
@@ -953,6 +956,18 @@ let pendingDeleteTimer = null;
 let pendingHabitToDelete = null;
 let lastFocusedBeforeModal = null;
 const $ = (id) => document.getElementById(id);
+
+// Haptic Feedback Trigger (Android + iOS 17.4+)
+function triggerHaptic() {
+  if (navigator.vibrate) {
+    navigator.vibrate(15);
+  }
+  const hapticSwitch = document.getElementById('ios-haptic-switch');
+  if (hapticSwitch) {
+    hapticSwitch.click();
+    hapticSwitch.checked = !hapticSwitch.checked; 
+  }
+}
 
 const IDB_DB = 'rex_tracker_db';
 const IDB_STORE = 'kv';
@@ -2026,6 +2041,9 @@ function handleAction(button) {
   if (action === 'toggle-day') {
     if (button.disabled) return;
     const habit = getHabit(habitId); if (!habit || isEditMode) return;
+    
+    triggerHaptic(); // Added Haptic Feedback Here
+
     const dayIndex = Number(button.dataset.dayIndex);
     const weekKey = button.dataset.weekKey;
     if (!Number.isInteger(dayIndex) || dayIndex < 0 || dayIndex > 6 || !/^W-\d{4}-\d{2}-\d{2}$/.test(weekKey || '')) return;
