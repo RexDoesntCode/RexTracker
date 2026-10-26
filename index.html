@@ -239,6 +239,23 @@
   html.dark .day-button.bg-white:hover:not(:disabled) { background:#17384d !important; border-color:#2baec9 !important; color:#8ceaff !important; }
   html.dark .day-button.bg-white.is-future { border-style:dashed !important; border-color:#3a4d61 !important; }
   html.dark .day-button.bg-white.is-future:hover:not(:disabled) { border-style:dashed !important; }
+  .day-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #c3d0de;
+}
+html.dark .day-dot {
+  background-color: #4e6478;
+}
+/* تغییر رنگ نقطه هنگام هاور کردن */
+.day-button.bg-white:hover:not(:disabled) .day-dot {
+  background-color: #1aa5cc;
+}
+html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
+  background-color: #8ceaff;
+}
 
   .habit-edit-panel { margin-top:12px !important; padding:14px !important; background:#f6faff !important; border:1px solid #dceaf4 !important; border-radius:15px !important; }
   .habit-edit-panel button { transition:all .18s ease; }
@@ -1654,7 +1671,7 @@ function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette) {
   else classes += 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700';
   if (future) classes += ' is-future';
   if (disabled) classes += ' opacity-40 cursor-not-allowed';
-  const content = checked || grace ? '✓' : '·';
+  const content = checked || grace ? '✓' : '<span class="day-dot"></span>';
   const dateStr = formatCalendarDate(date, { weekday:false });
   const title = future
     ? (language === 'en' ? 'Future days cannot be logged' : 'ثبت روز آینده غیرفعال است')
