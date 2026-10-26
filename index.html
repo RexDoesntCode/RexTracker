@@ -412,7 +412,7 @@
 
 
 
-    /* v3.5 — same minimalist dots, compact matrix cards and denser desktop grid. */
+    /* v3.6 — same minimalist matrix; day squares increased to 10px. */
   #monthly-trends-section {
     margin-top:18px !important;
     padding:16px !important;
@@ -484,7 +484,7 @@
     background:transparent; transition:background-color .16s ease;
   }
   .matrix-day-square {
-    display:inline-block; width:8px; height:8px; flex:0 0 8px;
+    display:inline-block; width:10px; height:10px; flex:0 0 10px;
     border-radius:2px; background:#e2e8f0;
   }
   html.dark .matrix-day-square { background:#334155; }
@@ -523,7 +523,7 @@
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.0</span>
+            <span id="app-version-display">v3.6</span>
           </div>
           <p class="brand-subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -720,7 +720,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.5';
+const CURRENT_VERSION = '3.6';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAYS_SAT_FIRST = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
