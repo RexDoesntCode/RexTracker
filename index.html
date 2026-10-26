@@ -15,7 +15,6 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <link rel="manifest" href="./manifest.webmanifest">
   <title>Rex Tracker | رهگیری عادت‌ها</title>
-  <!-- FOUC prevention: apply dark theme before CSS paints -->
   <script>
   (function(){
     try {
@@ -28,14 +27,6 @@
     } catch(_){}
   })();
   </script>
-  <!--
-    NOTE (item #2): Tailwind CDN is convenient for GitHub Pages but NOT optimal for production
-    (FOUC on slow networks, no tree-shaking, ~300KB). For a real build, in your repo run:
-      npm i -D tailwindcss
-      npx tailwindcss -i ./src/input.css -o ./dist/tailwind.css --minify
-    Then replace the CDN <script> with <link rel="stylesheet" href="./dist/tailwind.css">.
-    This is a one-command change and drops the CSS payload from ~300KB to ~15KB.
-  -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +48,7 @@
   button, input, select { font:inherit; }
   button { cursor:pointer; transition:transform .18s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease, color .2s ease; }
   button:disabled { cursor:not-allowed; }
-  .app-shell { width:min(1360px,100%); margin-inline:auto; padding:24px clamp(14px,3vw,38px) 32px; }
+  .app-shell { width:min(1360px,100%); margin-inline:auto; padding:24px clamp(14px,3vw,38px) calc(32px + env(safe-area-inset-bottom)); }
   .topbar { position:relative; z-index:5; display:flex; align-items:center; justify-content:space-between; gap:20px; padding:14px 18px; background:rgba(255,255,255,.84); border:1px solid rgba(255,255,255,.95); border-radius:22px; box-shadow:0 10px 34px rgba(24,47,78,.055),inset 0 1px 0 #fff; backdrop-filter:blur(18px) saturate(140%); -webkit-backdrop-filter:blur(18px) saturate(140%); animation:rise-in .55s cubic-bezier(.2,.8,.2,1) both; }
   html.dark .topbar { background:rgba(15,31,47,.84); border-color:rgba(171,206,233,.11); box-shadow:0 14px 38px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.035); }
   .brand-lockup { display:flex; align-items:center; gap:13px; min-width:0; }
@@ -98,10 +89,6 @@
   .date-status-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:24px; }
   .date-display-group { display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; min-width:0; }
   #current-date-display { font-size:14px; font-weight:750; color:#405a73 !important; margin:0; }
-  .calendar-mode-toggle { min-height:30px; padding:3px 9px; border:1px solid #b9e8f2; border-radius:9px; background:rgba(235,250,255,.88); color:#167b9c; font-size:12px; font-weight:850; line-height:1.4; box-shadow:0 1px 4px rgba(20,120,160,.05); white-space:nowrap; }
-  .calendar-mode-toggle:hover { background:#dff7fd; border-color:#7bd6e8; transform:translateY(-1px); }
-  html.dark .calendar-mode-toggle { background:rgba(20,113,142,.17); border-color:rgba(71,190,221,.28); color:#92e4f5; }
-  html.dark .calendar-mode-toggle:hover { background:rgba(20,135,164,.26); border-color:rgba(71,190,221,.5); }
   html.dark #current-date-display { color:#d0dfed !important; }
   #save-status { display:inline-flex; align-items:center; gap:6px; width:max-content; max-width:100%; padding:7px 10px; border-radius:99px; border:1px solid #dcece7; background:rgba(238,250,246,.9); font-size:12px; font-weight:750; line-height:1.6; box-shadow:none; transition:background-color .2s ease,color .2s ease,border-color .2s ease; }
   #save-status::before { content:""; width:6px; height:6px; border-radius:50%; flex-shrink:0; background:currentColor; }
@@ -118,7 +105,6 @@
   html.dark .week-panel { background:rgba(7,22,36,.46); border-color:rgba(148,193,220,.15); box-shadow:inset 0 1px 0 rgba(255,255,255,.035); }
   .week-panel-top { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
   .week-panel-label { color:var(--muted); font-weight:750; font-size:13px; }
-  /* 3-button week stepper (item #6) */
   .week-stepper { display:flex; align-items:stretch; gap:0; padding:3px; border:1px solid var(--line); border-radius:13px; background:rgba(246,249,252,.85); box-shadow:inset 0 1px 2px rgba(25,59,89,.04); }
   html.dark .week-stepper { background:rgba(7,19,31,.55); box-shadow:inset 0 1px 2px rgba(0,0,0,.25); }
   .week-stepper button { min-width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; gap:5px; padding:0 8px; border-radius:9px; color:#5a6e83; font-size:12px; font-weight:800; transition:all .16s ease; }
@@ -193,13 +179,15 @@
   .tracker-surface { overflow:hidden; border:1px solid rgba(225,234,242,.95); border-radius:23px; background:rgba(255,255,255,.92); box-shadow:0 14px 36px rgba(22,50,80,.045),inset 0 1px 0 rgba(255,255,255,.96); animation:rise-in .55s .16s both; }
   html.dark .tracker-surface { background:rgba(14,28,43,.88); border-color:rgba(151,188,215,.13); box-shadow:0 14px 36px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.025); }
   #desktop-habits-wrap { overflow:auto; }
-  /* Table: bigger typography + tighter paddings (item #8) */
-  .habit-table { width:100%; border-collapse:separate; border-spacing:0; min-width:940px; color:#41576d; font-size:14px; }
+
+  /* Table: narrower title, wider progress (item #5) */
+  .habit-table { width:100%; border-collapse:separate; border-spacing:0; min-width:940px; color:#41576d; font-size:14px; table-layout:fixed; }
   .habit-table thead th { position:sticky; top:0; z-index:15; background:#f7fafc !important; color:#7d8fa2 !important; border-bottom:1px solid #e7edf3 !important; font-size:13px; line-height:1.7; font-weight:850; padding:14px 8px !important; }
-  .habit-table thead th:first-child { right:0; z-index:25; text-align:right; padding-inline:16px !important; min-width:225px; }
-  .habit-table th[id^="th-day-"] { min-width:52px; }
+  .habit-table thead th:first-child { right:0; z-index:25; text-align:right; padding-inline:16px !important; width:22%; min-width:210px; }
+  .habit-table th[id^="th-day-"] { min-width:52px; width:auto; }
+  .habit-table thead th.progress-th { min-width:140px; width:14%; }
+  .habit-table thead th.operation-th { width:56px; }
   .habit-table thead th.bg-indigo-50 { background:#eaf8ff !important; color:#1679b4 !important; }
-  /* Today marker: thicker bottom border on the today's th (item #9) */
   .habit-table thead th.is-today-col { box-shadow: inset 0 -3px 0 #64748b; }
   html.dark .habit-table thead th.is-today-col { box-shadow: inset 0 -3px 0 #94a3b8; }
   .habit-table tbody td[class*="bg-indigo-50"] { background:rgba(224,246,255,.48) !important; }
@@ -209,7 +197,7 @@
   .habit-table tbody tr:last-child td { border-bottom:0; }
   .habit-table tbody tr:hover { background:#f8fbff !important; }
   .habit-table tbody td { padding:12px 6px !important; border-bottom:1px solid #edf1f5 !important; vertical-align:middle; }
-  .habit-table tbody td:first-child { position:sticky; right:0; z-index:10; min-width:225px; background:#fff !important; padding:13px 16px !important; box-shadow:-8px 0 14px -16px rgba(30,62,92,.25); }
+  .habit-table tbody td:first-child { position:sticky; right:0; z-index:10; min-width:210px; max-width:260px; background:#fff !important; padding:13px 16px !important; box-shadow:-8px 0 14px -16px rgba(30,62,92,.25); }
   .habit-table tbody tr:hover td:first-child { background:#f8fbff !important; }
   .habit-table tbody td:last-child, .habit-table tbody th:last-child { border-left:0; }
   .habit-table .habit-title { color:#1e3650; font-size:15px; font-weight:850; line-height:1.7; }
@@ -223,19 +211,24 @@
   html.dark .habit-table tbody tr:hover td:first-child { background:#14283b !important; }
   html.dark .habit-table .habit-title { color:#e1edf7; }
   html.dark .habit-table .habit-goal-label { color:#a7bbcd; }
-  /* Bigger day button for larger target and clearer text (item #8) */
-  .day-button { width:38px; min-width:38px; height:42px; min-height:42px; border-radius:12px !important; border-width:2px !important; font-size:18px !important; margin-inline:auto; transition:transform .17s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease !important; -webkit-user-select:none; user-select:none; }
+
+  .day-button { width:38px; min-width:38px; height:42px; min-height:42px; border-radius:12px !important; border-width:2px !important; font-size:18px !important; margin-inline:auto; transition:transform .17s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease,color .2s ease !important; -webkit-user-select:none; user-select:none; }
   .day-button:not(:disabled):hover { transform:translateY(-2px) scale(1.04); box-shadow:0 6px 13px rgba(28,106,165,.11); }
   .day-button:not(:disabled):active { transform:scale(.94); }
   .day-button:focus-visible { outline:3px solid #13a9cb; outline-offset:2px; z-index:3; }
   .day-button[aria-pressed="true"] { transform:scale(.97); }
-  /* Dashed border for unchecked day buttons (item #4) */
-  .day-button.bg-white { color:#c3d0de !important; background:#f8fafc !important; border-style:dashed !important; border-color:#d8e2ec !important; }
-  .day-button.bg-white:hover:not(:disabled) { color:#1aa5cc !important; background:#eefaff !important; border-color:#8bd9ed !important; border-style:solid !important; }
+  /* Unchecked day: solid, subtle */
+  .day-button.bg-white { color:#c3d0de !important; background:#f8fafc !important; border-style:solid !important; border-color:#d8e2ec !important; }
+  .day-button.bg-white:hover:not(:disabled) { color:#1aa5cc !important; background:#eefaff !important; border-color:#8bd9ed !important; }
   .day-button:not(.bg-white) { box-shadow:0 4px 10px rgba(15,91,154,.1); }
   .day-button.opacity-40 { opacity:.42 !important; }
+  /* Future locked day: dashed (item #1) */
+  .day-button.bg-white.is-future { border-style:dashed !important; border-color:#c9d6e3 !important; }
   html.dark .day-button.bg-white { color:#4e6478 !important; background:#14283a !important; border-color:#334155 !important; }
-  html.dark .day-button.bg-white:hover:not(:disabled) { background:#17384d !important; border-color:#2baec9 !important; color:#8ceaff !important; border-style:solid !important; }
+  html.dark .day-button.bg-white:hover:not(:disabled) { background:#17384d !important; border-color:#2baec9 !important; color:#8ceaff !important; }
+  html.dark .day-button.bg-white.is-future { border-style:dashed !important; border-color:#3a4d61 !important; }
+  html.dark .day-button.bg-white.is-future:hover:not(:disabled) { border-style:dashed !important; }
+
   .habit-edit-panel { margin-top:12px !important; padding:14px !important; background:#f6faff !important; border:1px solid #dceaf4 !important; border-radius:15px !important; }
   .habit-edit-panel button { transition:all .18s ease; }
   .habit-edit-panel [data-action="save-name"] { background:#147ee8 !important; color:white !important; border-radius:9px; }
@@ -258,28 +251,25 @@
   #empty-state-cta { margin-top:18px; display:inline-flex; align-items:center; gap:8px; padding:11px 20px; border:1px solid transparent; border-radius:13px; color:#fff; background:linear-gradient(115deg,#1677ff,#14a8de); box-shadow:0 7px 18px rgba(22,119,255,.2); font-size:14px; font-weight:850; }
   #empty-state-cta:hover { transform:translateY(-2px); box-shadow:0 11px 23px rgba(22,119,255,.28); }
 
-  /* Streak pill (item #10) */
   .streak-pill { display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:7px; font-size:12px; font-weight:850; background:#fff2e5; color:#b45309; line-height:1.5; }
   html.dark .streak-pill { background:rgba(180,83,9,.18); color:#fbbf24; }
 
-  /* Wider progress bar (item #8) */
   .progress-cell { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  .progress-cell-bar { width:96px; background:#e9eff5; border-radius:999px; height:8px; overflow:hidden; }
+  /* Wider progress bar (item #5) */
+  .progress-cell-bar { width:120px; max-width:100%; background:#e9eff5; border-radius:999px; height:8px; overflow:hidden; }
   html.dark .progress-cell-bar { background:#1e2f43; }
   .progress-cell-bar > div { height:100%; border-radius:999px; }
 
   #monthly-trends-section { margin-top:18px !important; padding:16px !important; border-radius:18px !important; border:1px solid rgba(225,234,242,.95); background:rgba(255,255,255,.84); box-shadow:0 14px 36px rgba(22,50,80,.04); animation:rise-in .55s .22s both; }
   html.dark #monthly-trends-section { background:rgba(14,28,43,.84); border-color:rgba(151,188,215,.13); box-shadow:0 14px 36px rgba(0,0,0,.12); }
-  .trends-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .trends-heading { display:block; margin-bottom:10px; }
   .trends-heading-copy { min-width:0; }
-  #monthly-trends-title { display:flex; align-items:center; gap:8px; margin:0 !important; font-size:18px !important; line-height:1.6 !important; font-weight:850 !important; letter-spacing:-.02em; color:#213a53 !important; }
+  /* Title won't wrap (items #2 & #3: chip removed frees space; nowrap as guard) */
+  #monthly-trends-title { display:flex; align-items:center; gap:8px; margin:0 !important; font-size:18px !important; line-height:1.6 !important; font-weight:850 !important; letter-spacing:-.02em; color:#213a53 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   #monthly-trends-title > span { display:inline-block; width:4px !important; height:20px !important; flex:0 0 4px; border-radius:5px !important; background:linear-gradient(180deg,#25c4d7,#3683ff) !important; }
   html.dark #monthly-trends-title { color:#e6f0fa !important; }
   .trends-description { margin-top:3px; color:#67798c; font-size:12px; line-height:1.8; }
   html.dark .trends-description { color:#a3b5c7; }
-  .trends-period-chip { display:inline-flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0; padding:5px 8px; border:1px solid #dce7f0; border-radius:999px; color:#4e627a; background:rgba(246,250,253,.92); font-size:12px; font-weight:800; white-space:nowrap; }
-  .trends-period-dot { width:6px; height:6px; border-radius:50%; background:#20b8cc; }
-  html.dark .trends-period-chip { color:#cedce9; border-color:rgba(150,184,208,.18); background:rgba(6,20,32,.4); }
   #monthly-charts-container { display:grid !important; grid-template-columns:repeat(auto-fill,minmax(145px,150px)) !important; justify-content:start; align-items:start; gap:10px !important; margin-top:0 !important; }
   #monthly-charts-container > .matrix-card { min-width:0; padding:8px !important; border:1px solid #e2eaf1 !important; border-radius:12px !important; background:rgba(255,255,255,.92) !important; box-shadow:none !important; transition:border-color .16s ease; }
   #monthly-charts-container > .matrix-card:hover { border-color:#c8dce9 !important; }
@@ -321,8 +311,6 @@
   html.dark [data-sync-choice="cloud"] { background:rgba(21,43,62,.75) !important; border-color:rgba(145,184,210,.14) !important; }
   html.dark [data-sync-choice="local"] { background:rgba(105,42,57,.17) !important; border-color:rgba(209,113,134,.18) !important; }
   #account-config-warning { border-radius:14px !important; }
-
-  /* Toggle switch */
   .toggle-switch { position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0; }
   .toggle-switch input { opacity:0; width:0; height:0; }
   .toggle-slider { position:absolute; inset:0; cursor:pointer; border-radius:999px; background:#cbd5e1; transition:.2s; }
@@ -353,6 +341,9 @@
     .stats-grid { gap:10px; }
     .stat-card { padding:14px; gap:10px; }
     .stat-icon { width:38px; height:38px; border-radius:12px; }
+    .welcome-title { font-size:28px; }
+    .stat-label { font-size:12px; }
+    .stat-value { font-size:23px; }
   }
   @media (min-width: 768px) { .mobile-habits-grid { display:none !important; } }
   @media (max-width: 720px) {
@@ -371,7 +362,7 @@
     #sign-out-btn { flex:0 0 auto; }
     .welcome-section { grid-template-columns:1fr; gap:13px; margin-top:12px; padding:16px; border-radius:23px; }
     .eyebrow { margin-bottom:8px; font-size:12px; }
-    .welcome-title { font-size:23px; line-height:1.45; }
+    .welcome-title { font-size:24px; line-height:1.45; }
     .welcome-description { margin-top:7px; font-size:14px; line-height:1.85; }
     .date-status-row { align-items:flex-start; flex-direction:column; gap:8px; margin-top:13px; }
     #save-status { font-size:12px; padding:6px 9px; }
@@ -388,8 +379,6 @@
     #mobile-habits-list { padding:8px !important; gap:10px !important; }
     #mobile-habits-list > article { padding:14px !important; border-radius:17px !important; }
     #monthly-trends-section { margin-top:16px !important; padding:12px !important; border-radius:15px !important; }
-    .trends-heading { gap:7px; margin-bottom:8px; }
-    .trends-period-chip { padding:4px 7px; font-size:11px; }
     #monthly-trends-title { font-size:17px !important; }
     .trends-description { font-size:12px; line-height:1.6; }
     #monthly-charts-container { grid-template-columns:minmax(0,1fr) !important; gap:7px !important; }
@@ -419,7 +408,6 @@
     #monthly-charts-container > .matrix-card:hover { transform:none !important; }
   }
 
-  /* Readable secondary text in both themes */
   html:not(.dark) .text-slate-400 { color:#687b8f !important; }
   html:not(.dark) .text-slate-500 { color:#53697f !important; }
   html:not(.dark) .text-gray-400 { color:#687b8f !important; }
@@ -438,7 +426,7 @@
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.8</span>
+            <span id="app-version-display">v3.9</span>
           </div>
           <p class="brand-subtitle" data-i18n="app.subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -471,7 +459,7 @@
         <div class="date-status-row">
           <div class="date-display-group">
             <p id="current-date-display">امروز: ...</p>
-            <button id="calendar-mode-toggle" class="calendar-mode-toggle" type="button" title="تقویم فعلی شمسی است؛ برای تغییر به میلادی بزن" aria-label="تقویم فعلی شمسی؛ تغییر به میلادی" aria-pressed="false">شمسی</button>
+            <!-- item #6: removed the calendar-mode-toggle button (now handled in settings) -->
           </div>
           <span id="save-status" role="status" aria-live="polite" aria-atomic="true">ذخیره روی این دستگاه</span>
         </div>
@@ -479,7 +467,6 @@
       <div class="week-panel">
         <div class="week-panel-top">
           <span class="week-panel-label" data-i18n="week.overview">نمای کلی هفته</span>
-          <!-- 3-button week stepper (item #6) -->
           <div class="week-stepper" role="group" aria-label="انتخاب هفته">
             <button type="button" data-action="navigate-week" data-direction="-1" title="هفته قبل" aria-label="هفته قبل">
               <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
@@ -539,9 +526,9 @@
           <div id="desktop-habits-wrap" class="hidden md:block overflow-x-auto">
             <table class="habit-table text-right">
               <thead><tr>
-                <th class="p-4 min-w-[245px] w-[28%]" data-i18n="table.habit">عنوان عادت و مداومت</th>
-                <th id="th-day-0" class="p-3 text-center min-w-[50px]">شنبه</th><th id="th-day-1" class="p-3 text-center min-w-[50px]">یکشنبه</th><th id="th-day-2" class="p-3 text-center min-w-[50px]">دوشنبه</th><th id="th-day-3" class="p-3 text-center min-w-[50px]">سه‌شنبه</th><th id="th-day-4" class="p-3 text-center min-w-[50px]">چهارشنبه</th><th id="th-day-5" class="p-3 text-center min-w-[50px]">پنجشنبه</th><th id="th-day-6" class="p-3 text-center min-w-[50px]">جمعه</th>
-                <th class="p-3 text-center min-w-[110px]" data-i18n="table.progress">پیشرفت هفته</th><th id="th-operation" class="p-3 text-center w-14 hidden" data-i18n="table.operations">عملیات</th>
+                <th class="p-4" data-i18n="table.habit">عنوان عادت و مداومت</th>
+                <th id="th-day-0" class="p-3 text-center">شنبه</th><th id="th-day-1" class="p-3 text-center">یکشنبه</th><th id="th-day-2" class="p-3 text-center">دوشنبه</th><th id="th-day-3" class="p-3 text-center">سه‌شنبه</th><th id="th-day-4" class="p-3 text-center">چهارشنبه</th><th id="th-day-5" class="p-3 text-center">پنجشنبه</th><th id="th-day-6" class="p-3 text-center">جمعه</th>
+                <th class="p-3 text-center progress-th" data-i18n="table.progress">پیشرفت هفته</th><th id="th-operation" class="p-3 text-center operation-th hidden" data-i18n="table.operations">عملیات</th>
               </tr></thead>
               <tbody id="habits-table-body" class="text-sm"></tbody>
             </table>
@@ -549,7 +536,6 @@
           <div id="mobile-habits-list" class="md:hidden mobile-habits-grid p-3 space-y-3"></div>
           <div id="empty-state" class="hidden text-center py-14 px-5">
             <div aria-hidden="true">✦</div><p data-i18n="empty.title">هنوز عادتی ثبت نکردی.</p><p class="text-sm mt-2" data-i18n="empty.desc">با اضافه کردن اولین عادت، مسیر پیشرفتت را شروع کن.</p>
-            <!-- Empty state CTA (item #7) -->
             <button type="button" id="empty-state-cta" aria-label="افزودن اولین عادت"><span aria-hidden="true" style="font-size:18px;line-height:1">+</span><span data-i18n="empty.cta">افزودن اولین عادت</span></button>
           </div>
         </div>
@@ -563,7 +549,7 @@
           <h2 id="monthly-trends-title"><span aria-hidden="true"></span><span data-i18n="trends.title">مرور ۲۸ روز اخیر</span></h2>
           <p class="trends-description" data-i18n="trends.desc">چهار هفتهٔ پیوسته؛ هر ردیف از ابتدای هفته تا انتهای هفته.</p>
         </div>
-        <span class="trends-period-chip"><span class="trends-period-dot" aria-hidden="true"></span><span data-i18n="trends.chip">۴ هفتهٔ کامل</span></span>
+        <!-- item #3: chip removed -->
       </div>
       <div id="monthly-charts-container" class="matrix-grid"></div>
     </section>
@@ -571,7 +557,6 @@
     <footer data-i18n="footer">اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.</footer>
   </div>
 
-  <!-- Auth modal -->
   <div id="auth-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
     <div class="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-6">
       <div class="flex items-center justify-between gap-3 mb-4">
@@ -597,7 +582,6 @@
     </div>
   </div>
 
-  <!-- Add habit modal -->
   <div id="add-habit-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="add-habit-modal-title">
     <div class="w-full max-w-lg rounded-2xl p-5 sm:p-6">
       <div class="flex items-center justify-between gap-3 mb-5">
@@ -614,7 +598,6 @@
     </div>
   </div>
 
-  <!-- Delete confirm modal (item #5) -->
   <div id="delete-confirm-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="delete-confirm-title">
     <div class="w-full max-w-md rounded-2xl p-5 sm:p-6">
       <div class="flex items-start gap-3">
@@ -633,7 +616,6 @@
     </div>
   </div>
 
-  <!-- Sync conflict modal (item #15: unified to modal-overlay + is-open) -->
   <div id="sync-conflict-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="sync-conflict-title">
     <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-6">
       <div class="flex items-start gap-3">
@@ -666,7 +648,6 @@
     </div>
   </div>
 
-  <!-- Settings modal -->
   <div id="settings-modal" class="modal-overlay fixed inset-0 z-[60] p-4 items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="settings-title">
     <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-5 sm:p-6">
       <div class="flex items-center justify-between gap-3 mb-5">
@@ -740,7 +721,7 @@
 
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.8';
+const CURRENT_VERSION = '3.9';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAY_NAMES_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
@@ -793,7 +774,6 @@ const I18N = {
     'empty.cta': 'افزودن اولین عادت',
     'trends.title': 'مرور ۲۸ روز اخیر',
     'trends.desc': 'چهار هفتهٔ پیوسته؛ هر ردیف از ابتدای هفته تا انتهای هفته.',
-    'trends.chip': '۴ هفتهٔ کامل',
     'footer': 'اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.',
     'settings.title': 'تنظیمات',
     'settings.weekStart': 'شروع هفته',
@@ -805,9 +785,7 @@ const I18N = {
     'settings.calendar.gregorian': 'میلادی',
     'settings.language': 'زبان',
     'settings.nmt.desc': 'عادت‌های ۷ روزه اجازه می‌دهند یک روز از دست رفته زنجیره را نشکند (اگر بین دو روز متوالی ثبت‌شده باشد).',
-    'today.prefix': 'امروز:',
-    'calendar.jalali': 'شمسی',
-    'calendar.gregorian': 'میلادی'
+    'today.prefix': 'امروز:'
   },
   en: {
     'app.subtitle': 'Habit tracker focused on consistency',
@@ -845,7 +823,6 @@ const I18N = {
     'empty.cta': 'Add your first habit',
     'trends.title': 'Last 28 days',
     'trends.desc': 'Four consecutive weeks; each row is one full week.',
-    'trends.chip': '4 full weeks',
     'footer': 'Data is saved on this device first. When you sign in, your records sync across devices.',
     'settings.title': 'Settings',
     'settings.weekStart': 'Week starts on',
@@ -857,9 +834,7 @@ const I18N = {
     'settings.calendar.gregorian': 'Gregorian',
     'settings.language': 'Language',
     'settings.nmt.desc': 'Habits with a 7-day goal may skip one missed day without breaking the streak (when between two logged days).',
-    'today.prefix': 'Today:',
-    'calendar.jalali': 'Jalali',
-    'calendar.gregorian': 'Gregorian'
+    'today.prefix': 'Today:'
   }
 };
 
@@ -888,6 +863,45 @@ let pendingHabitToDelete = null;
 let lastFocusedBeforeModal = null;
 const $ = (id) => document.getElementById(id);
 
+// ---------- IndexedDB layer (long-term #3) ----------
+const IDB_DB = 'rex_tracker_db';
+const IDB_STORE = 'kv';
+let idbOpenPromise = null;
+
+function openIdb() {
+  if (idbOpenPromise) return idbOpenPromise;
+  idbOpenPromise = new Promise((resolve, reject) => {
+    if (typeof indexedDB === 'undefined') return reject(new Error('IndexedDB unavailable'));
+    const req = indexedDB.open(IDB_DB, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+    req.onblocked = () => reject(new Error('IDB blocked'));
+  }).catch(err => { idbOpenPromise = null; throw err; });
+  return idbOpenPromise;
+}
+async function idbGet(key) {
+  const db = await openIdb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbSet(key, val) {
+  const db = await openIdb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const req = tx.objectStore(IDB_STORE).put(val, key);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
 function toPersianDigits(value) {
   if (value === undefined || value === null) return '';
   const str = String(value);
@@ -906,7 +920,6 @@ function getWeekdayShort(displayIndex) {
 function getWeekdayNameForDate(date) {
   return language === 'en' ? WEEKDAY_NAMES_EN[date.getDay()] : WEEKDAY_NAMES_FA[date.getDay()];
 }
-
 function getCalendarDayNumber(date) {
   if (calendarMode === 'gregorian') return date.getDate();
   const j = jalaali.toJalaali(date.getFullYear(), date.getMonth() + 1, date.getDate());
@@ -942,9 +955,7 @@ function formatCalendarWeekRange(startDate) {
   endDate.setDate(endDate.getDate() + 6);
   if (language === 'en') {
     const startNeedsYear = startDate.getFullYear() !== endDate.getFullYear();
-    const sFmt = formatCalendarDate(startDate, { weekday:false, includeYear:startNeedsYear });
-    const eFmt = formatCalendarDate(endDate, { weekday:false, includeYear:true });
-    return `${sFmt} – ${eFmt}`;
+    return `${formatCalendarDate(startDate, { weekday:false, includeYear:startNeedsYear })} – ${formatCalendarDate(endDate, { weekday:false, includeYear:true })}`;
   }
   if (calendarMode === 'gregorian') {
     const startNeedsYear = startDate.getFullYear() !== endDate.getFullYear();
@@ -955,28 +966,6 @@ function formatCalendarWeekRange(startDate) {
   const startText = `${toPersianDigits(startJ.jd)} ${JALAALI_MONTHS[startJ.jm - 1]}${startJ.jy !== endJ.jy ? ` ${toPersianDigits(startJ.jy)}` : ''}`;
   const endText = `${toPersianDigits(endJ.jd)} ${JALAALI_MONTHS[endJ.jm - 1]} ${toPersianDigits(endJ.jy)}`;
   return `${startText} تا ${endText}`;
-}
-function updateCalendarModeButton() {
-  const button = $('calendar-mode-toggle');
-  if (!button) return;
-  const activeLabel = t(calendarMode === 'jalali' ? 'calendar.jalali' : 'calendar.gregorian');
-  const targetLabel = t(calendarMode === 'jalali' ? 'calendar.gregorian' : 'calendar.jalali');
-  button.textContent = activeLabel;
-  const title = language === 'en'
-    ? `Current calendar: ${activeLabel}. Click to switch to ${targetLabel}.`
-    : `تقویم فعلی ${activeLabel} است؛ برای تغییر به ${targetLabel} بزن`;
-  button.title = title;
-  button.setAttribute('aria-label', title);
-  button.setAttribute('aria-pressed', calendarMode === 'gregorian' ? 'true' : 'false');
-}
-function toggleCalendarMode() {
-  calendarMode = calendarMode === 'jalali' ? 'gregorian' : 'jalali';
-  try { localStorage.setItem('rex_calendar_mode', calendarMode); } catch (_) {}
-  renderApp();
-  const msg = language === 'en'
-    ? `Calendar set to ${calendarMode === 'jalali' ? 'Jalali' : 'Gregorian'}.`
-    : `تقویم به ${calendarMode === 'jalali' ? 'شمسی' : 'میلادی'} تغییر کرد.`;
-  showToast(msg, 'success');
 }
 
 function showToast(message, type='info') {
@@ -1001,10 +990,7 @@ function showUndoToast(message, onUndo, duration=8000) {
   undo.className = 'toast-undo';
   undo.textContent = language === 'en' ? 'Undo' : 'برگرداندن';
   undo.setAttribute('aria-label', language === 'en' ? 'Undo deleted habit' : 'برگرداندن عادت حذف‌شده');
-  undo.addEventListener('click', () => {
-    if (typeof onUndo === 'function') onUndo();
-    box.remove();
-  }, { once:true });
+  undo.addEventListener('click', () => { if (typeof onUndo === 'function') onUndo(); box.remove(); }, { once:true });
   box.append(text, undo);
   $('toast-container').appendChild(box);
   window.setTimeout(() => box.remove(), duration);
@@ -1063,7 +1049,6 @@ function cloneHabits(source=habits) {
 function dateOnlyNumber(date) { return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime(); }
 function isFutureDate(date) { return dateOnlyNumber(date) > dateOnlyNumber(new Date()); }
 
-// Week calculations now respect weekStartDay (0=Sun, 1=Mon, 6=Sat)
 function getWeekStartDate(date, offset=0) {
   const base = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const day = base.getDay();
@@ -1082,14 +1067,12 @@ function getWeekStats(offset=0) {
   const targetStart = getWeekStartDate(today, offset);
   const targetEnd = new Date(targetStart);
   targetEnd.setDate(targetStart.getDate() + 6);
-  const todayColumnIndex = getDayIndexForDate(today);
   return {
     weekKey: getWeekKeyFromStart(targetStart),
-    targetSat: targetStart, // kept name for backward-compat in renderer
     targetStart,
     targetEnd,
     weekRangeStr: formatCalendarWeekRange(targetStart),
-    todayColumnIndex
+    todayColumnIndex: getDayIndexForDate(today)
   };
 }
 function getStatusByDate(habit, dateObj) {
@@ -1122,13 +1105,12 @@ function calculateStreak(habit) {
 }
 function recalculateStreaks() { habits.forEach(h => h.currentStreak = calculateStreak(h)); }
 
-function loadDataFromDisk() {
+function loadDataFromDiskSync() {
   let raw = null;
   try { raw = localStorage.getItem('habits_data'); } catch (_) {}
   if (raw) {
     try {
-      const parsed = JSON.parse(raw);
-      habits = normalizeHabitData(parsed);
+      habits = normalizeHabitData(JSON.parse(raw));
     } catch (error) {
       let restored = false;
       try {
@@ -1151,13 +1133,15 @@ function saveDataToDisk(options={}) {
     const oldRaw = localStorage.getItem('habits_data');
     if (oldRaw) localStorage.setItem('habits_data_backup', oldRaw);
     localStorage.setItem('habits_data', JSON.stringify(habits));
-    setSaveStatus(language === 'en' ? 'Saved on device' : 'ذخیره روی دستگاه انجام شد', 'text-emerald-600 dark:text-emerald-400');
-  } catch (error) {
-    setSaveStatus(language === 'en' ? 'Local save failed' : 'ذخیرهٔ محلی ناموفق بود', 'text-rose-600 dark:text-rose-400');
-    showToast(language === 'en' ? 'Could not save. Check browser storage space.' : 'مرورگر نتوانست اطلاعات را ذخیره کند. فضای ذخیره‌سازی مرورگر را بررسی کن.', 'error');
+  } catch (e) {
+    console.warn('localStorage save failed (quota?)', e);
   }
+  // IDB fire-and-forget (large data path)
+  idbSet('habits_data', habits).catch(e => console.warn('IDB save failed', e));
+  setSaveStatus(language === 'en' ? 'Saved on device' : 'ذخیره روی دستگاه انجام شد', 'text-emerald-600 dark:text-emerald-400');
   if (shouldSync && cloudUser && supabaseClient) scheduleCloudSync();
 }
+
 function scheduleCloudSync() {
   if (!cloudUser || !supabaseClient) return;
   setSaveStatus(language === 'en' ? 'Queued for cloud sync…' : 'در صف همگام‌سازی ابری…', 'text-indigo-600 dark:text-indigo-400');
@@ -1176,9 +1160,7 @@ async function syncCloudNow() {
       if (!cloudUser || cloudUser.id !== userId) break;
       const snapshot = cloneHabits();
       const { error } = await supabaseClient.from('habit_data').upsert({
-        user_id: userId,
-        data: snapshot,
-        updated_at: new Date().toISOString()
+        user_id: userId, data: snapshot, updated_at: new Date().toISOString()
       }, { onConflict: 'user_id' });
       if (error) throw error;
       succeeded = true;
@@ -1188,19 +1170,13 @@ async function syncCloudNow() {
     succeeded = false;
     console.error('Cloud sync error:', error);
     setSaveStatus(language === 'en' ? 'Saved locally; cloud sync failed' : 'ذخیرهٔ محلی فعال؛ همگام‌سازی ناموفق', 'text-rose-600 dark:text-rose-400');
-    $('account-status').textContent = language === 'en'
-      ? 'Signed in, but cloud sync failed. Check the table and RLS policies.'
-      : 'ورود انجام شده، اما همگام‌سازی خطا دارد. تنظیمات جدول و سیاست‌های RLS را بررسی کن.';
+    $('account-status').textContent = language === 'en' ? 'Signed in, but cloud sync failed. Check the table and RLS policies.' : 'ورود انجام شده، اما همگام‌سازی خطا دارد. تنظیمات جدول و سیاست‌های RLS را بررسی کن.';
   } finally {
     cloudSyncInFlight = false;
-    if (cloudSyncRequested && cloudUser && cloudUser.id === userId) {
-      cloudSyncRequested = false;
-      setTimeout(syncCloudNow, 250);
-    }
+    if (cloudSyncRequested && cloudUser && cloudUser.id === userId) { cloudSyncRequested = false; setTimeout(syncCloudNow, 250); }
   }
   return succeeded;
 }
-
 async function forceCloudSync() {
   if (!supabaseClient || !cloudUser) {
     showToast(language === 'en' ? 'Sign in first to sync.' : 'برای همگام‌سازی، ابتدا وارد حساب کاربری شو.', 'error');
@@ -1225,7 +1201,6 @@ async function forceCloudSync() {
     if (!cloudUser || cloudUser.id !== userId) throw new Error('Account changed.');
     const localSet = normalizeHabitData(habits);
     const cloudSet = record ? normalizeHabitData(record.data) : null;
-
     if (!record) {
       const ok = await syncCloudNow();
       if (ok === true) showToast(language === 'en' ? 'Synced. Local data saved to cloud.' : 'همگام‌سازی اجباری انجام شد؛ اطلاعات این دستگاه در ابر ذخیره شد.', 'success');
@@ -1266,10 +1241,7 @@ function mergeHabitSets(localSet, cloudSet) {
   const merged = cloudSet.map(h => JSON.parse(JSON.stringify(h)));
   const indexById = new Map(merged.map((h, index) => [h.id, index]));
   localSet.forEach(local => {
-    if (!indexById.has(local.id)) {
-      merged.push(JSON.parse(JSON.stringify(local)));
-      return;
-    }
+    if (!indexById.has(local.id)) { merged.push(JSON.parse(JSON.stringify(local))); return; }
     const index = indexById.get(local.id);
     const cloud = merged[index];
     const history = { ...(cloud.history || {}) };
@@ -1282,14 +1254,13 @@ function mergeHabitSets(localSet, cloudSet) {
   return normalizeHabitData(merged);
 }
 function showSyncConflict(localData, cloudData) {
-  pendingConflict = { local: cloneHabitsFrom(localData), cloud: cloneHabitsFrom(cloudData) };
+  pendingConflict = { local: JSON.parse(JSON.stringify(localData)), cloud: JSON.parse(JSON.stringify(cloudData)) };
   $('sync-conflict-counts').textContent = language === 'en'
     ? `This browser: ${localData.length} habits · In account: ${cloudData.length} habits`
     : `این مرورگر: ${toPersianDigits(localData.length)} عادت  ·  داخل حساب: ${toPersianDigits(cloudData.length)} عادت`;
   $('account-status').textContent = language === 'en' ? 'Choose which version to keep in the opened window.' : 'برای انتخاب نسخهٔ اطلاعات، یکی از گزینه‌های پنجره را انتخاب کن.';
   openModal('sync-conflict-modal');
 }
-function cloneHabitsFrom(data) { return JSON.parse(JSON.stringify(data)); }
 function closeSyncConflict() { closeModal('sync-conflict-modal'); pendingConflict = null; }
 function applyHabitSet(newSet, sync=true) {
   habits = normalizeHabitData(newSet);
@@ -1363,10 +1334,7 @@ async function activateCloudAccount(user) {
     }
     const localText = JSON.stringify(localSet);
     const cloudText = JSON.stringify(cloudSet);
-    if (localSet.length && cloudSet.length && localText !== cloudText) {
-      showSyncConflict(localSet, cloudSet);
-      return;
-    }
+    if (localSet.length && cloudSet.length && localText !== cloudText) { showSyncConflict(localSet, cloudSet); return; }
     let cloudWriteOk = true;
     if (!localSet.length && cloudSet.length) {
       applyHabitSet(cloudSet, false);
@@ -1407,11 +1375,9 @@ function initCloud() {
     supabaseClient.auth.onAuthStateChange((event, session) => {
       const user = session && session.user ? session.user : null;
       updateAccountUI(user);
-      if (user) {
-        setTimeout(() => activateCloudAccount(user), 0);
-      } else {
-        cloudUser = null;
-        activeCloudUserId = null;
+      if (user) { setTimeout(() => activateCloudAccount(user), 0); }
+      else {
+        cloudUser = null; activeCloudUserId = null;
         if (cloudSyncTimer) clearTimeout(cloudSyncTimer);
         setSaveStatus(language === 'en' ? 'Saved on device' : 'ذخیره روی این دستگاه', 'text-slate-400');
         $('account-status').textContent = language === 'en' ? 'Signed out. Local data is intact.' : 'از حساب خارج شدی؛ اطلاعات این دستگاه پاک نشده و همچنان محلی است.';
@@ -1430,7 +1396,6 @@ function initCloud() {
   }
 }
 
-// Focus trap (item #13)
 function getFocusableElements(root) {
   return Array.from(root.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null || el === document.activeElement);
 }
@@ -1443,26 +1408,16 @@ function setupFocusTrap(modal) {
     const focusables = getFocusableElements(modal);
     if (!focusables.length) return;
     const first = focusables[0], last = focusables[focusables.length - 1];
-    if (e.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) {
-      e.preventDefault(); last.focus();
-    } else if (!e.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) {
-      e.preventDefault(); first.focus();
-    }
+    if (e.shiftKey && (document.activeElement === first || !modal.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
   };
   modal.addEventListener('keydown', handler);
   activeModalTrap = { modal, handler };
 }
 function teardownFocusTrap() {
-  if (activeModalTrap) {
-    activeModalTrap.modal.removeEventListener('keydown', activeModalTrap.handler);
-    activeModalTrap = null;
-  }
-  if (lastFocusedBeforeModal && lastFocusedBeforeModal.focus) {
-    try { lastFocusedBeforeModal.focus(); } catch(_){}
-    lastFocusedBeforeModal = null;
-  }
+  if (activeModalTrap) { activeModalTrap.modal.removeEventListener('keydown', activeModalTrap.handler); activeModalTrap = null; }
+  if (lastFocusedBeforeModal && lastFocusedBeforeModal.focus) { try { lastFocusedBeforeModal.focus(); } catch(_){} lastFocusedBeforeModal = null; }
 }
-
 function openModal(id) {
   const modal = $(id);
   if (!modal) return;
@@ -1494,9 +1449,8 @@ async function signIn(event) {
     $('auth-password').value = '';
     closeModal('auth-modal');
     showToast(language === 'en' ? 'Signed in.' : 'ورود موفق بود.', 'success');
-  } catch (error) {
-    showToast(authErrorMessage(error), 'error');
-  } finally { authBusy = false; $('sign-in-btn').disabled = false; $('sign-up-btn').disabled = false; }
+  } catch (error) { showToast(authErrorMessage(error), 'error'); }
+  finally { authBusy = false; $('sign-in-btn').disabled = false; $('sign-up-btn').disabled = false; }
 }
 async function signUp() {
   if (!supabaseClient || authBusy) return;
@@ -1577,7 +1531,7 @@ function createEditPanel(habit, index, compact=false) {
   return panel;
 }
 
-function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette, compact=false) {
+function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette) {
   const info = getStatusByDate(habit, date);
   const checked = info.isChecked;
   const grace = !checked && isGraceDayForDate(habit, date);
@@ -1587,6 +1541,7 @@ function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette, compact=fal
   if (checked) classes += `${palette.bg} ${palette.border} text-white shadow-sm`;
   else if (grace) classes += `${palette.opacityBg} border-transparent`;
   else classes += 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700';
+  if (future) classes += ' is-future';
   if (disabled) classes += ' opacity-40 cursor-not-allowed';
   const content = checked || grace ? '✓' : '·';
   const dateStr = formatCalendarDate(date, { weekday:false });
@@ -1596,6 +1551,104 @@ function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette, compact=fal
         ? (language === 'en' ? 'Exit edit mode to log' : 'برای ثبت وضعیت از حالت ویرایش خارج شو')
         : (language === 'en' ? `Log status for ${dateStr}` : `ثبت وضعیت روز ${dateStr}`));
   return `<button type="button" data-action="toggle-day" data-day-index="${dayIndex}" data-week-key="${weekKey}" class="${classes}" title="${title}" aria-label="${title}" aria-pressed="${checked ? 'true' : 'false'}" ${disabled ? 'disabled aria-disabled="true"' : ''}>${content}</button>`;
+}
+
+// ---------- Extracted builders (used by full + single-habit render) ----------
+function buildHabitRow(habit, habitIndex, stats, palette) {
+  if (!Array.isArray(habit.history[stats.weekKey])) habit.history[stats.weekKey] = [false,false,false,false,false,false,false];
+  const weekData = habit.history[stats.weekKey];
+  const tableStart = stats.targetStart;
+  let effectiveCompletions = 0;
+  for (let idx=0; idx<7; idx++) {
+    const checkDate = new Date(tableStart); checkDate.setDate(tableStart.getDate()+idx);
+    if (weekData[idx] === true || isGraceDayForDate(habit, checkDate)) effectiveCompletions++;
+  }
+  const percentage = Math.min(Math.round((effectiveCompletions / habit.weeklyGoal) * 100), 100);
+  let daysHtml = '';
+  for (let i=0; i<7; i++) {
+    const date = new Date(tableStart); date.setDate(tableStart.getDate()+i);
+    const todayColumn = weekOffset === 0 && i === stats.todayColumnIndex;
+    daysHtml += `<td class="p-1.5 text-center ${todayColumn ? 'bg-indigo-50/60 dark:bg-indigo-950/20' : ''}">${getDayButtonMarkup(habit,i,stats.weekKey,date,palette)}</td>`;
+  }
+  const streakPillHtml = habit.currentStreak >= 2 ? `<span class="streak-pill">🔥 ${toPersianDigits(habit.currentStreak)}</span>` : '';
+  const tr = document.createElement('tr');
+  tr.className = 'hover:bg-slate-50/70 dark:hover:bg-slate-800/30 transition-colors';
+  tr.dataset.habitId = habit.id;
+  tr.innerHTML = `
+    <td class="p-3 sm:p-4 align-top bg-white dark:bg-slate-900">
+      <div class="flex items-start gap-2.5"><span class="mt-2 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><div class="habit-title font-bold break-words"></div><div class="flex flex-wrap items-center gap-1.5 mt-1.5"><span class="text-xs habit-goal-label"></span>${streakPillHtml ? '<span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span>' + streakPillHtml : ''}</div></div></div>
+      <div class="edit-panel-mount"></div>
+    </td>
+    ${daysHtml}
+    <td class="p-3 text-center align-middle"><div class="progress-cell"><span class="text-sm font-extrabold text-slate-700 dark:text-slate-200">${toPersianDigits(percentage)}٪</span><div class="progress-cell-bar"><div class="${palette.bg}" style="width:${percentage}%"></div></div><span class="text-[11px] text-slate-500 dark:text-slate-400">${language === 'en' ? `${effectiveCompletions} of ${habit.weeklyGoal} days` : `${toPersianDigits(effectiveCompletions)} از ${toPersianDigits(habit.weeklyGoal)} روز`}</span></div></td>
+    <td class="operation-cell p-2 text-center align-middle ${isEditMode ? '' : 'hidden'}"><button type="button" data-action="delete-habit" class="p-2 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30" aria-label="${language === 'en' ? 'Delete habit' : 'حذف عادت'}" title="${language === 'en' ? 'Delete habit' : 'حذف عادت'}">⌫</button></td>`;
+  tr.querySelector('.habit-title').textContent = habit.title;
+  tr.querySelector('.habit-goal-label').textContent = language === 'en' ? `Goal: ${habit.weeklyGoal} days` : `هدف: ${toPersianDigits(habit.weeklyGoal)} روز`;
+  tr.querySelector('.edit-panel-mount').appendChild(createEditPanel(habit, habitIndex, false));
+  tr.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
+  return tr;
+}
+function buildHabitMobileCard(habit, habitIndex, stats, palette) {
+  const weekData = habit.history[stats.weekKey] || [false,false,false,false,false,false,false];
+  const tableStart = stats.targetStart;
+  let effectiveCompletions = 0;
+  for (let idx=0; idx<7; idx++) {
+    const checkDate = new Date(tableStart); checkDate.setDate(tableStart.getDate()+idx);
+    if (weekData[idx] === true || isGraceDayForDate(habit, checkDate)) effectiveCompletions++;
+  }
+  const percentage = Math.min(Math.round((effectiveCompletions / habit.weeklyGoal) * 100), 100);
+  let mobileDays = '';
+  for (let i=0; i<7; i++) {
+    const date = new Date(tableStart); date.setDate(tableStart.getDate()+i);
+    const todayColumn = weekOffset === 0 && i === stats.todayColumnIndex;
+    mobileDays += `<div class="flex flex-col items-center gap-1.5 rounded-lg py-1 ${todayColumn ? 'bg-indigo-50 dark:bg-indigo-950/40' : ''}"><span class="text-[11px] font-bold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}">${getWeekdayShort(i)}</span><span class="text-[11px] font-extrabold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}">${toPersianDigits(getCalendarDayNumber(date))}</span>${getDayButtonMarkup(habit,i,stats.weekKey,date,palette)}</div>`;
+  }
+  const streakPillHtml = habit.currentStreak >= 2 ? `<span class="streak-pill">🔥 ${toPersianDigits(habit.currentStreak)}</span>` : '';
+  const card = document.createElement('article');
+  card.className = 'rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-sm';
+  card.dataset.habitId = habit.id;
+  card.innerHTML = `
+    <div class="flex items-start gap-2.5"><span class="mt-2 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><h3 class="habit-title-mobile font-extrabold break-words"></h3><div class="flex flex-wrap items-center gap-2 mt-1"><span class="goal-label-mobile text-xs text-slate-500 dark:text-slate-400"></span>${streakPillHtml}<span class="text-xs text-slate-500 mr-auto">${toPersianDigits(percentage)}٪</span></div></div></div>
+    <div class="grid grid-cols-7 gap-1 mt-3">${mobileDays}</div>
+    <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-3"><div class="${palette.bg} h-full rounded-full" style="width:${percentage}%"></div></div>
+    <div class="mobile-edit-mount"></div>`;
+  card.querySelector('.habit-title-mobile').textContent = habit.title;
+  card.querySelector('.habit-title-mobile').title = habit.title;
+  card.querySelector('.goal-label-mobile').textContent = language === 'en' ? `${habit.weeklyGoal} days/week` : `هدف ${toPersianDigits(habit.weeklyGoal)} روز در هفته`;
+  card.querySelector('.mobile-edit-mount').appendChild(createEditPanel(habit, habitIndex + 1000, true));
+  card.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
+  return card;
+}
+function buildHabitMatrixCard(habit, habitIndex, palette) {
+  const matrixCard = document.createElement('article');
+  matrixCard.className = 'matrix-card';
+  matrixCard.dataset.habitId = habit.id;
+  const matrixColor = { accent: palette.hex, soft: palette.hex + '1a' };
+  let weeksRowsHtml = '';
+  const baseStart = getWeekStartDate(new Date(), -3);
+  for (let weekIdx = 0; weekIdx < 4; weekIdx++) {
+    let squares = '';
+    let completions = 0;
+    const weekStart = new Date(baseStart);
+    weekStart.setDate(baseStart.getDate() + weekIdx * 7);
+    for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+      const dayCellDate = new Date(weekStart);
+      dayCellDate.setDate(weekStart.getDate() + dayIdx);
+      const info = getStatusByDate(habit, dayCellDate);
+      const done = info.isChecked || isGraceDayForDate(habit, dayCellDate);
+      if (done) completions++;
+      const accessibleDate = `${getWeekdayNameForDate(dayCellDate)} ${formatCalendarDate(dayCellDate, { weekday: false })}`;
+      const statusLabel = done ? (language === 'en' ? 'logged' : 'ثبت‌شده') : (language === 'en' ? 'not logged' : 'ثبت‌نشده');
+      squares += `<span class="matrix-day-square ${done ? 'is-done' : ''}" role="img" aria-label="${accessibleDate}, ${statusLabel}" title="${accessibleDate} · ${statusLabel}" style="--matrix-accent:${matrixColor.accent}"></span>`;
+    }
+    const metGoal = completions >= habit.weeklyGoal;
+    const goalStyle = metGoal ? `style="background:${matrixColor.soft}"` : '';
+    weeksRowsHtml += `<div class="matrix-week-row ${metGoal ? 'is-goal-met' : ''}" ${goalStyle} aria-label="${completions}/7 ${language === 'en' ? 'days logged' : 'روز ثبت‌شده'}">${squares}</div>`;
+  }
+  matrixCard.innerHTML = `<div class="matrix-card-header"><span class="matrix-habit-dot" aria-hidden="true" style="background:${matrixColor.accent}"></span><h3 class="matrix-habit-title"></h3></div><div class="matrix-week-list">${weeksRowsHtml}</div>`;
+  matrixCard.querySelector('.matrix-habit-title').textContent = habit.title;
+  matrixCard.querySelector('.matrix-habit-title').title = habit.title;
+  return matrixCard;
 }
 
 function updateSummaryStats(stats) {
@@ -1631,7 +1684,6 @@ function renderApp() {
   const matrix = $('monthly-charts-container');
   const stats = getWeekStats(weekOffset);
   $('current-date-display').textContent = `${t('today.prefix')} ${formatCalendarDate(new Date())}`;
-  updateCalendarModeButton();
   $('current-week-display').textContent = formatCalendarWeekRange(stats.targetStart);
   $('habits-count-badge').textContent = language === 'en' ? `${habits.length} habits` : `${toPersianDigits(habits.length)} عادت`;
   updateSummaryStats(stats);
@@ -1640,7 +1692,6 @@ function renderApp() {
   $('edit-mode-note').classList.toggle('hidden', !isEditMode);
   $('th-operation').classList.toggle('hidden', !isEditMode);
 
-  // Week stepper state: this-week button is-current, next disabled when at current/future (item #12)
   const stepper = document.querySelector('.week-stepper');
   if (stepper) {
     const prevBtn = stepper.querySelector('[data-direction="-1"]');
@@ -1651,14 +1702,14 @@ function renderApp() {
     if (prevBtn) prevBtn.disabled = false;
   }
 
-  tbody.replaceChildren(); mobile.replaceChildren(); matrix.replaceChildren();
   for (let i=0; i<7; i++) {
     const th = $(`th-day-${i}`);
     const todayColumn = weekOffset === 0 && i === stats.todayColumnIndex;
     const dayDate = new Date(stats.targetStart); dayDate.setDate(stats.targetStart.getDate() + i);
-    th.className = `p-3 text-center min-w-[50px] ${todayColumn ? 'text-slate-900 dark:text-white bg-indigo-50 dark:bg-indigo-950/40 font-extrabold is-today-col' : 'text-slate-500 dark:text-slate-400'}`;
+    th.className = `p-3 text-center ${todayColumn ? 'text-slate-900 dark:text-white bg-indigo-50 dark:bg-indigo-950/40 font-extrabold is-today-col' : 'text-slate-500 dark:text-slate-400'}`;
     th.innerHTML = `<span class="block text-[12px] leading-5">${getWeekdayName(i)}</span><span class="block mt-0.5 text-[11px] font-extrabold opacity-80">${toPersianDigits(getCalendarDayNumber(dayDate))}</span>`;
   }
+
   emptyState.classList.toggle('hidden', habits.length > 0);
   const desktopWrap = $('desktop-habits-wrap');
   desktopWrap.classList.add('hidden');
@@ -1666,92 +1717,40 @@ function renderApp() {
   desktopWrap.classList.toggle('md:hidden', habits.length === 0);
   mobile.classList.toggle('hidden', habits.length === 0);
   trends.classList.toggle('hidden', habits.length === 0);
-  if (!habits.length) return;
 
-  const weekDataKey = stats.weekKey;
-  const tableStart = stats.targetStart;
-  habits.forEach((habit, habitIndex) => {
-    if (!Array.isArray(habit.history[weekDataKey])) habit.history[weekDataKey] = [false,false,false,false,false,false,false];
-    const weekData = habit.history[weekDataKey];
-    const palette = paletteFor(habit.colorPalette, habitIndex);
-    let effectiveCompletions = 0;
-    for (let idx=0; idx<7; idx++) {
-      const checkDate = new Date(tableStart); checkDate.setDate(tableStart.getDate()+idx);
-      if (weekData[idx] === true || isGraceDayForDate(habit, checkDate)) effectiveCompletions++;
-    }
-    const percentage = Math.min(Math.round((effectiveCompletions / habit.weeklyGoal) * 100), 100);
-    let daysHtml = '';
-    for (let i=0; i<7; i++) {
-      const date = new Date(tableStart); date.setDate(tableStart.getDate()+i);
-      const todayColumn = weekOffset === 0 && i === stats.todayColumnIndex;
-      daysHtml += `<td class="p-1.5 text-center ${todayColumn ? 'bg-indigo-50/60 dark:bg-indigo-950/20' : ''}">${getDayButtonMarkup(habit,i,weekDataKey,date,palette)}</td>`;
-    }
-    const tr = document.createElement('tr');
-    tr.className = 'hover:bg-slate-50/70 dark:hover:bg-slate-800/30 transition-colors';
-    tr.innerHTML = `
-      <td class="p-3 sm:p-4 align-top min-w-[225px] bg-white dark:bg-slate-900">
-        <div class="flex items-start gap-2.5"><span class="mt-2 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><div class="habit-title font-bold break-words"></div><div class="flex flex-wrap items-center gap-1.5 mt-1.5"><span class="text-xs habit-goal-label"></span><span class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></span><span class="streak-pill">🔥 ${toPersianDigits(habit.currentStreak)}</span></div></div></div>
-        <div class="edit-panel-mount"></div>
-      </td>
-      ${daysHtml}
-      <td class="p-3 text-center align-middle"><div class="progress-cell"><span class="text-sm font-extrabold text-slate-700 dark:text-slate-200">${toPersianDigits(percentage)}٪</span><div class="progress-cell-bar"><div class="${palette.bg}" style="width:${percentage}%"></div></div><span class="text-[11px] text-slate-500 dark:text-slate-400">${language === 'en' ? `${effectiveCompletions} of ${habit.weeklyGoal} days` : `${toPersianDigits(effectiveCompletions)} از ${toPersianDigits(habit.weeklyGoal)} روز`}</span></div></td>
-      <td class="operation-cell p-2 text-center align-middle ${isEditMode ? '' : 'hidden'}"><button type="button" data-action="delete-habit" class="p-2 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30" aria-label="${language === 'en' ? 'Delete habit' : 'حذف عادت'}" title="${language === 'en' ? 'Delete habit' : 'حذف عادت'}">⌫</button></td>`;
-    tr.querySelector('.habit-title').textContent = habit.title;
-    tr.querySelector('.habit-goal-label').textContent = language === 'en' ? `Goal: ${habit.weeklyGoal} days` : `هدف: ${toPersianDigits(habit.weeklyGoal)} روز`;
-    tr.querySelector('.edit-panel-mount').appendChild(createEditPanel(habit, habitIndex, false));
-    tr.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
-    tbody.appendChild(tr);
+  // Batch with DocumentFragments for fewer reflows
+  const tbodyFrag = document.createDocumentFragment();
+  const mobileFrag = document.createDocumentFragment();
+  const matrixFrag = document.createDocumentFragment();
+  if (habits.length) {
+    habits.forEach((habit, habitIndex) => {
+      const palette = paletteFor(habit.colorPalette, habitIndex);
+      tbodyFrag.appendChild(buildHabitRow(habit, habitIndex, stats, palette));
+      mobileFrag.appendChild(buildHabitMobileCard(habit, habitIndex, stats, palette));
+      matrixFrag.appendChild(buildHabitMatrixCard(habit, habitIndex, palette));
+    });
+  }
+  tbody.replaceChildren(tbodyFrag);
+  mobile.replaceChildren(mobileFrag);
+  matrix.replaceChildren(matrixFrag);
+}
 
-    const card = document.createElement('article');
-    card.className = 'rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3 shadow-sm';
-    let mobileDays = '';
-    for (let i=0; i<7; i++) {
-      const date = new Date(tableStart); date.setDate(tableStart.getDate()+i);
-      const todayColumn = weekOffset === 0 && i === stats.todayColumnIndex;
-      mobileDays += `<div class="flex flex-col items-center gap-1.5 rounded-lg py-1 ${todayColumn ? 'bg-indigo-50 dark:bg-indigo-950/40' : ''}"><span class="text-[11px] font-bold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}">${getWeekdayShort(i)}</span><span class="text-[11px] font-extrabold ${todayColumn ? 'text-indigo-700 dark:text-indigo-300' : 'text-slate-500 dark:text-slate-400'}">${toPersianDigits(getCalendarDayNumber(date))}</span>${getDayButtonMarkup(habit,i,weekDataKey,date,palette,true)}</div>`;
-    }
-    card.innerHTML = `
-      <div class="flex items-start gap-2.5"><span class="mt-2 w-2.5 h-2.5 rounded-full shrink-0 ${palette.dot}"></span><div class="min-w-0 flex-1"><h3 class="habit-title-mobile font-extrabold break-words"></h3><div class="flex flex-wrap items-center gap-2 mt-1"><span class="goal-label-mobile text-xs text-slate-500 dark:text-slate-400"></span><span class="streak-pill">🔥 ${toPersianDigits(habit.currentStreak)}</span><span class="text-xs text-slate-500 mr-auto">${toPersianDigits(percentage)}٪</span></div></div></div>
-      <div class="grid grid-cols-7 gap-1 mt-3">${mobileDays}</div>
-      <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-3"><div class="${palette.bg} h-full rounded-full" style="width:${percentage}%"></div></div>
-      <div class="mobile-edit-mount"></div>`;
-    card.querySelector('.habit-title-mobile').textContent = habit.title;
-    card.querySelector('.habit-title-mobile').title = habit.title;
-    card.querySelector('.goal-label-mobile').textContent = language === 'en' ? `${habit.weeklyGoal} days/week` : `هدف ${toPersianDigits(habit.weeklyGoal)} روز در هفته`;
-    card.querySelector('.mobile-edit-mount').appendChild(createEditPanel(habit, habitIndex + 1000, true));
-    card.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
-    mobile.appendChild(card);
-
-    // 28-day matrix
-    const matrixCard = document.createElement('article');
-    matrixCard.className = 'matrix-card';
-    const matrixColor = { accent: palette.hex, soft: palette.hex + '1a' };
-    let weeksRowsHtml = '';
-    const baseStart = getWeekStartDate(new Date(), -3);
-    for (let weekIdx = 0; weekIdx < 4; weekIdx++) {
-      let squares = '';
-      let completions = 0;
-      const weekStart = new Date(baseStart);
-      weekStart.setDate(baseStart.getDate() + weekIdx * 7);
-      for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
-        const dayCellDate = new Date(weekStart);
-        dayCellDate.setDate(weekStart.getDate() + dayIdx);
-        const info = getStatusByDate(habit, dayCellDate);
-        const done = info.isChecked || isGraceDayForDate(habit, dayCellDate);
-        if (done) completions++;
-        const accessibleDate = `${getWeekdayNameForDate(dayCellDate)} ${formatCalendarDate(dayCellDate, { weekday: false })}`;
-        const statusLabel = done ? (language === 'en' ? 'logged' : 'ثبت‌شده') : (language === 'en' ? 'not logged' : 'ثبت‌نشده');
-        squares += `<span class="matrix-day-square ${done ? 'is-done' : ''}" role="img" aria-label="${accessibleDate}, ${statusLabel}" title="${accessibleDate} · ${statusLabel}" style="--matrix-accent:${matrixColor.accent}"></span>`;
-      }
-      const metGoal = completions >= habit.weeklyGoal;
-      const goalStyle = metGoal ? `style="background:${matrixColor.soft}"` : '';
-      weeksRowsHtml += `<div class="matrix-week-row ${metGoal ? 'is-goal-met' : ''}" ${goalStyle} aria-label="${completions}/7 ${language === 'en' ? 'days logged' : 'روز ثبت‌شده'}">${squares}</div>`;
-    }
-    matrixCard.innerHTML = `<div class="matrix-card-header"><span class="matrix-habit-dot" aria-hidden="true" style="background:${matrixColor.accent}"></span><h3 class="matrix-habit-title"></h3></div><div class="matrix-week-list">${weeksRowsHtml}</div>`;
-    matrixCard.querySelector('.matrix-habit-title').textContent = habit.title;
-    matrixCard.querySelector('.matrix-habit-title').title = habit.title;
-    matrix.appendChild(matrixCard);
-  });
+// Surgical re-render of a single habit (item #9 optimization; no UX change)
+function rerenderSingleHabit(habitIndex) {
+  const habit = habits[habitIndex];
+  if (!habit) { renderApp(); return; }
+  const stats = getWeekStats(weekOffset);
+  const palette = paletteFor(habit.colorPalette, habitIndex);
+  const tbody = $('habits-table-body');
+  const oldTr = tbody.querySelector(`tr[data-habit-id="${habit.id}"]`);
+  if (oldTr) oldTr.replaceWith(buildHabitRow(habit, habitIndex, stats, palette));
+  const mobile = $('mobile-habits-list');
+  const oldCard = mobile.querySelector(`article[data-habit-id="${habit.id}"]`);
+  if (oldCard) oldCard.replaceWith(buildHabitMobileCard(habit, habitIndex, stats, palette));
+  const matrix = $('monthly-charts-container');
+  const oldMatrixCard = matrix.querySelector(`.matrix-card[data-habit-id="${habit.id}"]`);
+  if (oldMatrixCard) oldMatrixCard.replaceWith(buildHabitMatrixCard(habit, habitIndex, palette));
+  updateSummaryStats(stats);
 }
 
 function addHabit(event) {
@@ -1827,14 +1826,18 @@ function handleAction(button) {
     if (isFutureDate(date)) { showToast(language === 'en' ? 'Future days cannot be logged.' : 'ثبت روزهای آینده مجاز نیست.', 'error'); return; }
     if (!Array.isArray(habit.history[weekKey])) habit.history[weekKey] = [false,false,false,false,false,false,false];
     habit.history[weekKey][dayIndex] = !habit.history[weekKey][dayIndex];
-    recalculateStreaks(); saveDataToDisk(); renderApp(); return;
+    recalculateStreaks(); saveDataToDisk();
+    // Surgical update — no full render (item #9)
+    rerenderSingleHabit(habits.indexOf(habit));
+    return;
   }
   if (action === 'save-name') {
     const habit = getHabit(habitId); const panel = findHabitEditPanel(button); const input = panel && panel.querySelector('[data-role="edit-title"]');
     if (!habit || !input) return;
     const title = input.value.trim().slice(0,80);
     if (!title) { showToast(language === 'en' ? 'Name cannot be empty.' : 'نام عادت نمی‌تواند خالی باشد.', 'error'); input.focus(); return; }
-    habit.title = title; saveDataToDisk(); renderApp();
+    habit.title = title; saveDataToDisk();
+    rerenderSingleHabit(habits.indexOf(habit));
     showToast(language === 'en' ? 'Name saved.' : 'نام عادت ذخیره شد.', 'success'); return;
   }
   if (action === 'move-up' || action === 'move-down') {
@@ -1847,11 +1850,11 @@ function handleAction(button) {
   if (action === 'set-color') {
     const habit = getHabit(habitId); const index = Number(button.dataset.paletteIndex);
     if (!habit || !Number.isInteger(index) || !COLOR_PALETTES[index]) return;
-    habit.colorPalette = COLOR_PALETTES[index]; saveDataToDisk(); renderApp(); return;
+    habit.colorPalette = COLOR_PALETTES[index]; saveDataToDisk();
+    rerenderSingleHabit(habits.indexOf(habit));
+    return;
   }
-  if (action === 'delete-habit') {
-    requestDeleteHabit(habitId); return;
-  }
+  if (action === 'delete-habit') { requestDeleteHabit(habitId); return; }
 }
 
 document.addEventListener('click', (event) => {
@@ -1866,12 +1869,12 @@ document.addEventListener('change', (event) => {
   const habit = getHabit(select.dataset.habitId);
   const goal = Number(select.value);
   if (!habit || !Number.isInteger(goal) || goal < 1 || goal > 7) return;
-  habit.weeklyGoal = goal; recalculateStreaks(); saveDataToDisk(); renderApp();
+  habit.weeklyGoal = goal; recalculateStreaks(); saveDataToDisk();
+  rerenderSingleHabit(habits.indexOf(habit));
   showToast(language === 'en' ? 'Weekly goal saved.' : 'هدف هفتگی ذخیره شد.', 'success');
 });
 
 $('edit-mode-btn').addEventListener('click', () => { isEditMode = !isEditMode; renderApp(); });
-$('calendar-mode-toggle').addEventListener('click', toggleCalendarMode);
 $('add-habit-open-btn').addEventListener('click', () => openModal('add-habit-modal'));
 $('empty-state-cta').addEventListener('click', () => openModal('add-habit-modal'));
 $('auth-open-btn').addEventListener('click', () => openModal('auth-modal'));
@@ -1900,7 +1903,6 @@ $('setting-week-start').addEventListener('change', (e) => {
 $('setting-calendar').addEventListener('change', (e) => {
   calendarMode = e.target.value === 'gregorian' ? 'gregorian' : 'jalali';
   try { localStorage.setItem('rex_calendar_mode', calendarMode); } catch(_){}
-  updateCalendarModeButton();
   renderApp();
 });
 $('setting-language').addEventListener('change', (e) => {
@@ -1932,44 +1934,81 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-// Request persistent storage (item #26 idea, used on init)
 function requestPersistentStorage() {
   try { if (navigator.storage && typeof navigator.storage.persist === 'function') navigator.storage.persist(); } catch (_) {}
 }
 
 function applyLanguage() {
   document.documentElement.lang = language;
-  // Keep dir=rtl for layout stability; only translate text for now.
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    const val = t(key);
-    if (val) el.textContent = val;
-  });
-  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-    const key = el.dataset.i18nAria;
-    const val = t(key);
-    if (val) el.setAttribute('aria-label', val);
-  });
-  // Update theme label
-  try { setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light'); } catch(_){}
-  renderApp();
-}
-
-function initializeApp() {
-  $('app-version-display').textContent = `v${CURRENT_VERSION}`;
-  updateCalendarModeButton();
-  initTheme();
-  loadDataFromDisk();
-  renderApp();
-  requestPersistentStorage();
-  initCloud();
-  // Apply language translations after render
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const val = t(el.dataset.i18n);
     if (val) el.textContent = val;
   });
+  try { setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light'); } catch(_){}
+  renderApp();
 }
-initializeApp();
+
+// ---------- Service Worker registration (long-term #1) ----------
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+      // Check for updates periodically (every 30 min while app is open)
+      setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
+    }).catch(err => console.warn('SW registration failed', err));
+  });
+}
+
+async function initializeApp() {
+  $('app-version-display').textContent = `v${CURRENT_VERSION}`;
+  initTheme();
+  loadDataFromDiskSync();
+  renderApp();
+  // Async: try IndexedDB for newer/larger data
+  try {
+    const idbData = await idbGet('habits_data');
+    if (idbData && Array.isArray(idbData)) {
+      const parsed = normalizeHabitData(idbData);
+      if (JSON.stringify(parsed) !== JSON.stringify(habits)) {
+        habits = parsed; recalculateStreaks(); renderApp();
+      }
+    } else if (habits.length) {
+      idbSet('habits_data', habits).catch(() => {});
+    }
+  } catch (e) {
+    console.warn('IDB load failed, using localStorage only', e);
+  }
+  requestPersistentStorage();
+  initCloud();
+  applyLanguage();
+  registerServiceWorker();
+}
+initializeApp().catch(e => console.error('Init failed', e));
+  // Auto-resync when the browser reports we're back online.
+// syncCloudNow() is already queue-safe (cloudSyncRequested + cloudSyncInFlight),
+// so calling it here is harmless if a sync is already running.
+window.addEventListener('online', () => {
+  if (cloudUser && supabaseClient) {
+    if (cloudSyncTimer) { clearTimeout(cloudSyncTimer); cloudSyncTimer = null; }
+    syncCloudNow().then(ok => {
+      if (ok === true) showToast(
+        language === 'en'
+          ? 'Reconnected — data synced.'
+          : 'اتصال برگشت — اطلاعات همگام شد.',
+        'success'
+      );
+    });
+  }
+});
+
+// Also refresh auth session when coming back online,
+// so we don't operate with a stale token after long offline periods.
+window.addEventListener('online', () => {
+  if (supabaseClient && supabaseClient.auth) {
+    supabaseClient.auth.getSession().catch(() => {});
+  }
+});
 </script>
 </body>
 </html>
