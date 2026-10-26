@@ -410,6 +410,140 @@
     *,*::before,*::after { scroll-behavior:auto !important; }
   }
 
+
+
+  /* v3.3 — compact, legible 28-day habit history. Calendar/data logic remains unchanged. */
+  #monthly-trends-section {
+    margin-top:24px !important;
+    padding:clamp(14px,2vw,22px) !important;
+    border-radius:22px !important;
+  }
+  .trends-heading {
+    display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
+    margin-bottom:14px;
+  }
+  .trends-heading-copy { min-width:0; }
+  #monthly-trends-title {
+    display:flex; align-items:center; gap:9px;
+    margin:0 !important; font-size:16px !important; line-height:1.6 !important;
+    font-weight:850 !important; letter-spacing:-.02em;
+  }
+  #monthly-trends-title > span {
+    display:inline-block; width:4px !important; height:22px !important; flex:0 0 4px;
+  }
+  .trends-description {
+    margin-top:4px; color:#687b8e; font-size:11px; line-height:1.9;
+  }
+  html.dark .trends-description { color:#a3b5c7; }
+  .trends-period-chip {
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    flex-shrink:0; padding:6px 10px; border:1px solid #dce7f0; border-radius:999px;
+    color:#526a80; background:rgba(246,250,253,.92); font-size:11px; font-weight:800;
+    white-space:nowrap;
+  }
+  .trends-period-dot { width:6px; height:6px; border-radius:50%; background:#20b8cc; }
+  html.dark .trends-period-chip { color:#cedce9; border-color:rgba(150,184,208,.18); background:rgba(6,20,32,.4); }
+  #monthly-charts-container {
+    display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    align-items:start; gap:12px !important; margin-top:0 !important;
+  }
+  #monthly-charts-container:has(> .matrix-card:only-child) { grid-template-columns:minmax(0,1fr) !important; }
+  #monthly-charts-container > .matrix-card:only-child { width:min(100%,640px); justify-self:center; }
+  #monthly-charts-container > .matrix-card {
+    min-width:0; padding:13px !important; border:1px solid #e0e9f1 !important;
+    border-radius:17px !important; background:rgba(255,255,255,.92) !important;
+    box-shadow:0 5px 16px rgba(21,53,83,.035) !important;
+    transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+  }
+  #monthly-charts-container > .matrix-card:hover {
+    transform:translateY(-1px); border-color:#bfd8e8 !important;
+    box-shadow:0 9px 22px rgba(21,53,83,.06) !important;
+  }
+  html.dark #monthly-charts-container > .matrix-card {
+    background:rgba(12,28,43,.88) !important; border-color:rgba(146,183,210,.16) !important;
+    box-shadow:0 6px 17px rgba(0,0,0,.12) !important;
+  }
+  html.dark #monthly-charts-container > .matrix-card:hover { border-color:rgba(76,171,207,.4) !important; }
+  #monthly-charts-container > .matrix-card > .matrix-week-list {
+    padding:0 !important; margin-top:12px !important; border:0 !important;
+    border-radius:0 !important; background:transparent !important; box-shadow:none !important;
+  }
+  html.dark #monthly-charts-container > .matrix-card > .matrix-week-list { background:transparent !important; }
+  .matrix-card-header { display:flex; align-items:center; gap:9px; min-width:0; }
+  .matrix-habit-dot { width:9px; height:9px; border-radius:50%; flex:0 0 9px; }
+  .matrix-habit-copy { min-width:0; flex:1 1 auto; }
+  .matrix-habit-title {
+    min-width:0; overflow-wrap:anywhere; color:#243d55; font-size:13px;
+    line-height:1.65; font-weight:850; margin:0;
+  }
+  html.dark .matrix-habit-title { color:#e7f0f8; }
+  .matrix-habit-meta { color:#6b8094; font-size:10px; line-height:1.7; margin:1px 0 0; }
+  html.dark .matrix-habit-meta { color:#a8bacb; }
+  .matrix-streak {
+    flex:0 0 auto; padding:5px 7px; border:1px solid #edf0f4; border-radius:9px;
+    background:#f8fafc; color:#53697e; font-size:10px; font-weight:800; white-space:nowrap;
+  }
+  html.dark .matrix-streak { border-color:rgba(147,180,205,.13); background:rgba(3,17,29,.35); color:#d0dce8; }
+  .matrix-week-list { display:grid; gap:8px; margin-top:12px; }
+  .matrix-week {
+    min-width:0; padding:9px; border:1px solid #e7edf3; border-radius:12px;
+    background:linear-gradient(180deg,#fbfdff,#f7fafd);
+  }
+  html.dark .matrix-week { border-color:rgba(140,176,201,.13); background:linear-gradient(180deg,rgba(5,20,33,.46),rgba(7,22,35,.72)); }
+  .matrix-week-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; min-width:0; }
+  .matrix-week-range { color:#53697e; min-width:0; font-size:10px; line-height:1.6; font-weight:750; overflow-wrap:anywhere; }
+  html.dark .matrix-week-range { color:#c1d0de; }
+  .matrix-week-count {
+    flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; gap:3px;
+    min-height:22px; padding:3px 6px; border-radius:7px; background:#edf3f8;
+    color:#465f76; font-size:10px; font-weight:850; line-height:1.2; white-space:nowrap;
+  }
+  .matrix-week-count-text { opacity:1 !important; font-size:10px !important; white-space:nowrap; }
+  html.dark .matrix-week-count { background:#1b3042; color:#d0e1ef; }
+  .matrix-week.is-goal-met .matrix-week-count { background:var(--matrix-accent-soft,#e5f6f6); color:var(--matrix-accent,#1677a9); }
+  html.dark .matrix-week.is-goal-met .matrix-week-count { background:color-mix(in srgb,var(--matrix-accent,#1677a9) 20%,#102236); color:color-mix(in srgb,var(--matrix-accent,#1677a9) 55%,#ffffff); }
+  .matrix-goal-check { font-size:10px; line-height:1; }
+  .matrix-days-grid { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:4px; direction:rtl; }
+  .matrix-day {
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+    min-width:0; min-height:43px; padding:4px 1px; border:1px solid #e3eaf1;
+    border-radius:8px; background:#eef3f7; color:#4f667c; line-height:1.15;
+    transition:background-color .16s ease,border-color .16s ease,transform .16s ease;
+  }
+  .matrix-day-label { font-size:9px; font-weight:800; opacity:.8; }
+  .matrix-day-number { font-size:12px; font-weight:850; font-variant-numeric:tabular-nums; }
+  html.dark .matrix-day { background:#14283a; border-color:rgba(145,180,205,.16); color:#c4d4e2; }
+  .matrix-day.is-done { color:#fff !important; background:var(--matrix-accent,#168bce) !important; border-color:transparent !important; box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 2px 4px rgba(19,70,105,.08); }
+  .matrix-day.is-done .matrix-day-label { color:rgba(255,255,255,.86); }
+  .matrix-day.is-today:not(.is-done) { border-color:var(--matrix-accent,#168bce) !important; box-shadow:inset 0 0 0 1px var(--matrix-accent,#168bce); background:#f4fbff; }
+  html.dark .matrix-day.is-today:not(.is-done) { background:rgba(26,139,183,.12); }
+  @media (max-width:720px) {
+    #monthly-trends-section { margin-top:18px !important; padding:13px !important; border-radius:18px !important; }
+    .trends-heading { gap:8px; margin-bottom:11px; }
+    .trends-period-chip { padding:5px 8px; font-size:10px; }
+    #monthly-trends-title { font-size:15px !important; }
+    .trends-description { font-size:10px; line-height:1.7; }
+    #monthly-charts-container { grid-template-columns:minmax(0,1fr) !important; gap:9px !important; }
+    #monthly-charts-container > .matrix-card { padding:11px !important; border-radius:15px !important; }
+    .matrix-week-list { gap:7px; margin-top:10px; }
+    .matrix-week { padding:8px; }
+    .matrix-day { min-height:42px; border-radius:8px; }
+  }
+  @media (max-width:390px) {
+    .trends-heading { flex-direction:column; align-items:stretch; }
+    .trends-period-chip { align-self:flex-start; }
+    .matrix-week { padding:7px; }
+    .matrix-days-grid { gap:3px; }
+    .matrix-day { min-height:39px; }
+    .matrix-day-label { font-size:8px; }
+    .matrix-day-number { font-size:11px; }
+    .matrix-week-range { font-size:9px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #monthly-charts-container > .matrix-card, .matrix-day { transition:none !important; }
+    #monthly-charts-container > .matrix-card:hover { transform:none !important; }
+  }
+
 </style>
 </head>
 <body class="min-h-full pb-10 antialiased selection:bg-sky-100 dark:selection:bg-sky-950 transition-colors duration-200">
@@ -529,11 +663,15 @@
 
     <!-- ماتریس به عمد چهار ردیفِ هفتهٔ واقعیِ شنبه تا جمعه را نگه می‌دارد. -->
     <section id="monthly-trends-section" class="hidden" aria-labelledby="monthly-trends-title">
-      <div class="flex items-start sm:items-center justify-between gap-3 mb-4">
-        <div><p class="section-kicker">YOUR CONSISTENCY</p><h2 id="monthly-trends-title" class="text-sm font-extrabold flex items-center gap-2"><span></span> مرور ۲۸ روز اخیر</h2><p class="text-xs text-slate-500 mt-1.5">هر ردیف یک هفتهٔ کامل از شنبه تا جمعه است؛ الگوی کلی عادت‌ها را در یک نگاه ببین.</p></div>
-        <span class="text-xs text-slate-400 shrink-0 rounded-full border border-slate-200 px-3 py-1.5 dark:border-slate-700">۴ هفته</span>
+      <div class="trends-heading">
+        <div class="trends-heading-copy">
+          <p class="section-kicker">YOUR CONSISTENCY</p>
+          <h2 id="monthly-trends-title"><span aria-hidden="true"></span> مرور ۲۸ روز اخیر</h2>
+          <p class="trends-description">چهار هفتهٔ پیوسته؛ هر ردیف از شنبه تا جمعه.</p>
+        </div>
+        <span class="trends-period-chip"><span class="trends-period-dot" aria-hidden="true"></span> ۴ هفتهٔ کامل</span>
       </div>
-      <div id="monthly-charts-container" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"></div>
+      <div id="monthly-charts-container" class="matrix-grid"></div>
     </section>
 
     <footer>اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.</footer>
@@ -613,7 +751,7 @@
 // فقط publishable/anon key را در مرورگر بگذار؛ هرگز service_role key را در این فایل قرار نده.
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.2';
+const CURRENT_VERSION = '3.3';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAYS_SAT_FIRST = ['شنبه','یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه'];
@@ -1376,29 +1514,44 @@ function renderApp() {
     card.querySelectorAll('[data-action]').forEach(btn => { btn.dataset.habitId = habit.id; });
     mobile.appendChild(card);
 
-    // ماتریس ۲۸روزه عمداً از شنبهٔ سه هفتهٔ قبل شروع می‌شود و هر ردیف دقیقاً شنبه تا جمعه است.
-    const matrixCard = document.createElement('div');
-    matrixCard.className = 'bg-slate-50/70 dark:bg-slate-950/50 border border-slate-200/80 dark:border-slate-800 rounded-xl p-3';
+    // ماتریس ۲۸روزه عمداً از شنبهٔ سه هفتهٔ قبل شروع می‌شود و هر ردیف یک هفتهٔ واقعی شنبه تا جمعه است.
+    const matrixCard = document.createElement('article');
+    matrixCard.className = 'matrix-card';
     let weeksRowsHtml = '';
     const baseSat = new Date();
     const dToSat = baseSat.getDay() === 6 ? 0 : -(baseSat.getDay()+1);
     baseSat.setDate(baseSat.getDate() + dToSat - 21);
+    const paletteColors = {
+      'سبز':{accent:'#10b981', soft:'#e7f9f0'},
+      'آبی':{accent:'#0ea5e9', soft:'#e7f5fd'},
+      'نیلی':{accent:'#6366f1', soft:'#eeefff'},
+      'بنفش':{accent:'#a855f7', soft:'#f6edff'},
+      'صورتی':{accent:'#f43f5e', soft:'#fff0f3'},
+      'کهربایی':{accent:'#d97706', soft:'#fff5df'}
+    };
+    const matrixColor = paletteColors[palette.name] || {accent:'#168bce',soft:'#e5f6fc'};
+    const paletteAccent = matrixColor.accent;
+    const paletteAccentSoft = matrixColor.soft;
     for (let weekIdx=0; weekIdx<4; weekIdx++) {
-      let dots = '';
+      let daysHtml = '';
       let completions = 0;
+      const weekStart = new Date(baseSat);
+      weekStart.setDate(baseSat.getDate() + (weekIdx * 7));
       for (let dayIdx=0; dayIdx<7; dayIdx++) {
-        const dayCellDate = new Date(baseSat); dayCellDate.setDate(baseSat.getDate() + (weekIdx*7) + dayIdx);
+        const dayCellDate = new Date(weekStart);
+        dayCellDate.setDate(weekStart.getDate() + dayIdx);
         const info = getStatusByDate(habit, dayCellDate);
         const done = info.isChecked || isGraceDayForDate(habit, dayCellDate);
         if (done) completions++;
-        const dotClass = done ? `w-2 h-2 ${palette.bg} rounded-sm` : 'w-2 h-2 bg-slate-200 dark:bg-slate-800 rounded-sm';
-        dots += `<span class="${dotClass}" title="${formatCalendarDate(dayCellDate, { weekday:false })}"></span>`;
+        const isToday = dateOnlyNumber(dayCellDate) === dateOnlyNumber(new Date());
+        const statusLabel = done ? 'ثبت‌شده' : 'ثبت‌نشده';
+        const accessibleDate = `${WEEKDAYS_FA[dayCellDate.getDay()]} ${formatCalendarDate(dayCellDate, { weekday:false })}`;
+        daysHtml += `<div class="matrix-day ${done ? 'is-done' : ''} ${isToday ? 'is-today' : ''}" title="${accessibleDate} · ${statusLabel}" aria-label="${accessibleDate}، ${statusLabel}" style="--matrix-accent:${paletteAccent};--matrix-accent-soft:${paletteAccentSoft}"><span class="matrix-day-label">${WEEKDAYS_SHORT[dayIdx]}</span><span class="matrix-day-number">${toPersianDigits(getCalendarDayNumber(dayCellDate))}</span></div>`;
       }
       const metGoal = completions >= habit.weeklyGoal;
-      const rowClass = metGoal ? `${palette.weekCapsule} rounded-full` : 'rounded-full';
-      weeksRowsHtml += `<div class="flex items-center justify-center ${rowClass} py-1 px-2"><div class="flex items-center gap-1.5">${dots}</div></div>`;
+      weeksRowsHtml += `<div class="matrix-week ${metGoal ? 'is-goal-met' : ''}" style="--matrix-accent:${paletteAccent};--matrix-accent-soft:${paletteAccentSoft}"><div class="matrix-week-head"><span class="matrix-week-range">${formatCalendarWeekRange(weekStart)}</span><span class="matrix-week-count" aria-label="${toPersianDigits(completions)} روز از هفت روز"><span class="matrix-week-count-text" dir="rtl">${toPersianDigits(completions)} از ۷</span>${metGoal ? '<span class="matrix-goal-check" aria-hidden="true">✓</span>' : ''}</span></div><div class="matrix-days-grid">${daysHtml}</div></div>`;
     }
-    matrixCard.innerHTML = `<div class="flex items-center justify-between gap-2 mb-3"><span class="matrix-habit-title font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 truncate"></span><span class="text-[10px] font-bold px-2 py-1 rounded-md ${palette.lightBg} ${palette.text} shrink-0">۲۸ روز</span></div><div class="space-y-1.5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg p-2.5">${weeksRowsHtml}</div>`;
+    matrixCard.innerHTML = `<div class="matrix-card-header"><span class="matrix-habit-dot ${palette.dot}" aria-hidden="true"></span><div class="matrix-habit-copy"><h3 class="matrix-habit-title"></h3><p class="matrix-habit-meta">هدف هفتگی: ${toPersianDigits(habit.weeklyGoal)} روز</p></div><span class="matrix-streak" title="تداوم فعلی">🔥 ${toPersianDigits(habit.currentStreak)}</span></div><div class="matrix-week-list">${weeksRowsHtml}</div>`;
     matrixCard.querySelector('.matrix-habit-title').textContent = habit.title;
     matrixCard.querySelector('.matrix-habit-title').title = habit.title;
     matrix.appendChild(matrixCard);
