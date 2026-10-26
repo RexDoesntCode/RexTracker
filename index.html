@@ -167,7 +167,9 @@
   #habits-count-badge { display:inline-flex; align-items:center; padding:9px 12px; color:#587088; background:#eef4f8; border:1px solid #e2ebf2; border-radius:11px; font-size:13px; font-weight:800; white-space:nowrap; }
   html.dark #habits-count-badge { background:#14283a; border-color:rgba(144,181,208,.12); color:#bbd0e2; }
   #add-habit-open-btn { width:auto; min-height:44px; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:9px 15px; border:1px solid transparent; border-radius:13px; color:#fff; background:linear-gradient(115deg,#1677ff,#14a8de); box-shadow:0 7px 18px rgba(22,119,255,.18); font-size:14px; font-weight:850; }
-  #add-habit-open-btn span { font-size:21px; font-weight:400; line-height:1; }
+  /* FIX #1 — bold text label, keep + sign light */
+  #add-habit-open-btn > span:first-child { font-size:21px; font-weight:400; line-height:1; }
+  #add-habit-open-btn > span:last-child { font-weight:850; }
   #add-habit-open-btn:hover { transform:translateY(-2px); box-shadow:0 11px 23px rgba(22,119,255,.25); }
   #edit-mode-btn { min-height:44px; padding:9px 13px; border:1px solid #e1e8f0; border-radius:13px; color:#63758a; background:rgba(255,255,255,.82); font-size:14px; font-weight:800; }
   #edit-mode-btn:hover { background:#fff; border-color:#bdcee0; }
@@ -180,7 +182,6 @@
   html.dark .tracker-surface { background:rgba(14,28,43,.88); border-color:rgba(151,188,215,.13); box-shadow:0 14px 36px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.025); }
   #desktop-habits-wrap { overflow:auto; }
 
-  /* Table: narrower title, wider progress (item #5) */
   .habit-table { width:100%; border-collapse:separate; border-spacing:0; min-width:940px; color:#41576d; font-size:14px; table-layout:fixed; }
   .habit-table thead th { position:sticky; top:0; z-index:15; background:#f7fafc !important; color:#7d8fa2 !important; border-bottom:1px solid #e7edf3 !important; font-size:13px; line-height:1.7; font-weight:850; padding:14px 8px !important; }
   .habit-table thead th:first-child { right:0; z-index:25; text-align:right; padding-inline:16px !important; width:22%; min-width:210px; }
@@ -212,17 +213,16 @@
   html.dark .habit-table .habit-title { color:#e1edf7; }
   html.dark .habit-table .habit-goal-label { color:#a7bbcd; }
 
-  .day-button { width:38px; min-width:38px; height:42px; min-height:42px; border-radius:12px !important; border-width:2px !important; font-size:18px !important; margin-inline:auto; transition:transform .17s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease,color .2s ease !important; -webkit-user-select:none; user-select:none; }
+  /* FIX #2 — perfectly square day buttons (width = height) */
+  .day-button { width:40px; min-width:40px; height:40px; min-height:40px; border-radius:12px !important; border-width:2px !important; font-size:18px !important; margin-inline:auto; transition:transform .17s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,border-color .2s ease,background .2s ease,color .2s ease !important; -webkit-user-select:none; user-select:none; }
   .day-button:not(:disabled):hover { transform:translateY(-2px) scale(1.04); box-shadow:0 6px 13px rgba(28,106,165,.11); }
   .day-button:not(:disabled):active { transform:scale(.94); }
   .day-button:focus-visible { outline:3px solid #13a9cb; outline-offset:2px; z-index:3; }
   .day-button[aria-pressed="true"] { transform:scale(.97); }
-  /* Unchecked day: solid, subtle */
   .day-button.bg-white { color:#c3d0de !important; background:#f8fafc !important; border-style:solid !important; border-color:#d8e2ec !important; }
   .day-button.bg-white:hover:not(:disabled) { color:#1aa5cc !important; background:#eefaff !important; border-color:#8bd9ed !important; }
   .day-button:not(.bg-white) { box-shadow:0 4px 10px rgba(15,91,154,.1); }
   .day-button.opacity-40 { opacity:.42 !important; }
-  /* Future locked day: dashed (item #1) */
   .day-button.bg-white.is-future { border-style:dashed !important; border-color:#c9d6e3 !important; }
   html.dark .day-button.bg-white { color:#4e6478 !important; background:#14283a !important; border-color:#334155 !important; }
   html.dark .day-button.bg-white:hover:not(:disabled) { background:#17384d !important; border-color:#2baec9 !important; color:#8ceaff !important; }
@@ -241,7 +241,8 @@
   html.dark #mobile-habits-list > article { background:rgba(15,30,46,.95) !important; border-color:rgba(150,187,213,.14) !important; box-shadow:0 9px 26px rgba(0,0,0,.12); }
   #mobile-habits-list .habit-title-mobile { color:#1e3650; font-size:16px; line-height:1.8; }
   html.dark #mobile-habits-list .habit-title-mobile { color:#e9f3fc; }
-  #mobile-habits-list .day-button { width:clamp(30px,8.5vw,38px); min-width:clamp(30px,8.5vw,38px); height:38px; min-height:38px; border-radius:10px !important; font-size:16px !important; }
+  /* FIX #2 — mobile squares also width=height */
+  #mobile-habits-list .day-button { width:clamp(32px,9vw,40px); min-width:clamp(32px,9vw,40px); height:clamp(32px,9vw,40px); min-height:clamp(32px,9vw,40px); border-radius:10px !important; font-size:16px !important; }
   #empty-state { padding:58px 20px !important; color:#8698aa; }
   #empty-state > div:first-child { width:64px; height:64px; display:grid; place-items:center; margin:0 auto 16px; border-radius:22px; background:linear-gradient(145deg,#e7f7ff,#f0f9ff); font-size:29px; box-shadow:inset 0 1px 0 #fff; }
   #empty-state p:first-of-type { color:#253e56; font-size:16px; font-weight:850; }
@@ -255,7 +256,6 @@
   html.dark .streak-pill { background:rgba(180,83,9,.18); color:#fbbf24; }
 
   .progress-cell { display:flex; flex-direction:column; align-items:center; gap:4px; }
-  /* Wider progress bar (item #5) */
   .progress-cell-bar { width:120px; max-width:100%; background:#e9eff5; border-radius:999px; height:8px; overflow:hidden; }
   html.dark .progress-cell-bar { background:#1e2f43; }
   .progress-cell-bar > div { height:100%; border-radius:999px; }
@@ -264,9 +264,10 @@
   html.dark #monthly-trends-section { background:rgba(14,28,43,.84); border-color:rgba(151,188,215,.13); box-shadow:0 14px 36px rgba(0,0,0,.12); }
   .trends-heading { display:block; margin-bottom:10px; }
   .trends-heading-copy { min-width:0; }
-  /* Title won't wrap (items #2 & #3: chip removed frees space; nowrap as guard) */
-  #monthly-trends-title { display:flex; align-items:center; gap:8px; margin:0 !important; font-size:18px !important; line-height:1.6 !important; font-weight:850 !important; letter-spacing:-.02em; color:#213a53 !important; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  #monthly-trends-title > span { display:inline-block; width:4px !important; height:20px !important; flex:0 0 4px; border-radius:5px !important; background:linear-gradient(180deg,#25c4d7,#3683ff) !important; }
+  /* FIX #3 — title: mark and text are separate, no clipping, one blue bar */
+  #monthly-trends-title { display:flex; align-items:center; gap:8px; margin:0 !important; font-size:18px !important; line-height:1.6 !important; font-weight:850 !important; letter-spacing:-.02em; color:#213a53 !important; white-space:nowrap; }
+  #monthly-trends-title > .title-mark { display:inline-block; width:4px; height:20px; flex:0 0 4px; border-radius:5px; background:linear-gradient(180deg,#25c4d7,#3683ff); }
+  #monthly-trends-title > .title-text { display:inline-block; flex:0 1 auto; min-width:0; white-space:nowrap; color:inherit; font:inherit; background:none; border:0; padding:0; height:auto; width:auto; }
   html.dark #monthly-trends-title { color:#e6f0fa !important; }
   .trends-description { margin-top:3px; color:#67798c; font-size:12px; line-height:1.8; }
   html.dark .trends-description { color:#a3b5c7; }
@@ -426,7 +427,7 @@
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.9</span>
+            <span id="app-version-display">v3.9.1</span>
           </div>
           <p class="brand-subtitle" data-i18n="app.subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -459,7 +460,6 @@
         <div class="date-status-row">
           <div class="date-display-group">
             <p id="current-date-display">امروز: ...</p>
-            <!-- item #6: removed the calendar-mode-toggle button (now handled in settings) -->
           </div>
           <span id="save-status" role="status" aria-live="polite" aria-atomic="true">ذخیره روی این دستگاه</span>
         </div>
@@ -546,10 +546,9 @@
       <div class="trends-heading">
         <div class="trends-heading-copy">
           <p class="section-kicker">YOUR CONSISTENCY</p>
-          <h2 id="monthly-trends-title"><span aria-hidden="true"></span><span data-i18n="trends.title">مرور ۲۸ روز اخیر</span></h2>
+          <h2 id="monthly-trends-title"><span class="title-mark" aria-hidden="true"></span><span class="title-text" data-i18n="trends.title">مرور ۲۸ روز اخیر</span></h2>
           <p class="trends-description" data-i18n="trends.desc">چهار هفتهٔ پیوسته؛ هر ردیف از ابتدای هفته تا انتهای هفته.</p>
         </div>
-        <!-- item #3: chip removed -->
       </div>
       <div id="monthly-charts-container" class="matrix-grid"></div>
     </section>
@@ -593,6 +592,12 @@
       <form id="add-habit-form" class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-end">
         <div><label for="habit-title" class="block text-xs font-semibold text-slate-500 mb-1.5">نام عادت</label><input type="text" id="habit-title" required maxlength="80" placeholder="مثلاً: ورزش، مطالعه، تمرین پیانو..." class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 placeholder:text-slate-400"></div>
         <div><label for="habit-goal" class="block text-xs font-semibold text-slate-500 mb-1.5">هدف هفتگی</label><select id="habit-goal" class="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"><option value="7">۷ روز (هر روز)</option><option value="6">۶ روز در هفته</option><option value="5">۵ روز در هفته</option><option value="4">۴ روز در هفته</option><option value="3">۳ روز در هفته</option><option value="2">۲ روز در هفته</option><option value="1">۱ روز در هفته</option></select></div>
+        <!-- FIX #4 — Never Miss Twice guidance -->
+        <div class="sm:col-span-2 rounded-xl bg-sky-50/70 dark:bg-sky-950/25 border border-sky-200/70 dark:border-sky-900/50 p-3.5">
+          <p class="text-sm leading-7 text-slate-700 dark:text-slate-200">
+            <strong>یه پیشنهاد دوستانه:</strong> برای بیشتر عادت‌ها هدف رو «هر روز» بذار. چرا؟ چون قانون <strong>Never Miss Twice</strong> می‌تونه نجاتت بده — اگه یه روز جا موندی، کافیه روز بعد جبران کنی و زنجیره نشکنه. یه روز نبودن اصلاً مهم نیست؛ چیزی که عادت‌ها رو می‌کشه «دو روز پشت سر هم» است.
+          </p>
+        </div>
         <div class="sm:col-span-2 flex items-center justify-end gap-2 pt-2"><button type="button" data-close-modal="add-habit-modal" class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800">انصراف</button><button type="submit" class="bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-950 font-bold px-5 py-2.5 rounded-xl transition whitespace-nowrap text-sm">افزودن عادت</button></div>
       </form>
     </div>
@@ -721,7 +726,7 @@
 
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.9';
+const CURRENT_VERSION = '3.9.1';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAY_NAMES_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
@@ -863,7 +868,6 @@ let pendingHabitToDelete = null;
 let lastFocusedBeforeModal = null;
 const $ = (id) => document.getElementById(id);
 
-// ---------- IndexedDB layer (long-term #3) ----------
 const IDB_DB = 'rex_tracker_db';
 const IDB_STORE = 'kv';
 let idbOpenPromise = null;
@@ -1136,7 +1140,6 @@ function saveDataToDisk(options={}) {
   } catch (e) {
     console.warn('localStorage save failed (quota?)', e);
   }
-  // IDB fire-and-forget (large data path)
   idbSet('habits_data', habits).catch(e => console.warn('IDB save failed', e));
   setSaveStatus(language === 'en' ? 'Saved on device' : 'ذخیره روی دستگاه انجام شد', 'text-emerald-600 dark:text-emerald-400');
   if (shouldSync && cloudUser && supabaseClient) scheduleCloudSync();
@@ -1553,7 +1556,6 @@ function getDayButtonMarkup(habit, dayIndex, weekKey, date, palette) {
   return `<button type="button" data-action="toggle-day" data-day-index="${dayIndex}" data-week-key="${weekKey}" class="${classes}" title="${title}" aria-label="${title}" aria-pressed="${checked ? 'true' : 'false'}" ${disabled ? 'disabled aria-disabled="true"' : ''}>${content}</button>`;
 }
 
-// ---------- Extracted builders (used by full + single-habit render) ----------
 function buildHabitRow(habit, habitIndex, stats, palette) {
   if (!Array.isArray(habit.history[stats.weekKey])) habit.history[stats.weekKey] = [false,false,false,false,false,false,false];
   const weekData = habit.history[stats.weekKey];
@@ -1718,7 +1720,6 @@ function renderApp() {
   mobile.classList.toggle('hidden', habits.length === 0);
   trends.classList.toggle('hidden', habits.length === 0);
 
-  // Batch with DocumentFragments for fewer reflows
   const tbodyFrag = document.createDocumentFragment();
   const mobileFrag = document.createDocumentFragment();
   const matrixFrag = document.createDocumentFragment();
@@ -1735,7 +1736,6 @@ function renderApp() {
   matrix.replaceChildren(matrixFrag);
 }
 
-// Surgical re-render of a single habit (item #9 optimization; no UX change)
 function rerenderSingleHabit(habitIndex) {
   const habit = habits[habitIndex];
   if (!habit) { renderApp(); return; }
@@ -1827,7 +1827,6 @@ function handleAction(button) {
     if (!Array.isArray(habit.history[weekKey])) habit.history[weekKey] = [false,false,false,false,false,false,false];
     habit.history[weekKey][dayIndex] = !habit.history[weekKey][dayIndex];
     recalculateStreaks(); saveDataToDisk();
-    // Surgical update — no full render (item #9)
     rerenderSingleHabit(habits.indexOf(habit));
     return;
   }
@@ -1948,24 +1947,37 @@ function applyLanguage() {
   renderApp();
 }
 
-// ---------- Service Worker registration (long-term #1) ----------
 function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
   if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').then(reg => {
-      // Check for updates periodically (every 30 min while app is open)
       setInterval(() => reg.update().catch(() => {}), 30 * 60 * 1000);
     }).catch(err => console.warn('SW registration failed', err));
   });
 }
+
+// Auto-resync when connection returns.
+window.addEventListener('online', () => {
+  if (cloudUser && supabaseClient) {
+    if (cloudSyncTimer) { clearTimeout(cloudSyncTimer); cloudSyncTimer = null; }
+    syncCloudNow().then(ok => {
+      if (ok === true) showToast(
+        language === 'en' ? 'Reconnected — data synced.' : 'اتصال برگشت — اطلاعات همگام شد.',
+        'success'
+      );
+    });
+  }
+  if (supabaseClient && supabaseClient.auth) {
+    supabaseClient.auth.getSession().catch(() => {});
+  }
+});
 
 async function initializeApp() {
   $('app-version-display').textContent = `v${CURRENT_VERSION}`;
   initTheme();
   loadDataFromDiskSync();
   renderApp();
-  // Async: try IndexedDB for newer/larger data
   try {
     const idbData = await idbGet('habits_data');
     if (idbData && Array.isArray(idbData)) {
@@ -1985,30 +1997,6 @@ async function initializeApp() {
   registerServiceWorker();
 }
 initializeApp().catch(e => console.error('Init failed', e));
-  // Auto-resync when the browser reports we're back online.
-// syncCloudNow() is already queue-safe (cloudSyncRequested + cloudSyncInFlight),
-// so calling it here is harmless if a sync is already running.
-window.addEventListener('online', () => {
-  if (cloudUser && supabaseClient) {
-    if (cloudSyncTimer) { clearTimeout(cloudSyncTimer); cloudSyncTimer = null; }
-    syncCloudNow().then(ok => {
-      if (ok === true) showToast(
-        language === 'en'
-          ? 'Reconnected — data synced.'
-          : 'اتصال برگشت — اطلاعات همگام شد.',
-        'success'
-      );
-    });
-  }
-});
-
-// Also refresh auth session when coming back online,
-// so we don't operate with a stale token after long offline periods.
-window.addEventListener('online', () => {
-  if (supabaseClient && supabaseClient.auth) {
-    supabaseClient.auth.getSession().catch(() => {});
-  }
-});
 </script>
 </body>
 </html>
