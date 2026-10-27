@@ -135,10 +135,13 @@
   .progress-ring .ring-track { stroke:#e9f0f5; }
   html.dark .progress-ring .ring-track { stroke:rgba(169,202,226,.12); }
   .progress-ring .ring-value { stroke:url(#ring-gradient); stroke-linecap:round; stroke-dasharray:226.2; stroke-dashoffset:226.2; transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1); filter:drop-shadow(0 2px 4px rgba(26,157,222,.2)); }
-  .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; }
-  #week-progress-value { direction:ltr; unicode-bidi:isolate; font-size:24px; color:#193b58; font-weight:900; letter-spacing:-.04em; line-height:1.15; }
+  
+  /* Centering Ring Text */
+  .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  #week-progress-value { direction:ltr; unicode-bidi:isolate; font-size:26px; color:#193b58; font-weight:900; letter-spacing:-.04em; line-height:1.15; margin-bottom: 14px; }
   html.dark #week-progress-value { color:#f1f8ff; }
-  .ring-caption { font-size:12px; color:#6a7d92; font-weight:650; line-height:1.4; }
+  .ring-caption { position: absolute; bottom: 20px; font-size:11px; color:#6a7d92; font-weight:650; line-height:1.4; }
+  
   .week-progress-copy { min-width:0; }
   .week-progress-copy strong { display:block; font-size:15px; line-height:1.8; color:#264158; }
   html.dark .week-progress-copy strong { color:#e0edf7; }
@@ -365,8 +368,8 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
     .week-panel-top { padding:17px 17px 10px 17px; gap:9px; }
     .week-progress-row { padding:0 17px 17px 17px; gap:12px; }
     .progress-ring { width:105px; height:105px; }
-    #week-progress-value { font-size:22px; }
-    .ring-caption { font-size:11px; }
+    #week-progress-value { font-size:24px; margin-bottom: 12px; }
+    .ring-caption { bottom: 16px; font-size:10px; }
     .stats-grid { gap:10px; }
     .stat-card { padding:14px; gap:10px; }
     .stat-icon { width:38px; height:38px; border-radius:12px; }
@@ -400,8 +403,8 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
     .week-label-inline { font-size:13px; }
     .week-progress-row { padding:0 13px 13px 13px; gap:12px; }
     .progress-ring { width:100px; height:100px; }
-    #week-progress-value { font-size:21px; }
-    .ring-caption { font-size:11px; }
+    #week-progress-value { font-size:22px; margin-bottom: 10px; }
+    .ring-caption { bottom: 14px; font-size:10px; }
     .week-progress-copy strong { font-size:14px; }
     .week-progress-copy p { font-size:12px; }
     main { margin-top:27px; }
@@ -465,7 +468,7 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
         <div class="min-w-0">
           <div class="brand-title-line">
             <h1 class="brand-title" dir="ltr">Rex Tracker</h1>
-            <span id="app-version-display">v3.9.5</span>
+            <span id="app-version-display">v3.9.6</span>
           </div>
           <p class="brand-subtitle" data-i18n="app.subtitle">رهگیری عادت‌ها؛ با تمرکز روی مداومت</p>
         </div>
@@ -516,12 +519,14 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
           <div class="week-panel-top-row-2">
             <p id="current-week-display" class="week-label-inline">...</p>
             <div class="week-stepper" role="group" aria-label="انتخاب هفته">
-              <button type="button" data-action="navigate-week" data-direction="-1" title="هفته قبل" aria-label="هفته قبل">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
-              </button>
-              <button type="button" data-action="navigate-week" data-direction="0" class="is-current" title="این هفته" aria-label="رفتن به این هفته"><span data-i18n="week.this">این هفته</span></button>
+              <!-- Swapped arrows: Next week (right) -->
               <button type="button" data-action="navigate-week" data-direction="1" title="هفته بعد" aria-label="هفته بعد">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+              </button>
+              <button type="button" data-action="navigate-week" data-direction="0" class="is-current" title="این هفته" aria-label="رفتن به این هفته"><span data-i18n="week.this">این هفته</span></button>
+              <!-- Swapped arrows: Prev week (left) -->
+              <button type="button" data-action="navigate-week" data-direction="-1" title="هفته قبل" aria-label="هفته قبل">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
               </button>
             </div>
           </div>
@@ -576,7 +581,7 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
         <div class="trends-heading-copy">
           <p class="section-kicker">YOUR CONSISTENCY</p>
           <h2 id="monthly-trends-title"><span class="title-mark" aria-hidden="true"></span><span class="title-text" data-i18n="trends.title">مرور ۲۸ روز اخیر</span></h2>
-          <p class="trends-description" data-i18n="trends.desc">چهار هفتهٔ پیوسته؛ هر ردیف از ابتدای هفته تا انتهای هفته.</p>
+          <p class="trends-description" data-i18n="trends.desc">هر ردیف نشان‌گر یک هفته و پایین‌ترین ردیف، هفته فعلی است.</p>
         </div>
       </div>
       <div id="monthly-charts-container" class="matrix-grid"></div>
@@ -811,7 +816,7 @@ html.dark .day-button.bg-white:hover:not(:disabled) .day-dot {
 
 const SUPABASE_URL = 'https://qvfcdazpkvitbmvhgrzm.supabase.co';
 const SUPABASE_PUBLIC_KEY = 'sb_publishable_NLumowrnAxVr-IjqUTjQ5g_IA_qe4th';
-const CURRENT_VERSION = '3.9.5';
+const CURRENT_VERSION = '3.9.6';
 const JALAALI_MONTHS = ['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
 const GREGORIAN_MONTHS_FA = ['ژانویه','فوریه','مارس','آوریل','مه','ژوئن','ژوئیه','اوت','سپتامبر','اکتبر','نوامبر','دسامبر'];
 const WEEKDAY_NAMES_FA = ['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'];
@@ -864,7 +869,7 @@ const I18N = {
     'empty.desc': 'با اضافه کردن اولین عادت، مسیر پیشرفتت را شروع کن.',
     'empty.cta': 'افزودن اولین عادت',
     'trends.title': 'مرور ۲۸ روز اخیر',
-    'trends.desc': 'چهار هفتهٔ پیوسته؛ هر ردیف از ابتدای هفته تا انتهای هفته.',
+    'trends.desc': 'هر ردیف نشان‌گر یک هفته و پایین‌ترین ردیف، هفته فعلی است.',
     'sync.hint': 'اطلاعات ابتدا روی همین دستگاه ذخیره می‌شوند. با ورود به حساب، سوابق روی دستگاه‌های دیگر نیز همگام می‌شوند.',
     'settings.title': 'تنظیمات',
     'settings.weekStart': 'شروع هفته',
@@ -915,7 +920,7 @@ const I18N = {
     'empty.desc': 'Add your first habit to start your journey.',
     'empty.cta': 'Add your first habit',
     'trends.title': 'Last 28 days',
-    'trends.desc': 'Four consecutive weeks; each row is one full week.',
+    'trends.desc': 'Each row represents a week, and the bottom row is the current week.',
     'sync.hint': 'Data is saved on this device first. When you sign in, your records sync across devices.',
     'settings.title': 'Settings',
     'settings.weekStart': 'Week starts on',
@@ -1803,22 +1808,17 @@ function getTodayAndYesterdayCounts() {
   const yest = new Date(); yest.setDate(yest.getDate() - 1);
   return { today: getCompletionsOnDate(today), yesterday: getCompletionsOnDate(yest) };
 }
-function getWeeklyAverageCompletions(weeksBack = 8) {
-  const today = new Date();
-  let total = 0, count = 0;
-  for (let i = 0; i < weeksBack; i++) {
-    const weekStart = getWeekStartDate(today, -i);
-    const weekKey = getWeekKeyFromStart(weekStart);
-    let weekTotal = 0, hasData = false;
-    habits.forEach(h => {
-      if (Array.isArray(h.history && h.history[weekKey])) {
-        hasData = true;
-        weekTotal += h.history[weekKey].filter(Boolean).length;
-      }
-    });
-    if (hasData) { total += weekTotal; count++; }
-  }
-  return count > 0 ? Math.round(total / count) : null;
+function getPreviousWeekCompletions(targetStart) {
+  const prevStart = new Date(targetStart);
+  prevStart.setDate(prevStart.getDate() - 7);
+  const prevKey = getWeekKeyFromStart(prevStart);
+  let total = 0;
+  habits.forEach(h => {
+    if (Array.isArray(h.history && h.history[prevKey])) {
+      total += h.history[prevKey].filter(Boolean).length;
+    }
+  });
+  return total;
 }
 function getBestRecordAcrossHabits() {
   let best = 0, habit = null;
@@ -1868,15 +1868,11 @@ function updateSummaryStats(stats) {
   }
 
   $('summary-completions-count').textContent = toPersianDigits(completedDays);
-  const weeklyAvg = getWeeklyAverageCompletions(8);
+  
+  // Changed to show previous week's completions
+  const prevWeekCount = getPreviousWeekCompletions(stats.targetStart);
   const compSub = $('summary-completions-sub');
-  if (weeklyAvg === null) {
-    compSub.textContent = language === 'en' ? 'Week avg: —' : 'میانگین هفته‌های قبل: —';
-  } else {
-    compSub.textContent = language === 'en'
-      ? `Week avg: ${weeklyAvg}`
-      : `میانگین هفته‌های قبل: ${toPersianDigits(weeklyAvg)}`;
-  }
+  compSub.textContent = language === 'en' ? `Last week: ${prevWeekCount}` : `هفته قبل: ${toPersianDigits(prevWeekCount)}`;
 
   const record = getBestRecordAcrossHabits();
   $('summary-best-record').textContent = toPersianDigits(record.best);
@@ -2042,7 +2038,7 @@ function handleAction(button) {
     if (button.disabled) return;
     const habit = getHabit(habitId); if (!habit || isEditMode) return;
     
-    triggerHaptic(); // Added Haptic Feedback Here
+    triggerHaptic();
 
     const dayIndex = Number(button.dataset.dayIndex);
     const weekKey = button.dataset.weekKey;
